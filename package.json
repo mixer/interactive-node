@@ -1,0 +1,29 @@
+{
+  "name": "carina",
+  "version": "0.1.0",
+  "description": "A NodeJS and Browser compatible client for Beam.pro's constellation socket.",
+  "main": "js/index.js",
+  "scripts": {
+    "build": "cd ts && tsc",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WatchBeam/carina.git"
+  },
+  "keywords": [
+    "Constellation",
+    "Beam"
+  ],
+  "author": "James Birtles <jameshb@beam.pro>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WatchBeam/carina/issues"
+  },
+  "homepage": "https://github.com/WatchBeam/carina#readme",
+  "devDependencies": {
+    "typescript": "^1.8.10",
+    "typings": "^1.3.2",
+    "ws": "^1.1.1"
+  }
+}
