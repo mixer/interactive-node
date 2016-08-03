@@ -4,7 +4,9 @@
   "description": "A NodeJS and Browser compatible client for Beam.pro's constellation socket.",
   "main": "js/index.js",
   "scripts": {
-    "build": "cd ts && tsc",
+    "build:ts": "cd ts && tsc && tsc -d",
+    "build:webpack": "cd ts && webpack && webpack --config webpack.config.min.js",
+    "build": "npm run build:ts && npm run build:webpack",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -22,8 +24,11 @@
   },
   "homepage": "https://github.com/WatchBeam/carina#readme",
   "devDependencies": {
+    "ts-loader": "^0.8.2",
     "typescript": "^1.8.10",
     "typings": "^1.3.2",
+    "unminified-webpack-plugin": "^1.1.0",
+    "webpack": "^1.13.1",
     "ws": "^1.1.1"
   }
 }
