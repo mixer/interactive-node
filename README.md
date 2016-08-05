@@ -41,6 +41,9 @@ ca.subscribe('channel:1:update', function (data) {
 #### JavaScript
 ```js
 const Carina = require('carina').Carina;
+const ws = require('ws');
+
+Carina.WebSocket = ws;
 
 let ca = new Carina();
 ca.subscribe('channel:1:update', data => {
@@ -51,6 +54,9 @@ ca.subscribe('channel:1:update', data => {
 #### TypeScript
 ```ts
 import { Carina } from 'carina';
+import * as ws from 'ws';
+
+Carina.WebSocket = ws;
 
 let ca = new Carina();
 ca.subscribe('channel:1:update', data => {
