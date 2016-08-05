@@ -1,12 +1,17 @@
 import { EventEmitter } from 'events';
 import { TimeoutError, MessageParseError, ConstellationError } from './errors';
+import * as pako from 'pako';
 
 export class ConstellationSocket extends EventEmitter {
     public static WebSocket: typeof WebSocket = typeof WebSocket === 'undefined' ? null : WebSocket;
     public static Promise: typeof Promise = typeof Promise === 'undefined' ? null : Promise;
 
-    public static CONSTELLATION_URL = 'wss://constellation.beam.pro';
-    public static REPLY_TIMEOUT = 10000; // 10 seconds
+    public static GZIP_THRESHOLD = 1024;
+    public static DEFAULTS = Object.freeze({
+        url: 'wss://constellation.beam.pro',
+        gzip: true,
+        replyTimeout: 10000, // 10 seconds
+    });
 
     public ready = false;
 
@@ -14,10 +19,13 @@ export class ConstellationSocket extends EventEmitter {
     private messageId: number = 0;
     private queue: any[] = [];
 
-    constructor() {
+    constructor(public options: SocketOptions = {}) {
         super();
 
-        this.socket = new ConstellationSocket.WebSocket(ConstellationSocket.CONSTELLATION_URL);
+        options = Object.assign({}, ConstellationSocket.DEFAULTS, options);
+        options.protocol = options.protocol || options.gzip ? 'cnstl-gzip' : null;
+
+        this.socket = new ConstellationSocket.WebSocket(options.url, options.protocol);
 
         this.rebroadcastEvent('open');
         this.rebroadcastEvent('close');
@@ -30,6 +38,10 @@ export class ConstellationSocket extends EventEmitter {
             this.queue.forEach(data => this.send(data));
             this.queue = [];
         });
+    }
+
+    public static shouldGzip(packet: string): boolean {
+        return packet.length > this.GZIP_THRESHOLD;
     }
 
     /**
@@ -50,7 +62,7 @@ export class ConstellationSocket extends EventEmitter {
                         `Timeout waiting for response to ${method}: ${JSON.stringify(params)}`
                     )
                 );
-            }, ConstellationSocket.REPLY_TIMEOUT);
+            }, this.options.replyTimeout);
 
             this.once(`reply:${id}`, replyListener = (err, res) => {
                 clearTimeout(timeout);
@@ -65,7 +77,13 @@ export class ConstellationSocket extends EventEmitter {
     }
 
     public sendJson(object: StringMap<any>) {
-        this.send(JSON.stringify(object));
+        var packet: any = JSON.stringify(object);
+
+        if (ConstellationSocket.shouldGzip(packet)) {
+            packet = pako.gzip(packet);
+        }
+
+        this.send(packet);
     }
 
     public send(data: any) {
@@ -83,8 +101,16 @@ export class ConstellationSocket extends EventEmitter {
         return ++this.messageId;
     }
 
-    private extractMessage (messageString: string) {
-        var message;
+    private extractMessage (packet: string | Buffer) {
+        var message: any;
+
+        var messageString: string;
+        // If the packet is binary, then we need to unzip it
+        if (typeof packet !== 'string') {
+            messageString = <string> <any> pako.ungzip(packet, {to: 'string'});
+        } else {
+            messageString = packet;
+        }
 
         try {
             message = JSON.parse(messageString);
@@ -118,3 +144,10 @@ export class ConstellationSocket extends EventEmitter {
 }
 
 export type ConstellationMethod = 'livesubscribe' | 'liveunsubscribe';
+
+export interface SocketOptions {
+    url?: string;
+    gzip?: boolean;
+    protocol?: string;
+    replyTimeout?: number;
+}

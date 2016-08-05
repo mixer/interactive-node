@@ -30,5 +30,8 @@
     "unminified-webpack-plugin": "^1.1.0",
     "webpack": "^1.13.1",
     "ws": "^1.1.1"
+  },
+  "dependencies": {
+    "pako": "^1.0.3"
   }
 }

@@ -1,4 +1,4 @@
-import { ConstellationSocket } from './socket';
+import { ConstellationSocket, SocketOptions } from './socket';
 
 export class Carina {
     /**
@@ -32,9 +32,13 @@ export class Carina {
         return ConstellationSocket.Promise;
     }
 
-    public socket = new ConstellationSocket();
+    public socket;
 
     private waiting: StringMap<Promise<any>> = {};
+
+    constructor(options: SocketOptions = {}) {
+        this.socket = new ConstellationSocket(options);
+    }
 
     /**
      * @callback onSubscriptionCb
