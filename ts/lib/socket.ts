@@ -3,14 +3,17 @@ import { TimeoutError, MessageParseError, ConstellationError } from './errors';
 import * as pako from 'pako';
 
 export class ConstellationSocket extends EventEmitter {
-    public static WebSocket: typeof WebSocket = typeof WebSocket === 'undefined' ? null : WebSocket;
+    public static WebSocket: any = typeof WebSocket === 'undefined' ? null : WebSocket;
     public static Promise: typeof Promise = typeof Promise === 'undefined' ? null : Promise;
 
+    public static IS_BOT_HEADER = 'x-is-bot';
     public static GZIP_THRESHOLD = 1024;
     public static DEFAULTS = Object.freeze({
         url: 'wss://constellation.beam.pro',
         gzip: true,
         replyTimeout: 10000, // 10 seconds
+        isBot: false,
+        autoConnect: true,
     });
 
     public ready = false;
@@ -22,26 +25,54 @@ export class ConstellationSocket extends EventEmitter {
     constructor(public options: SocketOptions = {}) {
         super();
 
-        options = Object.assign({}, ConstellationSocket.DEFAULTS, options);
-        options.protocol = options.protocol || options.gzip ? 'cnstl-gzip' : null;
+        this.options = Object.assign({}, ConstellationSocket.DEFAULTS, options);
 
-        this.socket = new ConstellationSocket.WebSocket(options.url, options.protocol);
+        this.setMaxListeners(Infinity);
+
+        this.on('message', res => this.extractMessage(res));
+
+        if (this.options.autoConnect) {
+            this.connect(options);
+        }
+    }
+
+    public static shouldGzip(packet: string): boolean {
+        return packet.length > this.GZIP_THRESHOLD;
+    }
+
+    /**
+     * Open a new socket connection.
+     * By default, the socket will auto connect when creating a new instance. 
+     */
+    public connect(options: SocketOptions = {}) {
+        this.options.protocol = this.options.protocol || this.options.gzip ? 'cnstl-gzip' : '';
+
+        this.ready = false;
+
+        var extras = { headers: {} };
+        if (this.options.isBot) {
+            extras.headers[ConstellationSocket.IS_BOT_HEADER] = true;
+        }
+        if (this.options.jwt) {
+            this.options.url += `?jwt=${options.jwt}`;
+        }
+
+        this.socket = new ConstellationSocket.WebSocket(
+            this.options.url,
+            this.options.protocol, 
+            extras
+        );
 
         this.rebroadcastEvent('open');
         this.rebroadcastEvent('close');
         this.rebroadcastEvent('message');
         this.rebroadcastEvent('error');
 
-        this.on('message', res => this.extractMessage(res));
         this.once('event:hello', () => {
             this.ready = true;
             this.queue.forEach(data => this.send(data));
             this.queue = [];
         });
-    }
-
-    public static shouldGzip(packet: string): boolean {
-        return packet.length > this.GZIP_THRESHOLD;
     }
 
     /**
@@ -146,8 +177,13 @@ export class ConstellationSocket extends EventEmitter {
 export type ConstellationMethod = 'livesubscribe' | 'liveunsubscribe';
 
 export interface SocketOptions {
-    url?: string;
+    isBot?: boolean;
+    autoConnect?: boolean;
     gzip?: boolean;
+
+    url?: string;
     protocol?: string;
+    jwt?: string;
+
     replyTimeout?: number;
 }

@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "description": "A NodeJS and Browser compatible client for Beam.pro's constellation socket.",
   "main": "js/index.js",
+  "typings": "js/index.d.ts",
   "scripts": {
     "build:ts": "cd ts && tsc && tsc -d",
     "build:webpack": "cd ts && webpack && webpack --config webpack.config.min.js",
     "build": "npm run build:ts && npm run build:webpack",
-    "prepublish": "npm run build"
+    "prepublish": "rm -rf dist && rm -rf js && npm run build"
   },
   "repository": {
     "type": "git",

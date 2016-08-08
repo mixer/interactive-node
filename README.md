@@ -46,7 +46,9 @@ const ws = require('ws');
 
 Carina.WebSocket = ws;
 
-const ca = new Carina();
+// Note: You MUST set isBot if the client is
+// an automated bot and you are NOT authing.
+const ca = new Carina({ isBot: true });
 ca.subscribe('channel:1:update', data => {
     console.log('Channel update', data);
 });
@@ -59,8 +61,13 @@ import * as ws from 'ws';
 
 Carina.WebSocket = ws;
 
-const ca = new Carina();
-ca.subscribe('channel:1:update', data => {
+const ca = new Carina({ isBot: true });
+ca.subscribe<ChannelUpdate>('channel:1:update', data => {
     console.log('Channel update', data);
 });
+
+// Example interface, does not contain all possible values.
+interface ChannelUpdate {
+    online?: boolean;
+}
 ```
