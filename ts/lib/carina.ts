@@ -52,8 +52,8 @@ export class Carina {
      * @param {onSubscriptionCb} cb - Called each time we receive an event for this slug.
      * @returns {Promise.<>} Resolves once subscribed. Any errors will reject.
      */
-    public subscribe(slug: string, cb: (data: StringMap<any>) => void): Promise<any> {
-        this.socket.on(`event:live`, data => {
+    public subscribe<T>(slug: string, cb: (data: T) => void): Promise<any> {
+        this.socket.on('event:live', data => {
             if (data.channel === slug) {
                 cb(data.payload);
             }
