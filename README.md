@@ -1,6 +1,7 @@
 # Carina
 
 ## Installation
+You can either use npm (recommended) or download the zip from the [releases page](https://github.com/WatchBeam/carina/releases).
 
 ### Browser
 ```html
