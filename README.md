@@ -45,7 +45,7 @@ const ws = require('ws');
 
 Carina.WebSocket = ws;
 
-let ca = new Carina();
+const ca = new Carina();
 ca.subscribe('channel:1:update', data => {
     console.log('Channel update', data);
 });
@@ -58,7 +58,7 @@ import * as ws from 'ws';
 
 Carina.WebSocket = ws;
 
-let ca = new Carina();
+const ca = new Carina();
 ca.subscribe('channel:1:update', data => {
     console.log('Channel update', data);
 });
