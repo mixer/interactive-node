@@ -8,30 +8,29 @@ export class ConstellationSocket extends EventEmitter {
 
     public static IS_BOT_HEADER = 'x-is-bot';
     public static GZIP_THRESHOLD = 1024;
-    public static DEFAULTS = Object.freeze({
+    public static DEFAULTS = {
         url: 'wss://constellation.beam.pro',
         gzip: true,
         replyTimeout: 10000, // 10 seconds
         isBot: false,
         autoConnect: true,
-    });
+    };
 
     public ready = false;
+    public options: SocketOptions = Object.assign({}, ConstellationSocket.DEFAULTS);
 
     private socket: WebSocket;
     private messageId: number = 0;
     private queue: any[] = [];
 
-    constructor(public options: SocketOptions = {}) {
+    constructor(options: SocketOptions = {}) {
         super();
-
-        this.options = Object.assign({}, ConstellationSocket.DEFAULTS, options);
 
         this.setMaxListeners(Infinity);
 
         this.on('message', res => this.extractMessage(res));
 
-        if (this.options.autoConnect) {
+        if (options.autoConnect !== false) {
             this.connect(options);
         }
     }
@@ -45,21 +44,28 @@ export class ConstellationSocket extends EventEmitter {
      * By default, the socket will auto connect when creating a new instance. 
      */
     public connect(options: SocketOptions = {}) {
-        this.options.protocol = this.options.protocol || this.options.gzip ? 'cnstl-gzip' : '';
-
+        Object.assign(this.options, options);
         this.ready = false;
 
+        var url = this.options.url;
+        var protocol = this.options.protocol || this.options.gzip ? 'cnstl-gzip' : '';
         var extras = { headers: {} };
+
         if (this.options.isBot) {
             extras.headers[ConstellationSocket.IS_BOT_HEADER] = true;
         }
+
+        if (this.options.authToken) {
+            extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
+        }
+
         if (this.options.jwt) {
-            this.options.url += `?jwt=${options.jwt}`;
+            url += `?jwt=${this.options.jwt}`;
         }
 
         this.socket = new ConstellationSocket.WebSocket(
-            this.options.url,
-            this.options.protocol, 
+            url,
+            protocol, 
             extras
         );
 
@@ -78,7 +84,7 @@ export class ConstellationSocket extends EventEmitter {
     /**
      * Send a method to the server.
      */
-    public execute(method: ConstellationMethod, params: StringMap<any> = {}, id: number = this.nextId()) {
+    public execute(method: ConstellationMethod, params: { [key: string]: any } = {}, id: number = this.nextId()) {
         this.sendJson({
             type: 'method',
             method, params, id
@@ -107,7 +113,7 @@ export class ConstellationSocket extends EventEmitter {
         });
     }
 
-    public sendJson(object: StringMap<any>) {
+    public sendJson(object: { [key: string]: any }) {
         var packet: any = JSON.stringify(object);
 
         if (ConstellationSocket.shouldGzip(packet)) {
@@ -184,6 +190,7 @@ export interface SocketOptions {
     url?: string;
     protocol?: string;
     jwt?: string;
+    authToken?: string;
 
     replyTimeout?: number;
 }

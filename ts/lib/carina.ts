@@ -34,7 +34,7 @@ export class Carina {
 
     public socket;
 
-    private waiting: StringMap<Promise<any>> = {};
+    private waiting: { [key: string]: Promise<any> } = {};
 
     constructor(options: SocketOptions = {}) {
         this.socket = new ConstellationSocket(options);
