@@ -35,9 +35,15 @@ export class Carina {
     public socket;
 
     private waiting: { [key: string]: Promise<any> } = {};
+    private subscriptions: string[] = [];
 
     constructor(options: SocketOptions = {}) {
         this.socket = new ConstellationSocket(options);
+
+        // Resub to live events on reconnect.
+        this.socket.on('reopen', () => {
+            this.socket.execute('livesubscribe', { events: this.subscriptions });
+        });
     }
 
     /**
@@ -53,7 +59,7 @@ export class Carina {
      * @returns {Promise.<>} Resolves once subscribed. Any errors will reject.
      */
     public subscribe<T>(slug: string, cb: (data: T) => void): Promise<any> {
-        this.socket.on('event:live', data => {
+        this.socket.on('event:live', (data: { channel: string, payload: any }) => {
             if (data.channel === slug) {
                 cb(data.payload);
             }
@@ -61,7 +67,11 @@ export class Carina {
 
         return this
         .waitFor(`subscription:${slug}`, () => {
-            return this.socket.execute('livesubscribe', { events: [slug] });
+            return this.socket.execute('livesubscribe', { events: [slug] })
+            .then(res => {
+                this.subscriptions.push(slug);
+                return res;
+            });
         })
         .catch(err => {
             this.stopWaiting(`subscription:${slug}`);
@@ -77,7 +87,14 @@ export class Carina {
      */
     public unsubscribe(slug: string) {
         this.stopWaiting(`subscription:${slug}`);
-        return this.socket.execute('liveunsubscribe', { events: [slug] });
+        return this.socket.execute('liveunsubscribe', { events: [slug] })
+        .then(res => {
+            const index = this.subscriptions.indexOf(slug);
+            if (index > -1) {
+                this.subscriptions.splice(index, 1);
+            }
+            return res;
+        });
     }
 
     private waitFor<T>(identifier: string, cb?: () => Promise<T>): Promise<T> {
