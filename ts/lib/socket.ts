@@ -126,7 +126,7 @@ export class ConstellationSocket extends EventEmitter {
                 );
             }, this.options.replyTimeout);
 
-            this.on(`reply:${id}`, replyListener = (err, res) => {
+            this.once(`reply:${id}`, replyListener = (err, res) => {
                 clearTimeout(timeout);
 
                 if (err) {
