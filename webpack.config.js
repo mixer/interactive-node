@@ -4,7 +4,7 @@ module.exports = {
     entry: './index.ts',
     devtool: 'source-map',
     output: {
-        path: '../dist',
+        path: './dist',
         filename: 'carina.js',
         library: 'carina',
         libraryTarget: 'umd',

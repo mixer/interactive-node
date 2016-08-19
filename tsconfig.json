@@ -2,9 +2,8 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es5",
-        "noImplicitAny": false,
         "sourceMap": true,
-        "outDir": "../js"
+        "outDir": "./js"
     },
     "exclude": [
         "node_modules"
