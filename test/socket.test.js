@@ -152,6 +152,7 @@ describe('socket', () => {
                 greet();
                 newWs.on('message', payload => {
                     sendReplyTo(payload);
+                    expect(socket.queue.size).to.equal(1);
                 });
             });
 

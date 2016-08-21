@@ -102,7 +102,7 @@ export class ConstellationSocket extends EventEmitter {
     private reconnectTimeout: NodeJS.Timer;
     private state: State;
     private socket: WebSocket;
-    private queue: Packet[] = [];
+    private queue: Set<Packet> = new Set<Packet>();
 
     constructor(options: SocketOptions = {}) {
         super();
@@ -155,11 +155,7 @@ export class ConstellationSocket extends EventEmitter {
 
             this.options.reconnectionPolicy.reset();
             this.state = State.Connected;
-            this.queue.forEach(data => {
-                this.send(data).then(() => {
-                    this.queue.splice(this.queue.indexOf(data), 1);
-                });
-            });
+            this.queue.forEach(data => this.send(data));
         });
 
         this.once('close', err => {
@@ -194,7 +190,7 @@ export class ConstellationSocket extends EventEmitter {
         clearTimeout(this.reconnectTimeout);
 
         this.queue.forEach(packet => packet.cancel());
-        this.queue = [];
+        this.queue.clear();
     }
 
     /**
@@ -214,7 +210,7 @@ export class ConstellationSocket extends EventEmitter {
             return Promise.reject(new CancelledError());
         }
 
-        this.queue.push(packet);
+        this.queue.add(packet);
 
         // If the socket has not said hello, queue the request and return
         // the promise eventually emitted when it is sent.
@@ -236,11 +232,17 @@ export class ConstellationSocket extends EventEmitter {
             // Wait for replies to that packet ID:
             resolveOn(this, `reply:${packet.id()}`, timeout)
             .then((result: { err: Error, result: any }) => {
+                this.queue.delete(packet);
+
                 if (result.err) {
                     throw result.err;
                 }
 
                 return result.result;
+            })
+            .catch(err => {
+                this.queue.delete(packet);
+                throw err;
             }),
             // Never resolve if the consumer cancels the packets:
             resolveOn(packet, 'cancel', timeout + 1)
