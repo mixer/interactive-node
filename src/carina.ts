@@ -5,8 +5,8 @@ export class Carina {
      * Set the websocket implementation.
      * You will likely not need to set this in a browser environment.
      * You will not need to set this if WebSocket is globally available.
-     * 
-     * @example 
+     *
+     * @example
      * Carina.WebSocket = require('ws');
      */
     public static set WebSocket(ws: any) {
@@ -15,21 +15,6 @@ export class Carina {
 
     public static get WebSocket() {
         return ConstellationSocket.WebSocket;
-    }
-
-    /**
-     * Set the Promise implementation.
-     * You will not need to set this if Promise is globally available.
-     * 
-     * @example 
-     * Carina.Promise = require('bluebird');
-     */
-    public static set Promise(promise: any) {
-        ConstellationSocket.Promise = promise;
-    }
-
-    public static get Promise() {
-        return ConstellationSocket.Promise;
     }
 
     public socket;
@@ -53,7 +38,7 @@ export class Carina {
 
     /**
      * Subscribe to a live event
-     * 
+     *
      * @param {string} slug
      * @param {onSubscriptionCb} cb - Called each time we receive an event for this slug.
      * @returns {Promise.<>} Resolves once subscribed. Any errors will reject.
@@ -81,7 +66,7 @@ export class Carina {
 
     /**
      * Unsubscribe from a live event.
-     * 
+     *
      * @param {string} slug
      * @returns {Promise.<>} Resolves once unsubscribed. Any errors will reject.
      */

@@ -4,6 +4,12 @@ export class BaseError extends Error {
     }
 }
 
+export class CancelledError extends BaseError {
+    constructor() {
+        super("Packet was cancelled or Carina was closed before a reply was received.");
+    }
+}
+
 export class TimeoutError extends BaseError {
 }
 

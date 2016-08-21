@@ -8,14 +8,14 @@ import { TimeoutError } from './errors';
  * @param {Promise[]} promises
  * @return {Promise}
  */
-export function race (promises: Promise<void>[]): Promise<void> {
-    return new Promise<void>((_resolve, _reject) => {
+export function race (promises: Promise<any>[]): Promise<any> {
+    return new Promise<any>((_resolve, _reject) => {
         let done = false;
-        function guard (fn: () => void): () => void {
-            return function () {
+        function guard (fn: (value: any) => void): (value: any) => void {
+            return function (value: any) {
                 if (!done) {
                     done = true;
-                    fn();
+                    fn(value);
                 }
             };
         }
@@ -44,7 +44,7 @@ export function resolveOn(emitter: EventEmitter, event: string,
             resolve(data);
         };
 
-        emitter.on('event', listener);
+        emitter.once(event, listener);
 
         setTimeout(() => {
             if (!resolved) {

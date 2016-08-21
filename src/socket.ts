@@ -1,7 +1,9 @@
-import { TimeoutError, MessageParseError, ConstellationError } from './errors';
+import { TimeoutError, MessageParseError, ConstellationError, CancelledError } from './errors';
 import { ExponentialReconnectionPolicy, ReconnectionPolicy } from './reconnection';
-import { race, timeout, resolveOn } from './util';
 import { EventEmitter } from 'events';
+import { Packet, PacketState } from './packets';
+
+import { race, timeout, resolveOn } from './util';
 import * as querystring from 'querystring';
 import * as pako from 'pako';
 
@@ -46,8 +48,8 @@ export interface SocketOptions {
 
     // Settings to use for reconnecting automatically to Constellation.
     // Defaults to automatically reconnecting with the ExponentialPolicy.
-    autoReconnect?: boolean;
     reconnectionPolicy?: ReconnectionPolicy;
+    autoReconnect?: boolean;
 
     // Websocket URL to connect to, defaults to wss://constellation.beam.pro
     url?: string;
@@ -63,10 +65,6 @@ export interface SocketOptions {
 
     // Timeout on Constellation method calls before we throw an error.
     replyTimeout?: number;
-
-    // Whether to automatically connect when the socket is instantiated.
-    // Defaults to true.
-    autoConnect?: boolean;
 }
 
 /**
@@ -83,14 +81,6 @@ export enum State {
     Closing,
 }
 
-/**
- * The Sendable type indicates data types that can be used in the
- * WebSocket.send method.
- */
-type Sendable = string | ArrayBuffer | Blob;
-
-export type ConstellationMethod = 'livesubscribe' | 'liveunsubscribe';
-
 function getDefaults(): SocketOptions {
     return {
         url: 'wss://constellation.beam.pro',
@@ -99,7 +89,6 @@ function getDefaults(): SocketOptions {
         isBot: false,
         gzip: new SizeThresholdGzipDetector(1024),
         autoReconnect: true,
-        autoConnect: true,
         reconnectionPolicy: new ExponentialReconnectionPolicy(),
     };
 }
@@ -113,8 +102,7 @@ export class ConstellationSocket extends EventEmitter {
     private reconnectTimeout: NodeJS.Timer;
     private state: State;
     private socket: WebSocket;
-    private messageId: number = 0;
-    private queue: Sendable[] = [];
+    private queue: Packet[] = [];
 
     constructor(options: SocketOptions = {}) {
         super();
@@ -130,17 +118,13 @@ export class ConstellationSocket extends EventEmitter {
 
         this.options = Object.assign(getDefaults(), options);
         this.on('message', msg => this.extractMessage(msg.data));
-
-        if (options.autoConnect) {
-            this.connect();
-        }
     }
 
     /**
      * Open a new socket connection. By default, the socket will auto
      * connect when creating a new instance.
      */
-    public connect() {
+    public connect(): ConstellationSocket {
         const protocol = this.options.gzip ? 'cnstl-gzip' : 'cnstl';
         const extras = {
             headers: {
@@ -164,18 +148,21 @@ export class ConstellationSocket extends EventEmitter {
         this.rebroadcastEvent('message');
         this.rebroadcastEvent('error');
 
-        this.on('event:hello', () => {
+        this.once('event:hello', () => {
             if (this.state !== State.Connecting) { // may have been closed just now
                 return;
             }
 
             this.options.reconnectionPolicy.reset();
             this.state = State.Connected;
-            this.queue.forEach(data => this.send(data));
-            this.queue = [];
+            this.queue.forEach(data => {
+                this.send(data).then(() => {
+                    this.queue.splice(this.queue.indexOf(data), 1);
+                });
+            });
         });
 
-        this.on('close', () => {
+        this.once('close', err => {
             if (this.state === State.Closing || !this.options.autoReconnect) {
                 this.state = State.Idle;
                 return;
@@ -186,6 +173,8 @@ export class ConstellationSocket extends EventEmitter {
                 this.connect();
             }, this.options.reconnectionPolicy.next());
         });
+
+        return this;
     }
 
     /**
@@ -203,63 +192,73 @@ export class ConstellationSocket extends EventEmitter {
         this.state = State.Closing;
         this.socket.close();
         clearTimeout(this.reconnectTimeout);
+
+        this.queue.forEach(packet => packet.cancel());
+        this.queue = [];
     }
 
     /**
-     * Send a method to the server.
+     * Executes an RPC method on the server. Returns a promise which resolves
+     * after it completes, or after a timeout occurs.
      */
-    public execute(method: ConstellationMethod, params: { [key: string]: any } = {}): Promise<any> {
-        const timeout = this.options.replyTimeout;
-        const id = this.nextId();
-
-        this.sendJson({
-            id,
-            method,
-            params,
-            type: 'method',
-        });
-
-        return race([
-            resolveOn(this, `reply:${id}`, timeout),
-            resolveOn(this, 'close', timeout + 1)
-            .then(() => this.execute(method, params)),
-        ]);
+    public execute(method: string, params: { [key: string]: any } = {}): Promise<any> {
+        return this.send(new Packet(method, params));
     }
 
     /**
-     * Send emits the JSON-serializable object over the socket.
+     * Send emits a packet over the websocket, or queues it for later sending
+     * if the socket is not open.
      */
-    public sendJson(object: { [key: string]: any }) {
-        var packet: any = JSON.stringify(object);
-
-        if (this.options.gzip.shouldZip(packet, object)) {
-            packet = pako.gzip(packet);
+    public send(packet: Packet): Promise<any> {
+        if (packet.getState() === PacketState.Cancelled) {
+            return Promise.reject(new CancelledError());
         }
 
-        this.send(packet);
-    }
+        this.queue.push(packet);
 
-    /**
-     * Returns the next incremented request ID.
-     * @return {number}
-     */
-    private nextId(): number {
-        return this.messageId++;
-    }
-
-    /**
-     * Send is a low-level method to send raw bytes over the weos
-     * @param {any} data [description]
-     */
-    private send(data: Sendable) {
-        // If the socket has not said hello, queue the request.
+        // If the socket has not said hello, queue the request and return
+        // the promise eventually emitted when it is sent.
         if (this.state !== State.Connected) {
-            this.queue.push(data);
-            return;
+            return race([
+                resolveOn(packet, 'send'),
+                resolveOn(packet, 'cancel')
+                .then(() => { throw new CancelledError() }),
+            ]);
         }
 
-        this.emit('send', data);
-        this.socket.send(data);
+        const timeout = packet.getTimeout(this.options.replyTimeout);
+        const data = JSON.stringify(packet);
+        const payload = this.options.gzip.shouldZip(data, packet.toJSON())
+            ? pako.gzip(data)
+            : data;
+
+        const promise = race([
+            // Wait for replies to that packet ID:
+            resolveOn(this, `reply:${packet.id()}`, timeout)
+            .then((result: { err: Error, result: any }) => {
+                if (result.err) {
+                    throw result.err;
+                }
+
+                return result.result;
+            }),
+            // Never resolve if the consumer cancels the packets:
+            resolveOn(packet, 'cancel', timeout + 1)
+            .then(() => { throw new CancelledError() }),
+            // Re-queue packets if the socket closes:
+            resolveOn(this, 'close', timeout + 1)
+            .then(() => {
+                packet.setState(PacketState.Pending);
+                return this.send(packet);
+            }),
+        ]);
+
+        packet.emit('send', promise);
+        packet.setState(PacketState.Sending);
+        this.emit('send', payload);
+        this.socket.send(payload);
+
+        return promise;
     }
 
     private extractMessage (packet: string | Buffer) {
@@ -284,7 +283,7 @@ export class ConstellationSocket extends EventEmitter {
             break;
         case 'reply':
             let err = message.error ? ConstellationError.from(message.error) : null;
-            this.emit(`reply:${message.id}`, err, message.result);
+            this.emit(`reply:${message.id}`, { err, result: message.result });
             break;
         default:
             throw new MessageParseError(`Unknown message type "${message.type}"`);

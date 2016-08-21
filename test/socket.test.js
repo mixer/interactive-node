@@ -1,0 +1,171 @@
+const Websocket = require('ws');
+const Errors = require('../lib/errors');
+const Socket = require('../lib/socket').ConstellationSocket;
+const port = process.env.SERVER_PORT || 1339;
+
+describe('socket', () => {
+    let server;
+    let socket;
+    const url = `ws://127.0.0.1:${port}/`;
+
+    beforeEach(ready => {
+        server = new Websocket.Server({ port }, ready);
+    });
+
+    afterEach(done => {
+        if (socket) {
+            socket.close();
+            socket = null;
+        }
+
+        server.close(done);
+    });
+
+    describe('connecting', () => {
+        it('connects with no auth', done => {
+            socket = new Socket({ url }).connect();
+            server.on('connection', ws => {
+                expect(ws.upgradeReq.url).to.equal('/');
+                expect(ws.upgradeReq.headers.authorization).to.be.undefined;
+                done();
+            });
+        });
+
+        it('connects with JWT auth', done => {
+            socket = new Socket({ url, jwt: 'asdf!' }).connect();
+            server.on('connection', ws => {
+                expect(ws.upgradeReq.url).to.equal('/?jwt=asdf!');
+                expect(ws.upgradeReq.headers.authorization).to.be.undefined;
+                done();
+            });
+        });
+
+        it('connects with an OAuth token', done => {
+            socket = new Socket({ url, authToken: 'asdf!' }).connect();
+            server.on('connection', ws => {
+                expect(ws.upgradeReq.url).to.equal('/');
+                expect(ws.upgradeReq.headers.authorization).to.equal('Bearer asdf!');
+                done();
+            });
+        });
+
+        it('throws an error on ambiguous auth', () => {
+            expect(() => new Socket({ url, authToken: 'asdf!', jwt: 'wat?' })).to.throw();
+        });
+    });
+
+    describe('sending packets', () => {
+        let ws;
+        let next, reset;
+
+        function greet (authenticated = false) {
+            ws.send(JSON.stringify({ type: 'event', event: 'hello' }));
+        }
+
+        function awaitConnect (callback) {
+            server.once('connection', _ws => {
+                ws = _ws;
+                callback(ws);
+            });
+        }
+
+        function sendReplyTo(payload) {
+            const data = JSON.parse(payload);
+            expect(data).to.containSubset({ type: 'method', method: 'hello', params: { foo: 'bar' }});
+            ws.send(JSON.stringify({ type: 'reply', id: data.id, error: null, result: 'hi' }));
+        }
+
+        beforeEach(ready => {
+            awaitConnect(() => ready());
+            socket = new Socket({ url }).connect();
+
+            next = sinon.stub(socket.options.reconnectionPolicy, 'next').returns(5);
+            reset = sinon.stub(socket.options.reconnectionPolicy, 'reset');
+        });
+
+        it('queues before "hello" is sent, sends method calls', () => {
+            let sent = false;
+            ws.on('message', payload => {
+                if (!sent) {
+                    assert.fail('Expected to wait until "hello" is sent before sending data');
+                }
+                sendReplyTo(payload);
+            });
+            setTimeout(() => { sent = true, greet() }, 10);
+
+            return socket.execute('hello', { foo: 'bar' })
+            .then(res => expect(res).to.equal('hi'));
+        });
+
+        it('reconnects if a connection is lost using the backoff interval', done => {
+            expect(reset).to.not.have.been.called;
+            expect(next).to.not.have.been.called;
+            greet();
+
+            // Initially greets and calls reset
+            socket.once('event:hello', () => {
+                expect(reset).to.have.been.calledOnce;
+                ws.close();
+
+                // Backs off when a healthy connection is lost
+                awaitConnect(ws => {
+                    expect(next).to.have.been.calledOnce;
+                    expect(reset).to.have.been.calledOnce;
+                    ws.close();
+
+                    // Backs off again if establishing fails
+                    awaitConnect(ws => {
+                        expect(next).to.have.been.calledTwice;
+                        expect(reset).to.have.been.calledOnce;
+                        greet();
+
+                        // Resets after connection is healthy again.
+                        socket.once('event:hello', () => {
+                            expect(reset).to.have.been.calledTwice;
+                            socket.close();
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+
+        it('respects closing the socket during a reconnection', done => {
+            greet();
+            socket.once('event:hello', () => ws.close());
+            setTimeout(() => socket.close(), 1);
+
+            awaitConnect(ws => assert.fail('Expected not to have reconnected with a closed socket'));
+            setTimeout(done, 20);
+        });
+
+        it('times out message calls if no reply is received', () => {
+            socket.options.replyTimeout = 5;
+            greet();
+            return socket.execute('hello', { foo: 'bar' })
+            .catch(err => expect(err).to.be.an.instanceof(Errors.TimeoutError));
+        });
+
+        it('retries messages if the socket is closed before replying', () => {
+            ws.on('message', () => ws.close());
+            awaitConnect(newWs => {
+                greet();
+                newWs.on('message', payload => {
+                    sendReplyTo(payload);
+                });
+            });
+
+            greet();
+            return socket.execute('hello', { foo: 'bar' })
+            .then(res => expect(res).to.equal('hi'));
+        });
+
+        it('cancels packets if the socket is closed mid-call', () => {
+            ws.on('message', () => socket.close());
+            greet();
+
+            return socket.execute('hello', { foo: 'bar' })
+            .catch(err => expect(err).be.an.instanceof(Errors.CancelledError));
+        });
+    });
+});
