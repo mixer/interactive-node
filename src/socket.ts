@@ -3,7 +3,7 @@ import { ExponentialReconnectionPolicy, ReconnectionPolicy } from './reconnectio
 import { EventEmitter } from 'events';
 import { Packet, PacketState } from './packets';
 
-import { race, timeout, resolveOn } from './util';
+import { timeout, resolveOn } from './util';
 import * as querystring from 'querystring';
 import * as pako from 'pako';
 
@@ -84,7 +84,7 @@ export enum State {
 function getDefaults(): SocketOptions {
     return {
         url: 'wss://constellation.beam.pro',
-        userAgent: `Carnia ${pkg.version}`,
+        userAgent: `Carina ${pkg.version}`,
         replyTimeout: 10000,
         isBot: false,
         gzip: new SizeThresholdGzipDetector(1024),
@@ -215,7 +215,7 @@ export class ConstellationSocket extends EventEmitter {
         // If the socket has not said hello, queue the request and return
         // the promise eventually emitted when it is sent.
         if (this.state !== State.Connected) {
-            return race([
+            return Promise.race([
                 resolveOn(packet, 'send'),
                 resolveOn(packet, 'cancel')
                 .then(() => { throw new CancelledError() }),
@@ -228,7 +228,7 @@ export class ConstellationSocket extends EventEmitter {
             ? pako.gzip(data)
             : data;
 
-        const promise = race([
+        const promise = Promise.race([
             // Wait for replies to that packet ID:
             resolveOn(this, `reply:${packet.id()}`, timeout)
             .then((result: { err: Error, result: any }) => {

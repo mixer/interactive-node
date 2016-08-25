@@ -12,7 +12,7 @@ export enum PacketState {
     Cancelled
 }
 
-const maxInt32 = -1 >>> 0;
+const maxInt32 = 0xFFFFFFFF;
 
 /**
  * A Packet is a data type that can be sent over the wire to Constellation.

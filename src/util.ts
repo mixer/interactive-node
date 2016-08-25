@@ -2,31 +2,6 @@ import { EventEmitter } from 'events';
 import { TimeoutError } from './errors';
 
 /**
- * race takes an array of promises and is resolved with the first promise
- * that resolves, or rejects. After the first resolve or rejection, all
- * future resolutions and rejections will be discarded.
- * @param {Promise[]} promises
- * @return {Promise}
- */
-export function race (promises: Promise<any>[]): Promise<any> {
-    return new Promise<any>((_resolve, _reject) => {
-        let done = false;
-        function guard (fn: (value: any) => void): (value: any) => void {
-            return function (value: any) {
-                if (!done) {
-                    done = true;
-                    fn(value);
-                }
-            };
-        }
-
-        const resolve = guard(_resolve);
-        const reject = guard(_reject);
-        promises.forEach(p => p.then(resolve).catch(reject));
-    });
-}
-
-/**
  * Returns a promise that's resolved when an event is emitted on the
  * EventEmitter.
  * @param  {EventEmitter} emitter

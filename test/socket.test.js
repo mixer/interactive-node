@@ -50,7 +50,8 @@ describe('socket', () => {
         });
 
         it('throws an error on ambiguous auth', () => {
-            expect(() => new Socket({ url, authToken: 'asdf!', jwt: 'wat?' })).to.throw();
+            expect(() => new Socket({ url, authToken: 'asdf!', jwt: 'wat?' }))
+                .to.throw(/both JWT and OAuth token/);
         });
     });
 
