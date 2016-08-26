@@ -250,6 +250,10 @@ export class ConstellationSocket extends EventEmitter {
             // Re-queue packets if the socket closes:
             resolveOn(this, 'close', timeout + 1)
             .then(() => {
+                if (!this.queue.has(packet)) { // skip if we already resolved
+                    return;
+                }
+
                 packet.setState(PacketState.Pending);
                 return this.send(packet);
             }),

@@ -17,7 +17,7 @@ export class Carina {
         return ConstellationSocket.WebSocket;
     }
 
-    public socket;
+    public socket: ConstellationSocket;
 
     private waiting: { [key: string]: Promise<any> } = {};
     private subscriptions: string[] = [];
@@ -26,9 +26,29 @@ export class Carina {
         this.socket = new ConstellationSocket(options);
 
         // Resub to live events on reconnect.
-        this.socket.on('reopen', () => {
-            this.socket.execute('livesubscribe', { events: this.subscriptions });
+        this.socket.on('open', () => {
+            if (this.subscriptions.length > 0) {
+                this.socket.execute(
+                    'livesubscribe',
+                    { events: this.subscriptions }
+                );
+            }
         });
+    }
+
+    /**
+     * Boots the connection to constellation.
+     */
+    public open(): Carina {
+        this.socket.connect();
+        return this;
+    }
+
+    /**
+     * Frees resources associated with the Constellation connection.
+     */
+    public close() {
+        this.socket.close();
     }
 
     /**
