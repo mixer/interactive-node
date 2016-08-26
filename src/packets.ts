@@ -77,14 +77,14 @@ export class Packet extends EventEmitter {
 
     /**
      * Returns the current state of the packet.
-     * @return {PacketState} [description]
+     * @return {PacketState}
      */
     getState(): PacketState {
         return this.state;
     }
 
     setState(state: PacketState) {
-        if (state == this.state) {
+        if (state === this.state) {
             return;
         }
 
