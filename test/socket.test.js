@@ -70,15 +70,20 @@ describe('socket', () => {
             });
         }
 
-        function sendReplyTo(payload) {
+        function assertAndReplyTo(payload) {
             const data = JSON.parse(payload);
             expect(data).to.containSubset({ type: 'method', method: 'hello', params: { foo: 'bar' }});
             ws.send(JSON.stringify({ type: 'reply', id: data.id, error: null, result: 'hi' }));
         }
 
+        function replyTo(result, payload) {
+            const data = JSON.parse(payload);
+            ws.send(JSON.stringify({ id: data.id, type: 'reply', error: null, result }));
+        }
+
         beforeEach(ready => {
             awaitConnect(() => ready());
-            socket = new Socket({ url }).connect();
+            socket = new Socket({ url, pingInterval: 100, replyTimeout: 50 }).connect();
 
             next = sinon.stub(socket.options.reconnectionPolicy, 'next').returns(5);
             reset = sinon.stub(socket.options.reconnectionPolicy, 'reset');
@@ -90,7 +95,7 @@ describe('socket', () => {
                 if (!sent) {
                     assert.fail('Expected to wait until "hello" is sent before sending data');
                 }
-                sendReplyTo(payload);
+                assertAndReplyTo(payload);
             });
             setTimeout(() => { sent = true, greet() }, 10);
 
@@ -152,7 +157,7 @@ describe('socket', () => {
             awaitConnect(newWs => {
                 greet();
                 newWs.on('message', payload => {
-                    sendReplyTo(payload);
+                    assertAndReplyTo(payload);
                     expect(socket.queue.size).to.equal(1);
                 });
             });
@@ -168,6 +173,33 @@ describe('socket', () => {
 
             return socket.execute('hello', { foo: 'bar' })
             .catch(err => expect(err).be.an.instanceof(Errors.CancelledError));
+        });
+
+        describe('pings', () => {
+            it('sends ping messages on its interval', done => {
+                greet();
+                const start = Date.now();
+
+                ws.once('message', msg => replyTo({}, msg));
+                socket.once('ping', () => {
+                    expect(Date.now() - start).to.be.within(100, 200);
+                    socket.once('ping', () => {
+                        expect(Date.now() - start).to.be.within(200, 400);
+                        done();
+                    });
+                });
+            });
+
+            it('reconnects if a ping reply is not received', done => {
+                greet();
+
+                const start = Date.now();
+                socket.once('close', () => {
+                    expect(Date.now() - start).to.be.within(150, 250);
+                    expect(socket.state).to.equal(2);
+                    done();
+                });
+            });
         });
     });
 });

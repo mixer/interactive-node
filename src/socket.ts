@@ -65,6 +65,9 @@ export interface SocketOptions {
 
     // Timeout on Constellation method calls before we throw an error.
     replyTimeout?: number;
+
+    // Duration upon which to send a ping to the server. Defaults to 10 seconds.
+    pingInterval?: number;
 }
 
 /**
@@ -90,6 +93,7 @@ function getDefaults(): SocketOptions {
         gzip: new SizeThresholdGzipDetector(1024),
         autoReconnect: true,
         reconnectionPolicy: new ExponentialReconnectionPolicy(),
+        pingInterval: 10 * 1000,
     };
 }
 
@@ -98,8 +102,9 @@ export class ConstellationSocket extends EventEmitter {
     // does not natively support it.
     public static WebSocket: any = typeof WebSocket === 'undefined' ? null : WebSocket;
 
-    private options: SocketOptions;
     private reconnectTimeout: NodeJS.Timer;
+    private pingTimeout: NodeJS.Timer;
+    private options: SocketOptions;
     private state: State;
     private socket: WebSocket;
     private queue: Set<Packet> = new Set<Packet>();
@@ -147,6 +152,8 @@ export class ConstellationSocket extends EventEmitter {
         this.rebroadcastEvent('close');
         this.rebroadcastEvent('message');
         this.rebroadcastEvent('error');
+
+        this.once('open', () => this.schedulePing());
 
         this.once('event:hello', () => {
             if (this.state !== State.Connecting) { // may have been closed just now
@@ -223,11 +230,6 @@ export class ConstellationSocket extends EventEmitter {
         }
 
         const timeout = packet.getTimeout(this.options.replyTimeout);
-        const data = JSON.stringify(packet);
-        const payload = this.options.gzip.shouldZip(data, packet.toJSON())
-            ? pako.gzip(data)
-            : data;
-
         const promise = Promise.race([
             // Wait for replies to that packet ID:
             resolveOn(this, `reply:${packet.id()}`, timeout)
@@ -261,13 +263,22 @@ export class ConstellationSocket extends EventEmitter {
 
         packet.emit('send', promise);
         packet.setState(PacketState.Sending);
-        this.emit('send', payload);
-        this.socket.send(payload);
+        this.sendPacketInner(packet);
 
         return promise;
     }
 
-    private extractMessage (packet: string | Buffer) {
+    private sendPacketInner(packet: Packet) {
+        const data = JSON.stringify(packet);
+        const payload = this.options.gzip.shouldZip(data, packet.toJSON())
+            ? pako.gzip(data)
+            : data;
+
+        this.emit('send', payload);
+        this.socket.send(payload);
+    }
+
+    private extractMessage(packet: string | Buffer) {
         let messageString: string;
         // If the packet is binary, then we need to unzip it
         if (typeof packet !== 'string') {
@@ -282,6 +293,9 @@ export class ConstellationSocket extends EventEmitter {
         } catch (err) {
             throw new MessageParseError('Message returned was not valid JSON');
         }
+
+        // Bump the ping timeout whenever we get a message reply.
+        this.schedulePing();
 
         switch (message.type) {
         case 'event':
@@ -298,5 +312,30 @@ export class ConstellationSocket extends EventEmitter {
 
     private rebroadcastEvent(name: string) {
         this.socket.addEventListener(name, evt => this.emit(name, evt));
+    }
+
+    private schedulePing() {
+        clearTimeout(this.pingTimeout);
+
+        this.pingTimeout = setTimeout(() => {
+            if (this.state !== State.Connected) {
+                return;
+            }
+
+            const packet = new Packet('ping', null);
+            const timeout = this.options.replyTimeout;
+
+            setTimeout(() => {
+                this.sendPacketInner(packet);
+                this.emit('ping');
+            });
+
+            return Promise.race([
+                resolveOn(this, `reply:${packet.id()}`, timeout),
+                resolveOn(this, 'close', timeout + 1),
+            ])
+            .then(() => this.emit('pong'))
+            .catch(err => this.socket.close());
+        }, this.options.pingInterval);
     }
 }
