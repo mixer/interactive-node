@@ -151,7 +151,14 @@ export class ConstellationSocket extends EventEmitter {
         this.rebroadcastEvent('open');
         this.rebroadcastEvent('close');
         this.rebroadcastEvent('message');
-        this.rebroadcastEvent('error');
+
+        this.socket.addEventListener('error', err => {
+            if (this.state === State.Closing) {
+                this.emit('close');
+            } else {
+                this.emit('error', err);
+            }
+        });
 
         this.once('open', () => this.schedulePing());
 

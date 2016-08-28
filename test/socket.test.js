@@ -55,6 +55,23 @@ describe('socket', () => {
         });
     });
 
+    it('bubbles error events', done => {
+        const err = new Error('oh no!');
+        socket = new Socket({ url }).connect();
+        socket.once('error', e => {
+            expect(e).to.equal(err);
+            done();
+        });
+        socket.socket.emit('error', err);
+    });
+
+    it('ignores errors during socket teardown', done => {
+        socket = new Socket({ url }).connect();
+        socket.close();
+        socket.socket.emit('error', new Error('oh no!'));
+        socket.once('close', () => done());
+    });
+
     describe('sending packets', () => {
         let ws;
         let next, reset;
