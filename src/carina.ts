@@ -5,8 +5,8 @@ export class Carina {
      * Set the websocket implementation.
      * You will likely not need to set this in a browser environment.
      * You will not need to set this if WebSocket is globally available.
-     * 
-     * @example 
+     *
+     * @example
      * Carina.WebSocket = require('ws');
      */
     public static set WebSocket(ws: any) {
@@ -17,22 +17,7 @@ export class Carina {
         return ConstellationSocket.WebSocket;
     }
 
-    /**
-     * Set the Promise implementation.
-     * You will not need to set this if Promise is globally available.
-     * 
-     * @example 
-     * Carina.Promise = require('bluebird');
-     */
-    public static set Promise(promise: any) {
-        ConstellationSocket.Promise = promise;
-    }
-
-    public static get Promise() {
-        return ConstellationSocket.Promise;
-    }
-
-    public socket;
+    public socket: ConstellationSocket;
 
     private waiting: { [key: string]: Promise<any> } = {};
     private subscriptions: string[] = [];
@@ -41,9 +26,29 @@ export class Carina {
         this.socket = new ConstellationSocket(options);
 
         // Resub to live events on reconnect.
-        this.socket.on('reopen', () => {
-            this.socket.execute('livesubscribe', { events: this.subscriptions });
+        this.socket.on('open', () => {
+            if (this.subscriptions.length > 0) {
+                this.socket.execute(
+                    'livesubscribe',
+                    { events: this.subscriptions }
+                );
+            }
         });
+    }
+
+    /**
+     * Boots the connection to constellation.
+     */
+    public open(): Carina {
+        this.socket.connect();
+        return this;
+    }
+
+    /**
+     * Frees resources associated with the Constellation connection.
+     */
+    public close() {
+        this.socket.close();
     }
 
     /**
@@ -53,7 +58,7 @@ export class Carina {
 
     /**
      * Subscribe to a live event
-     * 
+     *
      * @param {string} slug
      * @param {onSubscriptionCb} cb - Called each time we receive an event for this slug.
      * @returns {Promise.<>} Resolves once subscribed. Any errors will reject.
@@ -81,7 +86,7 @@ export class Carina {
 
     /**
      * Unsubscribe from a live event.
-     * 
+     *
      * @param {string} slug
      * @returns {Promise.<>} Resolves once unsubscribed. Any errors will reject.
      */

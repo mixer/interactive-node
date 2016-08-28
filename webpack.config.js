@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-    entry: './index.ts',
+    entry: './src',
     devtool: 'source-map',
     output: {
-        path: '../dist',
+        path: './dist',
         filename: 'carina.js',
         library: 'carina',
         libraryTarget: 'umd',
@@ -14,6 +14,7 @@ module.exports = {
     },
     module: {
         loaders: [
+            { test: /\.json$/, loaders: ['json'] },
             { test: /\.ts$/, loader: 'ts-loader' },
         ]
     },
