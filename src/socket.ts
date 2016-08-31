@@ -146,6 +146,7 @@ export class ConstellationSocket extends EventEmitter {
         }
 
         this.socket = new ConstellationSocket.WebSocket(url, protocol, extras);
+        this.socket.binaryType = 'arraybuffer';
         this.state = State.Connecting;
 
         this.rebroadcastEvent('open');

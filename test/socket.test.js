@@ -72,6 +72,28 @@ describe('socket', () => {
         socket.once('close', () => done());
     });
 
+    it('decodes gzipped frames', done => {
+        const actual = new Buffer([31, 139, 8, 0, 0, 9, 110, 136, 0, 255, 170,
+            86, 42, 169, 44, 72, 85, 178, 82, 74, 45, 75, 205, 43, 81, 210,
+            129, 210, 86, 74, 25, 169, 57, 57, 249, 74, 58, 74, 41, 137, 37,
+            137, 74, 86, 213, 74, 137, 165, 37, 25, 169, 121, 37, 153, 201,
+            137, 37, 169, 41, 74, 86, 37, 69, 165, 169, 181, 181, 128, 0,
+            0, 0, 255, 255, 192, 5, 171, 17, 62, 0, 0, 0
+        ]);
+
+        socket = new Socket({ url }).connect();
+
+        socket.once('event:hello', data => {
+            expect(data).to.deep.equal({ authenticated: true });
+            done();
+        });
+
+        server.once('connection', _ws => {
+            ws = _ws;
+            ws.send(actual);
+        });
+    });
+
     describe('sending packets', () => {
         let ws;
         let next, reset;
