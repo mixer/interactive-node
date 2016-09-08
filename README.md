@@ -32,7 +32,7 @@ npm i --save carina
 
 #### app.js
 ```js
-var ca = new carina.Carina();
+var ca = new carina.Carina().open();
 ca.subscribe('channel:1:update', function (data) {
     console.log('Channel update', data);
 });
@@ -48,7 +48,7 @@ Carina.WebSocket = ws;
 
 // Note: You MUST set isBot if the client is
 // an automated bot and you are NOT authing.
-const ca = new Carina({ isBot: true });
+const ca = new Carina({ isBot: true }).open();
 ca.subscribe('channel:1:update', data => {
     console.log('Channel update', data);
 });
@@ -61,7 +61,7 @@ import * as ws from 'ws';
 
 Carina.WebSocket = ws;
 
-const ca = new Carina({ isBot: true });
+const ca = new Carina({ isBot: true }).open();
 ca.subscribe<ChannelUpdate>('channel:1:update', data => {
     console.log('Channel update', data);
 });
