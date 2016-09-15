@@ -37,6 +37,13 @@ export class Carina {
     }
 
     /**
+     * Sets the given options on the socket.
+     */
+    public setOptions(options: SocketOptions) {
+        this.socket.setOptions(options);
+    }
+
+    /**
      * Boots the connection to constellation.
      */
     public open(): Carina {

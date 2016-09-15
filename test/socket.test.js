@@ -235,7 +235,7 @@ describe('socket', () => {
                 const start = Date.now();
                 socket.once('close', () => {
                     expect(Date.now() - start).to.be.within(150, 250);
-                    expect(socket.state).to.equal(2);
+                    expect(socket.state).to.equal(5);
                     done();
                 });
             });

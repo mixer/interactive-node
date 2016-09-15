@@ -82,6 +82,10 @@ export enum State {
     Connected,
     // the socket is gracefully closing; after this it will become Idle
     Closing,
+    // the socket is reconnecting after closing unexpectedly
+    Reconnecting,
+    // connect was called whilst the old socket was still open
+    Refreshing,
 }
 
 function getDefaults(): SocketOptions {
@@ -112,17 +116,51 @@ export class ConstellationSocket extends EventEmitter {
     constructor(options: SocketOptions = {}) {
         super();
         this.setMaxListeners(Infinity);
+        this.setOptions(options);
 
-        if (options.jwt && options.authToken) {
-            throw new Error('Cannot connect to Constellation with both JWT and OAuth token.');
-        }
         if (ConstellationSocket.WebSocket === undefined) {
             throw new Error('Cannot find a websocket implementation; please provide one by ' +
                 'running ConstellationSocket.WebSocket = myWebSocketModule;')
         }
 
-        this.options = Object.assign(getDefaults(), options);
         this.on('message', msg => this.extractMessage(msg.data));
+        this.on('open', () => this.schedulePing());
+
+        this.on('event:hello', () => {
+            this.options.reconnectionPolicy.reset();
+            this.state = State.Connected;
+            this.queue.forEach(data => this.send(data));
+        });
+
+        this.on('close', err => {
+            if (this.state === State.Refreshing) {
+                this.state = State.Idle;
+                this.connect();
+                return;
+            }
+
+            if (this.state === State.Closing || !this.options.autoReconnect) {
+                this.state = State.Idle;
+                return;
+            }
+
+            this.state = State.Reconnecting;
+            this.reconnectTimeout = setTimeout(() => {
+                this.connect();
+            }, this.options.reconnectionPolicy.next());
+        });
+    }
+
+    /**
+     * Set the given options.
+     * Defaults and previous option values will be used if not supplied.
+     */
+    setOptions(options: SocketOptions) {
+        this.options = Object.assign({}, this.options || getDefaults(), options);
+
+        if (this.options.jwt && this.options.authToken) {
+            throw new Error('Cannot connect to Constellation with both JWT and OAuth token.');
+        }
     }
 
     /**
@@ -130,6 +168,11 @@ export class ConstellationSocket extends EventEmitter {
      * connect when creating a new instance.
      */
     public connect(): ConstellationSocket {
+        if (this.state === State.Closing) {
+            this.state = State.Refreshing;
+            return;
+        }
+
         const protocol = this.options.gzip ? 'cnstl-gzip' : 'cnstl';
         const extras = {
             headers: {
@@ -147,6 +190,7 @@ export class ConstellationSocket extends EventEmitter {
 
         this.socket = new ConstellationSocket.WebSocket(url, protocol, extras);
         this.socket.binaryType = 'arraybuffer';
+
         this.state = State.Connecting;
 
         this.rebroadcastEvent('open');
@@ -159,30 +203,6 @@ export class ConstellationSocket extends EventEmitter {
             } else {
                 this.emit('error', err);
             }
-        });
-
-        this.once('open', () => this.schedulePing());
-
-        this.once('event:hello', () => {
-            if (this.state !== State.Connecting) { // may have been closed just now
-                return;
-            }
-
-            this.options.reconnectionPolicy.reset();
-            this.state = State.Connected;
-            this.queue.forEach(data => this.send(data));
-        });
-
-        this.once('close', err => {
-            if (this.state === State.Closing || !this.options.autoReconnect) {
-                this.state = State.Idle;
-                return;
-            }
-
-            this.state = State.Connecting;
-            this.reconnectTimeout = setTimeout(() => {
-                this.connect();
-            }, this.options.reconnectionPolicy.next());
         });
 
         return this;
@@ -200,9 +220,14 @@ export class ConstellationSocket extends EventEmitter {
      * Close gracefully shuts down the websocket.
      */
     public close() {
+        if (this.state === State.Reconnecting) {
+            clearTimeout(this.reconnectTimeout);
+            this.state = State.Idle;
+            return;
+        }
+
         this.state = State.Closing;
         this.socket.close();
-        clearTimeout(this.reconnectTimeout);
 
         this.queue.forEach(packet => packet.cancel());
         this.queue.clear();
