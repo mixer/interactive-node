@@ -199,10 +199,11 @@ export class ConstellationSocket extends EventEmitter {
 
         this.socket.addEventListener('error', err => {
             if (this.state === State.Closing) {
-                this.emit('close');
-            } else {
-                this.emit('error', err);
+                // Ignore errors on a closing socket.
+                return;
             }
+
+            this.emit('error', err);
         });
 
         return this;
