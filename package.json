@@ -38,7 +38,6 @@
     "ws": "^1.1.1"
   },
   "dependencies": {
-    "@types/core-js": "^0.9.34",
     "@types/node": "^6.0.45",
     "@types/pako": "^0.2.31",
     "pako": "^1.0.3"
