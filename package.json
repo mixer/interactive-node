@@ -1,6 +1,6 @@
 {
   "name": "carina",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "A NodeJS and Browser compatible client for Beam.pro's constellation socket.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
