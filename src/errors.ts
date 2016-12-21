@@ -77,29 +77,29 @@ export module ConstellationError {
 
     export class LiveUnknownEvent extends Base {
         constructor(message: string) {
-            super(4100, message);
+            super(4106, message);
         }
     }
-    errors[4100] = LiveUnknownEvent;
+    errors[4106] = LiveUnknownEvent;
 
     export class LiveAccessDenied extends Base {
         constructor(message: string) {
-            super(4101, message);
+            super(4107, message);
         }
     }
-    errors[4101] = LiveAccessDenied;
+    errors[4107] = LiveAccessDenied;
 
     export class LiveAlreadySubscribed extends Base {
         constructor(message: string) {
-            super(4102, message);
+            super(4108, message);
         }
     }
-    errors[4102] = LiveAlreadySubscribed;
+    errors[4108] = LiveAlreadySubscribed;
 
     export class LiveNotSubscribed extends Base {
         constructor(message: string) {
-            super(4103, message);
+            super(4109, message);
         }
     }
-    errors[4103] = LiveNotSubscribed;
+    errors[4109] = LiveNotSubscribed;
 }
