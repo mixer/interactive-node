@@ -18,39 +18,24 @@ const maxInt32 = 0xFFFFFFFF;
 
 export type PacketType = 'method' | 'reply';
 
-export interface IPacket {
-    id: number;
-    type: PacketType;
-}
-
 export interface IRawValues {
     [key: string]: any;
 }
 
-export interface IMethod extends IPacket {
-    readonly method: string;
-    readonly params: IRawValues;
-    readonly discard?: boolean;
-}
-
-export interface IReply extends IPacket {
-    readonly result: null | IRawValues;
-    readonly error: null | InteractiveError.Base;
-}
-
 
 /**
- * A Packet is a wrapped Method or Reply that can be sent over the wire
+ * A Packet is a wrapped Method that can be sent over the wire, it is wrapped for timing and
+ * cancellation.
  */
 export class Packet extends EventEmitter {
     private state: PacketState = PacketState.Pending;
     private timeout: number;
 
-    private data: Method;
+    private method: Method;
 
-    constructor(data: Method) {
+    constructor(method: Method) {
         super();
-        this.data = data;
+        this.method = method;
     }
 
     /**
@@ -58,7 +43,7 @@ export class Packet extends EventEmitter {
      * @return {number}
      */
     id(): number {
-        return this.data.id;
+        return this.method.id;
     }
 
     /**
@@ -73,7 +58,7 @@ export class Packet extends EventEmitter {
      * toJSON implements is called in JSON.stringify.
      */
     toJSON(): IRawValues {
-        return this.data;
+        return this.method;
     }
 
     /**
@@ -108,9 +93,9 @@ export class Packet extends EventEmitter {
     }
 }
 
-export class Method implements IMethod {
+export class Method {
     public id;
-    public type = <PacketType> 'method';
+    public type = 'method';
 
     constructor(
         public method: string,
@@ -130,14 +115,17 @@ export class Method implements IMethod {
     }
 }
 
-export class Reply implements IReply {
-    public type = <PacketType> 'reply';
+export class Reply {
+    public type = 'reply';
     constructor(
         public id: number,
         public result: IRawValues = null,
         public error = null
     ) {}
 
+    /**
+     * Constructs a Reply packet from raw values coming in from a socket
+     */
     public static fromSocket(message: any): Reply {
         let err = message.error ? InteractiveError.from(message.error) : null;
         const reply = new Reply(message.id, message.result, message.error);
@@ -145,6 +133,9 @@ export class Reply implements IReply {
         return reply;
     }
 
+    /**
+     * Construct a reply packet that indicates an error
+     */
     public static fromError(id: number, error: InteractiveError.Base) {
         return new Reply(id, null, error);
     }
