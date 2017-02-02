@@ -15,7 +15,6 @@ export class Client {
      * Carina.WebSocket = require('ws');
      */
     public static set WebSocket(ws: any) {
-        console.log('bloop');
         ConstellationSocket.WebSocket = ws;
     }
 
