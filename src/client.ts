@@ -1,3 +1,5 @@
+import { EventEmitter } from 'events';
+
 import { CompressionScheme, ConstellationSocket, SocketOptions } from './socket';
 
 export enum InteractiveState {
@@ -5,7 +7,7 @@ export enum InteractiveState {
     Ready = 2
 }
 
-export class Client {
+export class Client extends EventEmitter {
     /**
      * Set the websocket implementation.
      * You will likely not need to set this in a browser environment.
@@ -27,7 +29,12 @@ export class Client {
     private waiting: { [key: string]: Promise<any> } = {};
 
     constructor(options: SocketOptions = {}) {
+        super();
         this.socket = new ConstellationSocket(options);
+
+        this.socket.on('method:onReady', res => {
+            this.emit('ready', res.isReady);
+        })
     }
 
     /**

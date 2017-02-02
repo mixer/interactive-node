@@ -293,6 +293,12 @@ export class ConstellationSocket extends EventEmitter {
         this.schedulePing();
 
         switch (message.type) {
+        case 'method':
+            //A discard is an optional message
+            if (message.discard) {
+                this.emit(`method:${message.method}`, message.params);
+            }
+            break;
         case 'event':
             this.emit(`event:${message.event}`, message.data);
             break;
