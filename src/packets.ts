@@ -33,7 +33,7 @@ export interface IError {
 }
 
 export interface IReply extends IPacket {
-    result: null | { [key: string]: any };
+    result: null | { [key: string]: any }
     error: null | ConstellationError.Base;
 }
 
@@ -122,11 +122,14 @@ export class Method extends Packet {
     }
 }
 
-export class Reply implements IReply {
-    public type: 'reply';
-    constructor(
-        public id: number,
-        public result: { [key: string]: any } = null,
-        public error = null
-    ) {}
+export class Reply extends Packet {
+    constructor(id: number, result: { [key: string]: any } = null, error = null) {
+        const replyData: IReply = {
+            id,
+            type: 'reply',
+            result,
+            error,
+        };
+        super(replyData);
+    }
 }
