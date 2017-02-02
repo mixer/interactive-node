@@ -1,3 +1,4 @@
+import { onReadyParams } from './methodTypes';
 import { ConstellationError } from './errors';
 import { EventEmitter } from 'events';
 import { MethodHandlerManager } from './methodhandler';
@@ -11,6 +12,7 @@ export enum InteractiveState {
 }
 
 export class Client extends EventEmitter {
+    public ready = false;
     public methodHandler = new MethodHandlerManager();
     /**
      * Set the websocket implementation.
@@ -47,6 +49,20 @@ export class Client extends EventEmitter {
                 .catch(only(ConstellationError.Base, err => {
                     this.socket.reply(Reply.fromError(method.id, err));
                 }));
+        });
+
+        this.methodHandler.addHandler('onReady', readyMethod => {
+            const params = <onReadyParams> readyMethod.params;
+
+            this.ready = params.isReady;
+
+            this.emit('ready', this.ready);
+            return Promise.resolve(null);
+        });
+
+        this.on('ready', ready => {
+            if (!ready) return;
+            this.getScenes();
         });
     }
 
@@ -90,5 +106,9 @@ export class Client extends EventEmitter {
         }).then(res => {
             this.socket.setOptions({compressionScheme: <CompressionScheme> res.scheme});
         }).then(res => undefined);
+    }
+
+    public getScenes() {
+        this.socket.execute('getScenes',)
     }
 }
