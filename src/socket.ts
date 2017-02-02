@@ -205,8 +205,9 @@ export class InteractiveSocket extends EventEmitter {
      * Executes an RPC method on the server. Returns a promise which resolves
      * after it completes, or after a timeout occurs.
      */
-    public execute(method: string, params: IRawValues = {}): Promise<any> {
-        return this.send(new Packet(new Method(method, params, false)));
+    public execute(method: string, params: IRawValues = {}, discard = false): Promise<any> {
+        const methodObj = new Method(method, params, discard);
+        return this.send(new Packet(methodObj));
     }
 
     /**
