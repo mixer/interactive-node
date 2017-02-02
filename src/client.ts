@@ -6,11 +6,6 @@ import { Reply } from './packets';
 import { CompressionScheme, InteractiveSocket, SocketOptions } from './socket';
 import { only } from './util';
 
-export enum InteractiveState {
-    Idle = 1,
-    Ready = 2
-}
-
 export class Client extends EventEmitter {
     public ready = false;
     public methodHandler = new MethodHandlerManager();
@@ -82,7 +77,7 @@ export class Client extends EventEmitter {
     public close() {
         this.socket.close();
     }
-
+    //TODO We probably don't actually need this and stopWaiting
     private waitFor<T>(identifier: string, cb?: () => Promise<T>): Promise<T> {
         if (this.waiting[identifier]) {
             return this.waiting[identifier];
@@ -95,6 +90,7 @@ export class Client extends EventEmitter {
         delete this.waiting[identifier];
     }
 
+    //TODO: Actually implement compression
     public setCompression(preferences: CompressionScheme[]): Promise<void> {
         return this.socket.execute('setCompression', {
             params: preferences,

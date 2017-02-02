@@ -21,14 +21,18 @@ export interface IPacket {
     type: 'method' | 'reply';
 }
 
+export interface IRawValues {
+    [key: string]: any;
+}
+
 export interface IMethod extends IPacket {
     readonly method: string;
-    readonly params: { [key: string]: any }
-    readonly discard?: boolean
+    readonly params: IRawValues;
+    readonly discard?: boolean;
 }
 
 export interface IReply extends IPacket {
-    readonly result: null | { [key: string]: any }
+    readonly result: null | IRawValues;
     readonly error: null | InteractiveError.Base;
 }
 
@@ -66,7 +70,7 @@ export class Packet extends EventEmitter {
     /**
      * toJSON implements is called in JSON.stringify.
      */
-    toJSON(): { [key: string]: any } {
+    toJSON(): IRawValues {
         return this.data;
     }
 
@@ -106,8 +110,8 @@ export class Method implements IMethod {
     public id;
     public type: 'method';
     constructor(
-        public method: string, 
-        public params: { [key: string]: any }, 
+        public method: string,
+        public params: IRawValues,
         public discard?:boolean
     ) {
         this.id = Math.floor(Math.random() * maxInt32);
@@ -118,7 +122,7 @@ export class Method implements IMethod {
         return method;
     }
 
-    public reply(result: { [key: string]: any }, error = null ): Reply {
+    public reply(result: IRawValues, error = null ): Reply {
         return new Reply(this.id(), result, error);
     }
 }
@@ -126,8 +130,8 @@ export class Method implements IMethod {
 export class Reply implements IReply {
     public type: 'reply';
     constructor(
-        public id: number, 
-        public result: { [key: string]: any } = null,
+        public id: number,
+        public result: IRawValues = null,
         public error = null
     ) {}
 

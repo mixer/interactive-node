@@ -1,7 +1,7 @@
 import { TimeoutError, MessageParseError, InteractiveError, CancelledError } from './errors';
 import { ExponentialReconnectionPolicy, ReconnectionPolicy } from './reconnection';
 import { EventEmitter } from 'events';
-import { Packet, PacketState, Method, Reply } from './packets';
+import { IRawValues, Method, Packet, PacketState, Reply } from './packets';
 
 import { timeout, resolveOn } from './util';
 import * as querystring from 'querystring';
@@ -121,7 +121,7 @@ export class InteractiveSocket extends EventEmitter {
      */
     setOptions(options: SocketOptions) {
         this.options = Object.assign({}, this.options || getDefaults(), options);
-
+        //TODO: Clear up auth here later
         if (this.options.jwt && this.options.authToken) {
             throw new Error('Cannot connect to Constellation with both JWT and OAuth token.');
         }
@@ -138,6 +138,7 @@ export class InteractiveSocket extends EventEmitter {
         }
 
         const extras = {
+            //TODO X-Auth-User is temporary, used to mock against while service gets integrated with Beam stack
             headers: {
                 'X-Protocol-Version': '2.0',
                 'X-Auth-User': '{"ID":1, "Username":"connor","XP":100}'
@@ -148,6 +149,7 @@ export class InteractiveSocket extends EventEmitter {
         if (this.options.authToken) {
             extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
         } else if (this.options.jwt) {
+            //TODO: Clear up auth here later
             url += '?' + querystring.stringify({ jwt: this.options.jwt });
         }
 
@@ -201,7 +203,7 @@ export class InteractiveSocket extends EventEmitter {
      * Executes an RPC method on the server. Returns a promise which resolves
      * after it completes, or after a timeout occurs.
      */
-    public execute(method: string, params: { [key: string]: any } = {}): Promise<any> {
+    public execute(method: string, params: IRawValues = {}): Promise<any> {
         return this.send(new Packet(new Method(method, params)));
     }
 
