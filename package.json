@@ -1,7 +1,7 @@
 {
-  "name": "carina",
+  "name": "beam-interactive-2",
   "version": "0.5.4",
-  "description": "A NodeJS and Browser compatible client for Beam.pro's constellation socket.",
+  "description": "Interactive Frontend!",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
@@ -13,18 +13,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WatchBeam/carina.git"
+    "url": "git+https://github.com/WatchBeam/beam-interactive-2.git"
   },
+  "private": true,
   "keywords": [
-    "Constellation",
+    "Interactive",
     "Beam"
   ],
-  "author": "James Birtles <jameshb@beam.pro>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/WatchBeam/carina/issues"
+    "url": "https://github.com/WatchBeam/beam-interactive-2/issues"
   },
-  "homepage": "https://github.com/WatchBeam/carina#readme",
+  "homepage": "https://github.com/WatchBeam/beam-interactive-2#readme",
   "devDependencies": {
     "awesome-typescript-loader": "^2.2.4",
     "chai": "^3.5.0",
