@@ -107,8 +107,4 @@ export class Client extends EventEmitter {
             this.socket.setOptions({compressionScheme: <CompressionScheme> res.scheme});
         }).then(res => undefined);
     }
-
-    public getScenes() {
-        this.socket.execute('getScenes',)
-    }
 }
