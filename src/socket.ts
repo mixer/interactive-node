@@ -89,9 +89,11 @@ export class InteractiveSocket extends EventEmitter {
                 'running ConstellationSocket.WebSocket = myWebSocketModule;')
         }
 
-        this.on('message', msg => this.extractMessage(msg.data));
+        this.on('message', msg => {
+            this.extractMessage(msg.data)
+        });
 
-        this.on('event:hello', () => {
+        this.on('open', () => {
             this.options.reconnectionPolicy.reset();
             this.state = State.Connected;
             this.queue.forEach(data => this.send(data));
@@ -195,7 +197,6 @@ export class InteractiveSocket extends EventEmitter {
 
         this.state = State.Closing;
         this.socket.close();
-
         this.queue.forEach(packet => packet.cancel());
         this.queue.clear();
     }
@@ -205,7 +206,7 @@ export class InteractiveSocket extends EventEmitter {
      * after it completes, or after a timeout occurs.
      */
     public execute(method: string, params: IRawValues = {}): Promise<any> {
-        return this.send(new Packet(new Method(method, params)));
+        return this.send(new Packet(new Method(method, params, false)));
     }
 
     /**

@@ -16,9 +16,11 @@ export enum PacketState {
 
 const maxInt32 = 0xFFFFFFFF;
 
+export type PacketType = 'method' | 'reply';
+
 export interface IPacket {
     id: number;
-    type: 'method' | 'reply';
+    type: PacketType;
 }
 
 export interface IRawValues {
@@ -108,11 +110,12 @@ export class Packet extends EventEmitter {
 
 export class Method implements IMethod {
     public id;
-    public type: 'method';
+    public type = <PacketType> 'method';
+
     constructor(
         public method: string,
         public params: IRawValues,
-        public discard?:boolean
+        public discard: boolean = false,
     ) {
         this.id = Math.floor(Math.random() * maxInt32);
     }
@@ -128,7 +131,7 @@ export class Method implements IMethod {
 }
 
 export class Reply implements IReply {
-    public type: 'reply';
+    public type = <PacketType> 'reply';
     constructor(
         public id: number,
         public result: IRawValues = null,
