@@ -1,0 +1,23 @@
+import * as pako from 'pako';
+import * as varint from 'varint';
+
+interface compressor {
+    inflate(input: string): string;
+    deflate(input: string): string ;
+}
+
+export const compressors:{[key: string]: compressor} = {
+    'gzip': {
+        inflate(input: string) {
+            const prefix: Uint8Array = varint.encode(input.length, new Uint8Array([]));
+            //TODO This is kinda meh
+            console.log(pako.gzip(input));
+            return '';
+        },
+        deflate(input: string) {
+            return '';
+        }
+    }
+}
+
+compressors['gzip'].inflate('psidhfoisdfosdhifdsofisdfois');
