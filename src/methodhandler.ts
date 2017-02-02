@@ -6,7 +6,7 @@ export interface IMethodHandler {
 }
 
 export class MethodHandlerManager {
-    private handlers: {[key: string]: IMethodHandler};
+    private handlers: {[key: string]: IMethodHandler} = {};
 
     public addHandler(method: string, handler: IMethodHandler) {
         this.handlers[method] = handler;
