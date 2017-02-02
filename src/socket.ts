@@ -88,7 +88,6 @@ export class ConstellationSocket extends EventEmitter {
         }
 
         this.on('message', msg => this.extractMessage(msg.data));
-        this.on('open', () => this.schedulePing());
 
         this.on('event:hello', () => {
             this.options.reconnectionPolicy.reset();
@@ -297,9 +296,6 @@ export class ConstellationSocket extends EventEmitter {
             throw new MessageParseError('Message returned was not valid JSON');
         }
 
-        // Bump the ping timeout whenever we get a message reply.
-        // this.schedulePing();
-
         switch (message.type) {
         case 'method':
             //A discard is an optional message
@@ -319,29 +315,4 @@ export class ConstellationSocket extends EventEmitter {
     private rebroadcastEvent(name: string) {
         this.socket.addEventListener(name, evt => this.emit(name, evt));
     }
-
-    // private schedulePing() {
-    //     clearTimeout(this.pingTimeout);
-
-    //     this.pingTimeout = setTimeout(() => {
-    //         if (this.state !== State.Connected) {
-    //             return;
-    //         }
-
-    //         const packet = new Packet('ping', null);
-    //         const timeout = this.options.replyTimeout;
-
-    //         setTimeout(() => {
-    //             this.sendPacketInner(packet);
-    //             this.emit('ping');
-    //         });
-
-    //         return Promise.race([
-    //             resolveOn(this, `reply:${packet.id()}`, timeout),
-    //             resolveOn(this, 'close', timeout + 1),
-    //         ])
-    //         .then(() => this.emit('pong'))
-    //         .catch(err => this.socket.close());
-    //     }, this.options.pingInterval);
-    // }
 }
