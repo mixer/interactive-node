@@ -1,4 +1,4 @@
-import { ConstellationError } from './errors';
+import { InteractiveError } from './errors';
 import { Method, Reply } from './packets';
 
 export interface IMethodHandler {
@@ -31,7 +31,7 @@ export class MethodHandlerManager {
         if (method.discard) {
             return Promise.resolve(null);
         } else {
-            return Promise.reject(new ConstellationError.UnknownMethodName(''));
+            return Promise.reject(new InteractiveError.UnknownMethodName(''));
         }
     }
 }

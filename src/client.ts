@@ -1,9 +1,9 @@
 import { onReadyParams } from './methodTypes';
-import { ConstellationError } from './errors';
+import { InteractiveError } from './errors';
 import { EventEmitter } from 'events';
 import { MethodHandlerManager } from './methodhandler';
 import { Reply } from './packets';
-import { CompressionScheme, ConstellationSocket, SocketOptions } from './socket';
+import { CompressionScheme, InteractiveSocket, SocketOptions } from './socket';
 import { only } from './util';
 
 export enum InteractiveState {
@@ -20,23 +20,23 @@ export class Client extends EventEmitter {
      * You will not need to set this if WebSocket is globally available.
      *
      * @example
-     * Carina.WebSocket = require('ws');
+     * client.WebSocket = require('ws');
      */
     public static set WebSocket(ws: any) {
-        ConstellationSocket.WebSocket = ws;
+        InteractiveSocket.WebSocket = ws;
     }
 
     public static get WebSocket() {
-        return ConstellationSocket.WebSocket;
+        return InteractiveSocket.WebSocket;
     }
 
-    public socket: ConstellationSocket;
+    public socket: InteractiveSocket;
 
     private waiting: { [key: string]: Promise<any> } = {};
 
     constructor(options: SocketOptions = {}) {
         super();
-        this.socket = new ConstellationSocket(options);
+        this.socket = new InteractiveSocket(options);
 
         this.socket.on('method', method => {
             this.methodHandler
@@ -46,7 +46,7 @@ export class Client extends EventEmitter {
                         this.socket.reply(reply);
                     }
                 })
-                .catch(only(ConstellationError.Base, err => {
+                .catch(only(InteractiveError.Base, err => {
                     this.socket.reply(Reply.fromError(method.id, err));
                 }));
         });
@@ -58,11 +58,6 @@ export class Client extends EventEmitter {
 
             this.emit('ready', this.ready);
             return Promise.resolve(null);
-        });
-
-        this.on('ready', ready => {
-            if (!ready) return;
-            this.getScenes();
         });
     }
 

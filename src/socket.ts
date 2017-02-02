@@ -1,4 +1,4 @@
-import { TimeoutError, MessageParseError, ConstellationError, CancelledError } from './errors';
+import { TimeoutError, MessageParseError, InteractiveError, CancelledError } from './errors';
 import { ExponentialReconnectionPolicy, ReconnectionPolicy } from './reconnection';
 import { EventEmitter } from 'events';
 import { Packet, PacketState, Method, Reply } from './packets';
@@ -66,7 +66,7 @@ function getDefaults(): SocketOptions {
     };
 }
 
-export class ConstellationSocket extends EventEmitter {
+export class InteractiveSocket extends EventEmitter {
     // WebSocket constructor, may be overridden if the environment
     // does not natively support it.
     public static WebSocket: any = typeof WebSocket === 'undefined' ? null : WebSocket;
@@ -83,7 +83,7 @@ export class ConstellationSocket extends EventEmitter {
         this.setMaxListeners(Infinity);
         this.setOptions(options);
 
-        if (ConstellationSocket.WebSocket === undefined) {
+        if (InteractiveSocket.WebSocket === undefined) {
             throw new Error('Cannot find a websocket implementation; please provide one by ' +
                 'running ConstellationSocket.WebSocket = myWebSocketModule;')
         }
@@ -131,7 +131,7 @@ export class ConstellationSocket extends EventEmitter {
      * Open a new socket connection. By default, the socket will auto
      * connect when creating a new instance.
      */
-    public connect(): ConstellationSocket {
+    public connect(): InteractiveSocket {
         if (this.state === State.Closing) {
             this.state = State.Refreshing;
             return;
@@ -151,7 +151,7 @@ export class ConstellationSocket extends EventEmitter {
             url += '?' + querystring.stringify({ jwt: this.options.jwt });
         }
         console.log(url);
-        this.socket = new ConstellationSocket.WebSocket(url, extras);
+        this.socket = new InteractiveSocket.WebSocket(url, extras);
         this.socket.binaryType = 'arraybuffer';
 
         this.state = State.Connecting;

@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { ConstellationError } from './errors';
+import { InteractiveError } from './errors';
 
 
 export enum PacketState {
@@ -29,7 +29,7 @@ export interface IMethod extends IPacket {
 
 export interface IReply extends IPacket {
     readonly result: null | { [key: string]: any }
-    readonly error: null | ConstellationError.Base;
+    readonly error: null | InteractiveError.Base;
 }
 
 
@@ -132,13 +132,13 @@ export class Reply implements IReply {
     ) {}
 
     public static fromSocket(message: any): Reply {
-        let err = message.error ? ConstellationError.from(message.error) : null;
+        let err = message.error ? InteractiveError.from(message.error) : null;
         const reply = new Reply(message.id, message.result, message.error);
         // TODO do we need a new state here?
         return reply;
     }
 
-    public static fromError(id: number, error: ConstellationError.Base) {
+    public static fromError(id: number, error: InteractiveError.Base) {
         return new Reply(id, null, error);
     }
 }
