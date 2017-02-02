@@ -150,7 +150,7 @@ export class InteractiveSocket extends EventEmitter {
         } else if (this.options.jwt) {
             url += '?' + querystring.stringify({ jwt: this.options.jwt });
         }
-        console.log(url);
+
         this.socket = new InteractiveSocket.WebSocket(url, extras);
         this.socket.binaryType = 'arraybuffer';
 
