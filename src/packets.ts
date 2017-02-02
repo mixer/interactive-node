@@ -14,28 +14,41 @@ export enum PacketState {
 
 const maxInt32 = 0xFFFFFFFF;
 
+export interface IPacket {
+    id: number;
+    type: 'method' | 'reply';
+}
+
+export interface IMethod extends IPacket {
+    method: string;
+    params: { [key: string]: any }
+    discard?: boolean
+}
+
+export interface IError {
+    code: number;
+    message: string;
+    path: string;
+}
+
+export interface IReply extends IPacket {
+    result: null | { [key: string]: any }
+    error: null | IError
+}
+
+
 /**
  * A Packet is a data type that can be sent over the wire to Constellation.
  */
 export class Packet extends EventEmitter {
     private state: PacketState = PacketState.Pending;
     private timeout: number;
-    private data: {
-        type: 'method',
-        id: number,
-        method: string,
-        discard?: boolean,
-        params: { [key: string]: any }
-    };
 
-    constructor(private method: string, private params: { [key: string]: any }) {
+    private data: IPacket;
+
+    constructor(data: IPacket) {
         super();
-        this.data = {
-            id: Math.floor(Math.random() * maxInt32),
-            type: 'method',
-            method,
-            params,
-        };
+        this.data = data;
     }
 
     /**
@@ -93,9 +106,29 @@ export class Packet extends EventEmitter {
     }
 }
 
+export class Method extends Packet {
+    constructor(method: string, params: { [key: string]: any }, discard?:boolean) {
+        const methodData: IMethod = {
+            type: 'method',
+            method,
+            params,
+            id: Math.floor(Math.random() * maxInt32),
+        };
+        if (discard) {
+            methodData.discard = discard;
+        }
+        super(methodData);
+    }
+}
 
-/**
- * Call represents a Constellation method call.
- */
-export class Call extends Packet {
+export class Reply extends Packet {
+    constructor(id: number, result: { [key: string]: any } = null, error = null) {
+        const replyData: IReply = {
+            id,
+            type: 'reply',
+            result,
+            error,
+        };
+        super(replyData);
+    }
 }
