@@ -1,6 +1,9 @@
+import { ConstellationError } from './errors';
 import { EventEmitter } from 'events';
-
+import { MethodHandlerManager } from './methodhandler';
+import { Reply } from './packets';
 import { CompressionScheme, ConstellationSocket, SocketOptions } from './socket';
+import { only } from './util';
 
 export enum InteractiveState {
     Idle = 1,
@@ -8,6 +11,7 @@ export enum InteractiveState {
 }
 
 export class Client extends EventEmitter {
+    public methodHandler = new MethodHandlerManager();
     /**
      * Set the websocket implementation.
      * You will likely not need to set this in a browser environment.
@@ -32,9 +36,18 @@ export class Client extends EventEmitter {
         super();
         this.socket = new ConstellationSocket(options);
 
-        this.socket.on('method:onReady', res => {
-            this.emit('ready', res.isReady);
-        })
+        this.socket.on('method', method => {
+            this.methodHandler
+                .handle(method)
+                .then(reply => {
+                    if (reply) {
+                        this.socket.reply(reply);
+                    }
+                })
+                .catch(only(ConstellationError.Base, err => {
+                    this.socket.reply(Reply.fromError(method.id, err));
+                }));
+        });
     }
 
     /**

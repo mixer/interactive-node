@@ -45,3 +45,28 @@ export function timeout (message: string, delay: number): Promise<void> {
         setTimeout(() => reject(err), delay);
     });
 }
+/**
+ * Returns a function that calls the wrapped function with only instances of
+ * the provided class, and throws them otherwise. This is meant to be used
+ * inside `.catch` blocks of promises.
+ * 
+ * Imported from frontend2
+ *
+ * @example
+ * // Surpress an error
+ * return foo.catch(only(AlreadyExistsErrror));
+ * // Handle a error
+ * return foo.catch(only(AdapterResponseError, err => alert(err.toLocaleString())));
+ */
+export function only<T extends Error, U>(
+    cls: { new(...args: any[]): T },
+    handler: (err: T) => U = () => null,
+): (err: any) => U {
+    return err => {
+        if (!(err instanceof cls)) {
+            throw err;
+        }
+
+        return handler(err);
+    };
+}

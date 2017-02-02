@@ -27,12 +27,6 @@ export interface IMethod extends IPacket {
     readonly discard?: boolean
 }
 
-export interface IError {
-    code: number;
-    message: string;
-    path: string;
-}
-
 export interface IReply extends IPacket {
     readonly result: null | { [key: string]: any }
     readonly error: null | ConstellationError.Base;
@@ -46,9 +40,9 @@ export class Packet extends EventEmitter {
     private state: PacketState = PacketState.Pending;
     private timeout: number;
 
-    protected data: Method | Reply;
+    private data: Method;
 
-    constructor(data: Method | Reply) {
+    constructor(data: Method) {
         super();
         this.data = data;
     }
@@ -142,5 +136,9 @@ export class Reply implements IReply {
         const reply = new Reply(message.id, message.result, message.error);
         // TODO do we need a new state here?
         return reply;
+    }
+
+    public static fromError(id: number, error: ConstellationError.Base) {
+        return new Reply(id, null, error);
     }
 }

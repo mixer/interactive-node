@@ -18,7 +18,7 @@ export class MessageParseError extends BaseError {
 
 export module ConstellationError {
     export class Base extends BaseError {
-        constructor(public code: number, message: string) {
+        constructor(public code: number, message: string, public path: string = '') {
             super(message);
         }
     }

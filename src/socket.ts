@@ -265,7 +265,15 @@ export class ConstellationSocket extends EventEmitter {
         return promise;
     }
 
+    public reply(reply :Reply) {
+        this.sendRaw(reply);
+    }
+
     private sendPacketInner(packet: Packet) {
+        this.sendRaw(packet);
+    }
+
+    private sendRaw(packet: any) {
         const data = JSON.stringify(packet);
         const payload = data;
 
@@ -295,7 +303,7 @@ export class ConstellationSocket extends EventEmitter {
         switch (message.type) {
         case 'method':
             //A discard is an optional message
-            this.emit(`method:${message.method}`, Method.fromSocket(message));
+            this.emit('method', Method.fromSocket(message));
             break;
         case 'event':
             this.emit(`event:${message.event}`, message.data);
