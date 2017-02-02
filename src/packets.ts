@@ -128,8 +128,7 @@ export class Reply {
      */
     public static fromSocket(message: any): Reply {
         let err = message.error ? InteractiveError.from(message.error) : null;
-        const reply = new Reply(message.id, message.result, message.error);
-        // TODO do we need a new state here?
+        const reply = new Reply(message.id, message.result, err);
         return reply;
     }
 
