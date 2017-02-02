@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { ConstellationError } from './errors';
 
 export enum PacketState {
     // The packet has not been sent yet, it may be queued for later sending
@@ -32,8 +33,8 @@ export interface IError {
 }
 
 export interface IReply extends IPacket {
-    result: null | { [key: string]: any }
-    error: null | IError
+    result: null | { [key: string]: any };
+    error: null | ConstellationError.Base;
 }
 
 
@@ -121,14 +122,11 @@ export class Method extends Packet {
     }
 }
 
-export class Reply extends Packet {
-    constructor(id: number, result: { [key: string]: any } = null, error = null) {
-        const replyData: IReply = {
-            id,
-            type: 'reply',
-            result,
-            error,
-        };
-        super(replyData);
-    }
+export class Reply implements IReply {
+    public type: 'reply';
+    constructor(
+        public id: number,
+        public result: { [key: string]: any } = null,
+        public error = null
+    ) {}
 }

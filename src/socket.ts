@@ -1,7 +1,7 @@
 import { TimeoutError, MessageParseError, ConstellationError, CancelledError } from './errors';
 import { ExponentialReconnectionPolicy, ReconnectionPolicy } from './reconnection';
 import { EventEmitter } from 'events';
-import { Packet, PacketState } from './packets';
+import { Packet, PacketState, Method, Reply } from './packets';
 
 import { timeout, resolveOn } from './util';
 import * as querystring from 'querystring';
@@ -202,7 +202,7 @@ export class ConstellationSocket extends EventEmitter {
      * after it completes, or after a timeout occurs.
      */
     public execute(method: string, params: { [key: string]: any } = {}): Promise<any> {
-        return this.send(new Packet(method, params));
+        return this.send(new Method(method, params));
     }
 
     /**
@@ -304,7 +304,7 @@ export class ConstellationSocket extends EventEmitter {
             break;
         case 'reply':
             let err = message.error ? ConstellationError.from(message.error) : null;
-            this.emit(`reply:${message.id}`, { err, result: message.result });
+            this.emit(`reply:${message.id}`, new Reply(message.id, message.result, message.error));
             break;
         default:
             throw new MessageParseError(`Unknown message type "${message.type}"`);
