@@ -68,38 +68,82 @@ export module ConstellationError {
     }
     errors[4004] = InvalidMethodArguments;
 
-    export class SessionExpired extends Base {
+    export class EtagMismatch extends Base {
         constructor(message: string) {
             super(4005, message);
         }
     }
-    errors[4005] = SessionExpired;
+    errors[4005] = EtagMismatch;
 
-    export class LiveUnknownEvent extends Base {
+    export class InvalidTransactionId extends Base {
         constructor(message: string) {
-            super(4106, message);
+            super(4007, message);
         }
     }
-    errors[4106] = LiveUnknownEvent;
+    
+    errors[4007] = InvalidTransactionId;
 
-    export class LiveAccessDenied extends Base {
+    export class NotEnoughSparks extends Base {
         constructor(message: string) {
-            super(4107, message);
+            super(4008, message);
         }
     }
-    errors[4107] = LiveAccessDenied;
+    
+    errors[4008] = NotEnoughSparks;
 
-    export class LiveAlreadySubscribed extends Base {
+    export class UnknownGroup extends Base {
         constructor(message: string) {
-            super(4108, message);
+            super(4009, message);
         }
     }
-    errors[4108] = LiveAlreadySubscribed;
 
-    export class LiveNotSubscribed extends Base {
+    errors[4009] = UnknownGroup;
+
+    export class GroupAlreadyExists extends Base {
         constructor(message: string) {
-            super(4109, message);
+            super(4010, message);
         }
     }
-    errors[4109] = LiveNotSubscribed;
+    
+    errors[4010] = GroupAlreadyExists;
+
+    export class UnknownSceneId extends Base {
+        constructor(message: string) {
+            super(4011, message);
+        }
+    }
+    
+    errors[4011] = UnknownSceneId;
+
+    export class SceneAlreadyExists extends Base {
+        constructor(message: string) {
+            super(4012, message);
+        }
+    }
+    
+    errors[4012] = SceneAlreadyExists;
+
+    export class UnkownControlId extends Base {
+        constructor(message: string) {
+            super(4013, message);
+        }
+    }
+    
+    errors[4013] = UnkownControlId;
+
+    export class ControlAlreadyExists extends Base {
+        constructor(message: string) {
+            super(4014, message);
+        }
+    }
+    
+    errors[4014] = ControlAlreadyExists;
+
+    export class UnkownControlType extends Base {
+        constructor(message: string) {
+            super(4015, message);
+        }
+    }
+    
+    errors[4015] = UnkownControlType;
 }

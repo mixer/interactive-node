@@ -7,45 +7,13 @@ import { timeout, resolveOn } from './util';
 import * as querystring from 'querystring';
 import * as pako from 'pako';
 
-const pkg = require('../package.json');
-
-/**
- * The GzipDetector is used to determine whether packets should be compressed
- * before sending to Constellation.
- */
-export interface GzipDetector {
-    /**
-     * shouldZip returns true if the packet, encoded as a string, should
-     * be gzipped before sending to Constellation.
-     * @param {string} packet `raw` encoded as a string
-     * @param {any}    raw    the JSON-serializable object to be sent
-     */
-    shouldZip(packet: string, raw: any);
-}
-
-/**
- * SizeThresholdGzipDetector is a GzipDetector which zips all packets longer
- * than a certain number of bytes.
- */
-export class SizeThresholdGzipDetector implements GzipDetector {
-    constructor(private threshold: number) {}
-
-    shouldZip(packet: string, raw: { [key: string]: any }) {
-        return packet.length > this.threshold;
-    }
-}
+//We don't support lz4 due to time constraints right now
+export type CompressionScheme = 'none' | 'gzip';
 
 /**
  * SocketOptions are passed to the
  */
 export interface SocketOptions {
-    // Whether to announce that the client is a bot in the socket handshake.
-    // Note that setting it to `false` may result in a ban. Defaults to true.
-    isBot?: boolean;
-
-    // User agent header to advertise in connections.
-    userAgent?: string;
-
     // Settings to use for reconnecting automatically to Constellation.
     // Defaults to automatically reconnecting with the ExponentialPolicy.
     reconnectionPolicy?: ReconnectionPolicy;
@@ -54,9 +22,7 @@ export interface SocketOptions {
     // Websocket URL to connect to, defaults to wss://constellation.beam.pro
     url?: string;
 
-    // Interface used to determine whether messages should be gzipped.
-    // Defaults to a strategy which gzipps messages greater than 1KB in size.
-    gzip?: GzipDetector;
+    compressionScheme?: CompressionScheme;
 
     // Optional JSON web token to use for authentication.
     jwt?: string;
@@ -91,10 +57,8 @@ export enum State {
 function getDefaults(): SocketOptions {
     return {
         url: 'wss://constellation.beam.pro',
-        userAgent: `Carina ${pkg.version}`,
         replyTimeout: 10000,
-        isBot: false,
-        gzip: new SizeThresholdGzipDetector(1024),
+        compressionScheme: 'none',
         autoReconnect: true,
         reconnectionPolicy: new ExponentialReconnectionPolicy(),
         pingInterval: 10 * 1000,
@@ -173,11 +137,10 @@ export class ConstellationSocket extends EventEmitter {
             return;
         }
 
-        const protocol = this.options.gzip ? 'cnstl-gzip' : 'cnstl';
         const extras = {
             headers: {
-                'User-Agent': this.options.userAgent,
-                'X-Is-Bot': this.options.isBot,
+                'X-Protocol-Version': '2.0',
+                'X-Auth-User': '{"ID":1, "Username":"connor","XP":100}'
             },
         };
 
@@ -187,8 +150,8 @@ export class ConstellationSocket extends EventEmitter {
         } else if (this.options.jwt) {
             url += '?' + querystring.stringify({ jwt: this.options.jwt });
         }
-
-        this.socket = new ConstellationSocket.WebSocket(url, protocol, extras);
+        console.log(url);
+        this.socket = new ConstellationSocket.WebSocket(url, extras);
         this.socket.binaryType = 'arraybuffer';
 
         this.state = State.Connecting;
@@ -304,9 +267,7 @@ export class ConstellationSocket extends EventEmitter {
 
     private sendPacketInner(packet: Packet) {
         const data = JSON.stringify(packet);
-        const payload = this.options.gzip.shouldZip(data, packet.toJSON())
-            ? pako.gzip(data)
-            : data;
+        const payload = data;
 
         this.emit('send', payload);
         this.socket.send(payload);

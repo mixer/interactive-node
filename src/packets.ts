@@ -24,6 +24,7 @@ export class Packet extends EventEmitter {
         type: 'method',
         id: number,
         method: string,
+        discard?: boolean,
         params: { [key: string]: any }
     };
 
