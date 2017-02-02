@@ -303,8 +303,7 @@ export class ConstellationSocket extends EventEmitter {
             this.emit(`event:${message.event}`, message.data);
             break;
         case 'reply':
-            let err = message.error ? ConstellationError.from(message.error) : null;
-            this.emit(`reply:${message.id}`, new Reply(message.id, message.result, message.error));
+            this.emit(`reply:${message.id}`, Reply.fromSocket(message));
             break;
         default:
             throw new MessageParseError(`Unknown message type "${message.type}"`);

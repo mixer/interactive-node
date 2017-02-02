@@ -132,4 +132,12 @@ export class Reply extends Packet {
         };
         super(replyData);
     }
+
+    public static fromSocket(message: any): Reply {
+        let err = message.error ? ConstellationError.from(message.error) : null;
+        const reply = new Reply(message.id, message.result, message.error);
+        // TODO do we need a new state here?
+        reply.setState(PacketState.Replied);
+        return reply;
+    }
 }
