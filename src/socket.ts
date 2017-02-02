@@ -19,7 +19,7 @@ export interface SocketOptions {
     reconnectionPolicy?: ReconnectionPolicy;
     autoReconnect?: boolean;
 
-    // Websocket URL to connect to, defaults to wss://constellation.beam.pro
+    // Websocket URL to connect to, defaults to <TODO>
     url?: string;
 
     //compression scheme, defaults to none, Will remain none until pako typings are updated
@@ -27,6 +27,7 @@ export interface SocketOptions {
 
     // Optional JSON web token to use for authentication.
     jwt?: string;
+
     // Optional OAuth token to use for authentication.
     authToken?: string;
 
@@ -301,11 +302,7 @@ export class InteractiveSocket extends EventEmitter {
 
         switch (message.type) {
         case 'method':
-            //A discard is an optional message
             this.emit('method', Method.fromSocket(message));
-            break;
-        case 'event':
-            this.emit(`event:${message.event}`, message.data);
             break;
         case 'reply':
             this.emit(`reply:${message.id}`, Reply.fromSocket(message));
