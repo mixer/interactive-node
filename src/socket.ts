@@ -202,7 +202,7 @@ export class ConstellationSocket extends EventEmitter {
      * after it completes, or after a timeout occurs.
      */
     public execute(method: string, params: { [key: string]: any } = {}): Promise<any> {
-        return this.send(new Method(method, params));
+        return this.send(new Packet(new Method(method, params)));
     }
 
     /**
@@ -230,11 +230,11 @@ export class ConstellationSocket extends EventEmitter {
         const promise = Promise.race([
             // Wait for replies to that packet ID:
             resolveOn(this, `reply:${packet.id()}`, timeout)
-            .then((result: { err: Error, result: any }) => {
+            .then((result: Reply) => {
                 this.queue.delete(packet);
 
-                if (result.err) {
-                    throw result.err;
+                if (result.error) {
+                    throw result.error;
                 }
 
                 return result.result;
@@ -290,14 +290,12 @@ export class ConstellationSocket extends EventEmitter {
         }
 
         // Bump the ping timeout whenever we get a message reply.
-        this.schedulePing();
+        // this.schedulePing();
 
         switch (message.type) {
         case 'method':
             //A discard is an optional message
-            if (message.discard) {
-                this.emit(`method:${message.method}`, message.params);
-            }
+            this.emit(`method:${message.method}`, Method.fromSocket(message));
             break;
         case 'event':
             this.emit(`event:${message.event}`, message.data);
@@ -314,28 +312,28 @@ export class ConstellationSocket extends EventEmitter {
         this.socket.addEventListener(name, evt => this.emit(name, evt));
     }
 
-    private schedulePing() {
-        clearTimeout(this.pingTimeout);
+    // private schedulePing() {
+    //     clearTimeout(this.pingTimeout);
 
-        this.pingTimeout = setTimeout(() => {
-            if (this.state !== State.Connected) {
-                return;
-            }
+    //     this.pingTimeout = setTimeout(() => {
+    //         if (this.state !== State.Connected) {
+    //             return;
+    //         }
 
-            const packet = new Packet('ping', null);
-            const timeout = this.options.replyTimeout;
+    //         const packet = new Packet('ping', null);
+    //         const timeout = this.options.replyTimeout;
 
-            setTimeout(() => {
-                this.sendPacketInner(packet);
-                this.emit('ping');
-            });
+    //         setTimeout(() => {
+    //             this.sendPacketInner(packet);
+    //             this.emit('ping');
+    //         });
 
-            return Promise.race([
-                resolveOn(this, `reply:${packet.id()}`, timeout),
-                resolveOn(this, 'close', timeout + 1),
-            ])
-            .then(() => this.emit('pong'))
-            .catch(err => this.socket.close());
-        }, this.options.pingInterval);
-    }
+    //         return Promise.race([
+    //             resolveOn(this, `reply:${packet.id()}`, timeout),
+    //             resolveOn(this, 'close', timeout + 1),
+    //         ])
+    //         .then(() => this.emit('pong'))
+    //         .catch(err => this.socket.close());
+    //     }, this.options.pingInterval);
+    // }
 }

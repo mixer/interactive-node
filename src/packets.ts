@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { ConstellationError } from './errors';
 
+
 export enum PacketState {
     // The packet has not been sent yet, it may be queued for later sending
     Pending = 1,
@@ -21,9 +22,9 @@ export interface IPacket {
 }
 
 export interface IMethod extends IPacket {
-    method: string;
-    params: { [key: string]: any }
-    discard?: boolean
+    readonly method: string;
+    readonly params: { [key: string]: any }
+    readonly discard?: boolean
 }
 
 export interface IError {
@@ -33,21 +34,21 @@ export interface IError {
 }
 
 export interface IReply extends IPacket {
-    result: null | { [key: string]: any }
-    error: null | ConstellationError.Base;
+    readonly result: null | { [key: string]: any }
+    readonly error: null | ConstellationError.Base;
 }
 
 
 /**
- * A Packet is a data type that can be sent over the wire to Constellation.
+ * A Packet is a wrapped Method or Reply that can be sent over the wire
  */
 export class Packet extends EventEmitter {
     private state: PacketState = PacketState.Pending;
     private timeout: number;
 
-    private data: IPacket;
+    protected data: Method | Reply;
 
-    constructor(data: IPacket) {
+    constructor(data: Method | Reply) {
         super();
         this.data = data;
     }
@@ -107,37 +108,39 @@ export class Packet extends EventEmitter {
     }
 }
 
-export class Method extends Packet {
-    constructor(method: string, params: { [key: string]: any }, discard?:boolean) {
-        const methodData: IMethod = {
-            type: 'method',
-            method,
-            params,
-            id: Math.floor(Math.random() * maxInt32),
-        };
-        if (discard) {
-            methodData.discard = discard;
-        }
-        super(methodData);
+export class Method implements IMethod {
+    public id;
+    public type: 'method';
+    constructor(
+        public method: string, 
+        public params: { [key: string]: any }, 
+        public discard?:boolean
+    ) {
+        this.id = Math.floor(Math.random() * maxInt32);
+    }
+
+    public static fromSocket(message: any) {
+        const method = new Method(message.method, message.params, message.discard);
+        return method;
+    }
+
+    public reply(result: { [key: string]: any }, error = null ): Reply {
+        return new Reply(this.id(), result, error);
     }
 }
 
-export class Reply extends Packet {
-    constructor(id: number, result: { [key: string]: any } = null, error = null) {
-        const replyData: IReply = {
-            id,
-            type: 'reply',
-            result,
-            error,
-        };
-        super(replyData);
-    }
+export class Reply implements IReply {
+    public type: 'reply';
+    constructor(
+        public id: number, 
+        public result: { [key: string]: any } = null,
+        public error = null
+    ) {}
 
     public static fromSocket(message: any): Reply {
         let err = message.error ? ConstellationError.from(message.error) : null;
         const reply = new Reply(message.id, message.result, message.error);
         // TODO do we need a new state here?
-        reply.setState(PacketState.Replied);
         return reply;
     }
 }
