@@ -22,6 +22,7 @@ export interface SocketOptions {
     // Websocket URL to connect to, defaults to wss://constellation.beam.pro
     url?: string;
 
+    //compression scheme, defaults to none, Will remain none until pako typings are updated
     compressionScheme?: CompressionScheme;
 
     // Optional JSON web token to use for authentication.
