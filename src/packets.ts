@@ -16,12 +16,9 @@ export enum PacketState {
 
 const maxInt32 = 0xFFFFFFFF;
 
-export type PacketType = 'method' | 'reply';
-
 export interface IRawValues {
     [key: string]: any;
 }
-
 
 /**
  * A Packet is a wrapped Method that can be sent over the wire, it is wrapped for timing and
