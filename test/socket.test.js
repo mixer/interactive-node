@@ -1,8 +1,10 @@
 const Websocket = require('ws');
-const Errors = require('../lib/errors');
-const Socket = require('../lib/socket').InteractiveSocket;
-const port = process.env.SERVER_PORT || 1339;
 
+const Errors = require('../lib/errors');
+const packets = require('../lib/packets');
+const Socket = require('../lib/socket').InteractiveSocket;
+
+const port = process.env.SERVER_PORT || 1339;
 const METHOD = { id: 1, type: 'method', method:'hello', params:{ foo: 'bar' }, discard: false};
 const REPLY = { type: 'reply', id: 1, error: null, result: 'hi' };
 
@@ -209,7 +211,6 @@ describe('socket', () => {
         });
 
         it('recieves a reply to a method', () => {
-
             ws.on('message', payload => {
                 assertAndReplyTo(payload);
             });
@@ -219,6 +220,14 @@ describe('socket', () => {
                 expect(res).to.equal('hi');
             })
         });
+
+        it('emits a method sent to it', done => {
+            ws.send(JSON.stringify(METHOD));
+            socket.on('method', method => {
+                expect(method).to.deep.equal(packets.Method.fromSocket(METHOD));
+                done();
+            });
+        })
 
         it('cancels packets if the socket is closed mid-call', () => {
             ws.on('message', () => socket.close());
