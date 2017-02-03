@@ -16,31 +16,12 @@ export enum PacketState {
 
 const maxInt32 = 0xFFFFFFFF;
 
-export type PacketType = 'method' | 'reply';
-
-export interface IPacket {
-    id: number;
-    type: PacketType;
-}
-
 export interface IRawValues {
     [key: string]: any;
 }
 
-export interface IMethod extends IPacket {
-    readonly method: string;
-    readonly params: IRawValues;
-    readonly discard?: boolean;
-}
-
-export interface IReply extends IPacket {
-    readonly result: null | IRawValues;
-    readonly error: null | InteractiveError.Base;
-}
-
-
 /**
- * A Packet is a wrapped Method or Reply that can be sent over the wire
+ * A Packet is a wrapped Method that can be timedout or canceled whilst it travels over the wire
  */
 export class Packet extends EventEmitter {
     private state: PacketState = PacketState.Pending;
@@ -108,9 +89,9 @@ export class Packet extends EventEmitter {
     }
 }
 
-export class Method implements IMethod {
+export class Method {
     public id;
-    public type = <PacketType> 'method';
+    public type = 'method';
 
     constructor(
         public method: string,
@@ -130,8 +111,8 @@ export class Method implements IMethod {
     }
 }
 
-export class Reply implements IReply {
-    public type = <PacketType> 'reply';
+export class Reply {
+    public type = 'reply';
     constructor(
         public id: number,
         public result: IRawValues = null,
@@ -140,8 +121,7 @@ export class Reply implements IReply {
 
     public static fromSocket(message: any): Reply {
         let err = message.error ? InteractiveError.from(message.error) : null;
-        const reply = new Reply(message.id, message.result, message.error);
-        // TODO do we need a new state here?
+        const reply = new Reply(message.id, message.result, err);
         return reply;
     }
 
