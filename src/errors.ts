@@ -1,12 +1,12 @@
 export class BaseError extends Error {
-    constructor(public message) {
+    constructor(public message: string) {
         super(message);
     }
 }
 
 export class CancelledError extends BaseError {
     constructor() {
-        super("Packet was cancelled or socket was closed before a reply was received.");
+        super('Packet was cancelled or socket was closed before a reply was received.');
     }
 }
 
@@ -25,7 +25,7 @@ export module InteractiveError {
 
     const errors = {};
 
-    export function from({ code, message }: { code: number, message: string }) {
+    export function fromSocketMessage({ code, message }: { code: number, message: string }) {
         if (errors[code]) {
             return new errors[code](message);
         }
@@ -80,7 +80,7 @@ export module InteractiveError {
             super(4007, message);
         }
     }
-    
+
     errors[4007] = InvalidTransactionId;
 
     export class NotEnoughSparks extends Base {
@@ -88,7 +88,7 @@ export module InteractiveError {
             super(4008, message);
         }
     }
-    
+
     errors[4008] = NotEnoughSparks;
 
     export class UnknownGroup extends Base {
@@ -104,7 +104,7 @@ export module InteractiveError {
             super(4010, message);
         }
     }
-    
+
     errors[4010] = GroupAlreadyExists;
 
     export class UnknownSceneId extends Base {
@@ -112,7 +112,7 @@ export module InteractiveError {
             super(4011, message);
         }
     }
-    
+
     errors[4011] = UnknownSceneId;
 
     export class SceneAlreadyExists extends Base {
@@ -120,7 +120,7 @@ export module InteractiveError {
             super(4012, message);
         }
     }
-    
+
     errors[4012] = SceneAlreadyExists;
 
     export class UnkownControlId extends Base {
@@ -128,7 +128,7 @@ export module InteractiveError {
             super(4013, message);
         }
     }
-    
+
     errors[4013] = UnkownControlId;
 
     export class ControlAlreadyExists extends Base {
@@ -136,7 +136,7 @@ export module InteractiveError {
             super(4014, message);
         }
     }
-    
+
     errors[4014] = ControlAlreadyExists;
 
     export class UnkownControlType extends Base {
@@ -144,6 +144,6 @@ export module InteractiveError {
             super(4015, message);
         }
     }
-    
+
     errors[4015] = UnkownControlType;
 }

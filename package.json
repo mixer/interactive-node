@@ -9,7 +9,8 @@
     "build:webpack": "rm -rf dist && webpack && webpack --config webpack.config.min.js",
     "build": "npm run build:ts && npm run build:webpack",
     "test": "npm run build:ts && mocha -r test/_setup.js",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,9 @@
     "sinon-chai": "^2.8.0",
     "typescript": "~2.0.10",
     "webpack": "^1.13.1",
-    "ws": "^1.1.1"
+    "ws": "^1.1.1",
+    "tslint": "^4.3.1",
+    "tslint-microsoft-contrib": "^4.0.0"
   },
   "dependencies": {
     "@types/node": "^6.0.45",

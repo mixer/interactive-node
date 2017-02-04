@@ -17,7 +17,7 @@ export class MethodHandlerManager {
     }
 
     public handle(method: Method): Promise<Reply | null> {
-        if(this.handlers[method.method]) {
+        if (this.handlers[method.method]) {
             return this.handlers[method.method](method);
         }
         /**

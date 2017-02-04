@@ -9,9 +9,11 @@ import { TimeoutError } from './errors';
  * @para   {number}       timeout used to prevent memory leaks
  * @return {Promise<any>}
  */
-export function resolveOn(emitter: EventEmitter, event: string,
-    timeout: number = 120 * 1000): Promise<any> {
-
+export function resolveOn(
+    emitter: EventEmitter,
+    event: string,
+    timeout: number = 120 * 1000,
+): Promise<any> {
     return new Promise((resolve, reject) => {
         let resolved = false;
         const listener = data => {
@@ -21,12 +23,15 @@ export function resolveOn(emitter: EventEmitter, event: string,
 
         emitter.once(event, listener);
 
-        setTimeout(() => {
-            if (!resolved) {
-                emitter.removeListener(event, listener);
-                reject(new TimeoutError(`Expected to get event ${event}`));
-            }
-        }, timeout);
+        setTimeout(
+            () => {
+                if (!resolved) {
+                    emitter.removeListener(event, listener);
+                    reject(new TimeoutError(`Expected to get event ${event}`));
+                }
+            },
+            timeout,
+        );
     });
 }
 
@@ -36,7 +41,7 @@ export function resolveOn(emitter: EventEmitter, event: string,
  * @param  {Number} delay
  * @return {Promise}
  */
-export function timeout (message: string, delay: number): Promise<void> {
+export function timeout(message: string, delay: number): Promise<void> {
     // Capture the stacktrace here, since timeout stacktraces
     // often get mangled or dropped.
     const err = new TimeoutError(message);
@@ -49,7 +54,7 @@ export function timeout (message: string, delay: number): Promise<void> {
  * Returns a function that calls the wrapped function with only instances of
  * the provided class, and throws them otherwise. This is meant to be used
  * inside `.catch` blocks of promises.
- * 
+ *
  * Imported from frontend2
  *
  * @example

@@ -1,11 +1,11 @@
-import { TimeoutError, MessageParseError, InteractiveError, CancelledError } from './errors';
-import { ExponentialReconnectionPolicy, ReconnectionPolicy } from './reconnection';
 import { EventEmitter } from 'events';
-import { IRawValues, Method, Packet, PacketState, Reply } from './packets';
-
-import { timeout, resolveOn } from './util';
-import * as querystring from 'querystring';
 import * as pako from 'pako';
+import * as querystring from 'querystring';
+
+import { CancelledError, MessageParseError } from './errors';
+import { IRawValues, Method, Packet, PacketState, Reply } from './packets';
+import { ExponentialReconnectionPolicy, IReconnectionPolicy } from './reconnection';
+import { resolveOn } from './util';
 
 //We don't support lz4 due to time constraints right now
 export type CompressionScheme = 'none' | 'gzip';
@@ -13,10 +13,10 @@ export type CompressionScheme = 'none' | 'gzip';
 /**
  * SocketOptions are passed to the Interactive Socket and control behaviour.
  */
-export interface SocketOptions {
+export interface ISocketOptions {
     // Settings to use for reconnecting automatically to Constellation.
     // Defaults to automatically reconnecting with the ExponentialPolicy.
-    reconnectionPolicy?: ReconnectionPolicy;
+    reconnectionPolicy?: IReconnectionPolicy;
     autoReconnect?: boolean;
 
     // Websocket URL to connect to, defaults to <TODO>
@@ -56,7 +56,7 @@ export enum State {
     Refreshing,
 }
 
-function getDefaults(): SocketOptions {
+function getDefaults(): ISocketOptions {
     return {
         url: 'wss://constellation.beam.pro',
         replyTimeout: 10000,
@@ -70,27 +70,28 @@ function getDefaults(): SocketOptions {
 export class InteractiveSocket extends EventEmitter {
     // WebSocket constructor, may be overridden if the environment
     // does not natively support it.
+
+    //tslint:disable-next-line:variable-name
     public static WebSocket: any = typeof WebSocket === 'undefined' ? null : WebSocket;
 
     private reconnectTimeout: NodeJS.Timer;
-    private pingTimeout: NodeJS.Timer;
-    private options: SocketOptions;
+    private options: ISocketOptions;
     private state: State;
     private socket: WebSocket;
     private queue: Set<Packet> = new Set<Packet>();
 
-    constructor(options: SocketOptions = {}) {
+    constructor(options: ISocketOptions = {}) {
         super();
         this.setMaxListeners(Infinity);
         this.setOptions(options);
 
         if (InteractiveSocket.WebSocket === undefined) {
             throw new Error('Cannot find a websocket implementation; please provide one by ' +
-                'running ConstellationSocket.WebSocket = myWebSocketModule;')
+                'running InteractiveSocket.WebSocket = myWebSocketModule;');
         }
 
         this.on('message', msg => {
-            this.extractMessage(msg.data)
+            this.extractMessage(msg.data);
         });
 
         this.on('open', () => {
@@ -112,9 +113,12 @@ export class InteractiveSocket extends EventEmitter {
             }
 
             this.state = State.Reconnecting;
-            this.reconnectTimeout = setTimeout(() => {
-                this.connect();
-            }, this.options.reconnectionPolicy.next());
+            this.reconnectTimeout = setTimeout(
+                () => {
+                    this.connect();
+                },
+                this.options.reconnectionPolicy.next(),
+            );
         });
     }
 
@@ -122,7 +126,7 @@ export class InteractiveSocket extends EventEmitter {
      * Set the given options.
      * Defaults and previous option values will be used if not supplied.
      */
-    setOptions(options: SocketOptions) {
+    public setOptions(options: ISocketOptions) {
         this.options = Object.assign({}, this.options || getDefaults(), options);
         //TODO: Clear up auth here later
         if (this.options.jwt && this.options.authToken) {
@@ -144,7 +148,7 @@ export class InteractiveSocket extends EventEmitter {
             //TODO X-Auth-User is temporary, used to mock against while service gets integrated with Beam stack
             headers: {
                 'X-Protocol-Version': '2.0',
-                'X-Auth-User': '{"ID":1, "Username":"connor","XP":100}'
+                'X-Auth-User': '{"ID":1, "Username":"connor","XP":100}',
             },
         };
 
@@ -205,7 +209,7 @@ export class InteractiveSocket extends EventEmitter {
      * Executes an RPC method on the server. Returns a promise which resolves
      * after it completes, or after a timeout occurs.
      */
-    public execute(method: string, params: IRawValues = {}, discard = false): Promise<any> {
+    public execute(method: string, params: IRawValues = {}, discard: boolean = false): Promise<any> {
         const methodObj = new Method(method, params, discard);
         return this.send(new Packet(methodObj));
     }
@@ -227,7 +231,9 @@ export class InteractiveSocket extends EventEmitter {
             return Promise.race([
                 resolveOn(packet, 'send'),
                 resolveOn(packet, 'cancel')
-                .then(() => { throw new CancelledError() }),
+                .then(() => {
+                    throw new CancelledError();
+                }),
             ]);
         }
 
@@ -250,7 +256,9 @@ export class InteractiveSocket extends EventEmitter {
             }),
             // Never resolve if the consumer cancels the packets:
             resolveOn(packet, 'cancel', timeout + 1)
-            .then(() => { throw new CancelledError() }),
+            .then(() => {
+                throw new CancelledError();
+            }),
             // Re-queue packets if the socket closes:
             resolveOn(this, 'close', timeout + 1)
             .then(() => {
@@ -270,7 +278,7 @@ export class InteractiveSocket extends EventEmitter {
         return promise;
     }
 
-    public reply(reply :Reply) {
+    public reply(reply: Reply) {
         this.sendRaw(reply);
     }
 

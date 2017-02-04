@@ -1,9 +1,9 @@
-import { InteractiveError } from './errors';
 import { EventEmitter } from 'events';
-import { onReadyParams } from './methodTypes';
+import { InteractiveError } from './errors';
 import { MethodHandlerManager } from './methodhandler';
+import { onReadyParams } from './methodTypes';
 import { Reply } from './packets';
-import { CompressionScheme, InteractiveSocket, SocketOptions } from './socket';
+import { CompressionScheme, InteractiveSocket, ISocketOptions } from './socket';
 import { only } from './util';
 
 export class Client extends EventEmitter {
@@ -27,9 +27,7 @@ export class Client extends EventEmitter {
 
     public socket: InteractiveSocket;
 
-    private waiting: { [key: string]: Promise<any> } = {};
-
-    constructor(options: SocketOptions = {}) {
+    constructor(options: ISocketOptions = {}) {
         super();
         this.socket = new InteractiveSocket(options);
 
@@ -63,7 +61,7 @@ export class Client extends EventEmitter {
     /**
      * Sets the given options on the socket.
      */
-    public setOptions(options: SocketOptions) {
+    public setOptions(options: ISocketOptions) {
         this.socket.setOptions(options);
     }
 
@@ -80,18 +78,6 @@ export class Client extends EventEmitter {
      */
     public close() {
         this.socket.close();
-    }
-    //TODO We probably don't actually need this and stopWaiting
-    private waitFor<T>(identifier: string, cb?: () => Promise<T>): Promise<T> {
-        if (this.waiting[identifier]) {
-            return this.waiting[identifier];
-        }
-
-        return this.waiting[identifier] = cb();
-    }
-
-    private stopWaiting(identifier: string) {
-        delete this.waiting[identifier];
     }
 
     //TODO: Actually implement compression
