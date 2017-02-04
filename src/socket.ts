@@ -290,6 +290,7 @@ export class InteractiveSocket extends EventEmitter {
         let messageString: string;
         // If the packet is binary, then we need to unzip it
         if (typeof packet !== 'string') {
+            //TODO Review this after we update pako typings.
             messageString = <string> <any> pako.ungzip(packet, { to: 'string' });
         } else {
             messageString = packet;
