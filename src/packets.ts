@@ -98,7 +98,7 @@ export class Method {
         public id: number = Math.floor(Math.random() * maxInt32),
     ) {}
 
-    public static fromSocket(message: any) {
+    public static fromSocket(message: any): Method {
         return  new Method(message.method, message.params, message.discard, message.id);
     }
 
@@ -126,7 +126,7 @@ export class Reply {
     /**
      * Construct a reply packet that indicates an error
      */
-    public static fromError(id: number, error: InteractiveError.Base) {
+    public static fromError(id: number, error: InteractiveError.Base): Reply {
         return new Reply(id, null, error);
     }
 }
