@@ -1,6 +1,4 @@
 import { EventEmitter } from 'events';
-
-import { BaseError } from '../lib/errors';
 import { InteractiveError } from './errors';
 
 export enum PacketState {
@@ -104,7 +102,7 @@ export class Method {
         return  new Method(message.method, message.params, message.discard, message.id);
     }
 
-    public reply(result: IRawValues, error: typeof BaseError = null): Reply {
+    public reply(result: IRawValues, error: InteractiveError.Base = null): Reply {
         return new Reply(this.id, result, error);
     }
 }
@@ -114,14 +112,14 @@ export class Reply {
     constructor(
         public id: number,
         public result: IRawValues = null,
-        public error: typeof BaseError = null,
+        public error: InteractiveError.Base = null,
     ) {}
 
     /**
      * Constructs a Reply packet from raw values coming in from a socket
      */
     public static fromSocket(message: any): Reply {
-        const err: typeof BaseError = message.error ? InteractiveError.fromSocketMessage(message.error) : null;
+        const err: InteractiveError.Base = message.error ? InteractiveError.fromSocketMessage(message.error) : null;
         return new Reply(message.id, message.result, err);
     }
 

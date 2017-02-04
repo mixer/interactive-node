@@ -24,68 +24,66 @@ export interface IInteractiveError {
 
 export module InteractiveError {
     export class Base extends BaseError {
-        public code: number;
-        constructor(message: string) {
+        constructor(message: string, public code: number) {
             super(message);
         }
     }
 
-    const errors: { [code: number]: Base } = {};
+    const errors: { [code: number]: typeof Base } = {};
 
     export function fromSocketMessage(error: IInteractiveError): Base {
         if (errors[error.code]) {
-            return new errors[error.code](error.message);
+            return new errors[error.code](error.message, error.code);
         }
 
-        return new Base(error.code, error.message);
+        return new Base(error.message, error.code);
     }
 
     export class InvalidPayload extends Base {
         constructor(message: string) {
-            super(message);
-            this.code = 4000;
+            super(message, 4000);
         }
     }
     errors[4000] = InvalidPayload;
 
     export class PayloadDecompression extends Base {
         constructor(message: string) {
-            super(4001, message);
+            super(message, 4001);
         }
     }
     errors[4001] = PayloadDecompression;
 
     export class UnknownPacketType extends Base {
         constructor(message: string) {
-            super(4002, message);
+            super(message, 4002);
         }
     }
     errors[4002] = UnknownPacketType;
 
     export class UnknownMethodName extends Base {
         constructor(message: string) {
-            super(4003, message);
+            super(message, 4003);
         }
     }
     errors[4003] = UnknownMethodName;
 
     export class InvalidMethodArguments extends Base {
         constructor(message: string) {
-            super(4004, message);
+            super(message, 4004);
         }
     }
     errors[4004] = InvalidMethodArguments;
 
     export class EtagMismatch extends Base {
         constructor(message: string) {
-            super(4005, message);
+            super(message, 4005);
         }
     }
     errors[4005] = EtagMismatch;
 
     export class InvalidTransactionId extends Base {
         constructor(message: string) {
-            super(4007, message);
+            super(message, 4007);
         }
     }
 
@@ -93,7 +91,7 @@ export module InteractiveError {
 
     export class NotEnoughSparks extends Base {
         constructor(message: string) {
-            super(4008, message);
+            super(message, 4008);
         }
     }
 
@@ -101,7 +99,7 @@ export module InteractiveError {
 
     export class UnknownGroup extends Base {
         constructor(message: string) {
-            super(4009, message);
+            super(message, 4009);
         }
     }
 
@@ -109,7 +107,7 @@ export module InteractiveError {
 
     export class GroupAlreadyExists extends Base {
         constructor(message: string) {
-            super(4010, message);
+            super(message, 4010);
         }
     }
 
@@ -117,7 +115,7 @@ export module InteractiveError {
 
     export class UnknownSceneId extends Base {
         constructor(message: string) {
-            super(4011, message);
+            super(message, 4011);
         }
     }
 
@@ -125,7 +123,7 @@ export module InteractiveError {
 
     export class SceneAlreadyExists extends Base {
         constructor(message: string) {
-            super(4012, message);
+            super(message, 4012);
         }
     }
 
@@ -133,7 +131,7 @@ export module InteractiveError {
 
     export class UnkownControlId extends Base {
         constructor(message: string) {
-            super(4013, message);
+            super(message, 4013);
         }
     }
 
@@ -141,7 +139,7 @@ export module InteractiveError {
 
     export class ControlAlreadyExists extends Base {
         constructor(message: string) {
-            super(4014, message);
+            super(message, 4014);
         }
     }
 
@@ -149,7 +147,7 @@ export module InteractiveError {
 
     export class UnkownControlType extends Base {
         constructor(message: string) {
-            super(4015, message);
+            super(message, 4015);
         }
     }
 
