@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import { InteractiveError } from './errors';
 
-
 export enum PacketState {
     // The packet has not been sent yet, it may be queued for later sending
     Pending = 1,
@@ -21,8 +20,7 @@ export interface IRawValues {
 }
 
 /**
- * A Packet is a wrapped Method that can be sent over the wire, it is wrapped for timing and
- * cancellation.
+ * A Packet is a wrapped Method that can be timedout or canceled whilst it travels over the wire
  */
 export class Packet extends EventEmitter {
     private state: PacketState = PacketState.Pending;
@@ -91,24 +89,22 @@ export class Packet extends EventEmitter {
 }
 
 export class Method {
-    public id;
     public type = 'method';
 
     constructor(
         public method: string,
         public params: IRawValues,
         public discard: boolean = false,
-    ) {
-        this.id = Math.floor(Math.random() * maxInt32);
-    }
+        public id = Math.floor(Math.random() * maxInt32),
+    ) {}
 
     public static fromSocket(message: any) {
-        const method = new Method(message.method, message.params, message.discard);
+        const method = new Method(message.method, message.params, message.discard, message.id);
         return method;
     }
 
     public reply(result: IRawValues, error = null ): Reply {
-        return new Reply(this.id(), result, error);
+        return new Reply(this.id, result, error);
     }
 }
 
