@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import { InteractiveError } from './errors';
 import { MethodHandlerManager } from './methodhandler';
-import { onReadyParams } from './methodTypes';
 import { Method, Reply } from './packets';
 import { CompressionScheme, InteractiveSocket, ISocketOptions } from './socket';
 import { only } from './util';
@@ -48,10 +47,8 @@ export class Client extends EventEmitter {
                 }));
         });
         // This is mostly to demonstrate how the methodHandler could work
-        this.methodHandler.addHandler<onReadyParams>('onReady', readyMethod => {
-            const params = readyMethod.params;
-
-            this.ready = params.isReady;
+        this.methodHandler.addHandler('onReady', readyMethod => {
+            this.ready = readyMethod.params.isReady;
 
             this.emit('ready', this.ready);
             return Promise.resolve(null);

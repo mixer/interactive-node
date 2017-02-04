@@ -1,4 +1,5 @@
 import { InteractiveError } from './errors';
+import { onReadyParams } from './methodTypes';
 import { Method, Reply } from './packets';
 
 export interface IMethodHandler<T> {
@@ -8,7 +9,9 @@ export interface IMethodHandler<T> {
 export class MethodHandlerManager {
     private handlers: {[key: string]: IMethodHandler<any>} = {};
 
-    public addHandler<T>(method: string, handler: IMethodHandler<T>) {
+    public addHandler(method: 'onReady', handler: IMethodHandler<onReadyParams>): void;
+    public addHandler<T>(method: string, handler: IMethodHandler<T>): void;
+    public addHandler(method: string, handler: IMethodHandler<any>): void {
         this.handlers[method] = handler;
     }
 
