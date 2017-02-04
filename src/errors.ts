@@ -16,26 +16,34 @@ export class TimeoutError extends BaseError {
 export class MessageParseError extends BaseError {
 }
 
+export interface IInteractiveError {
+    code: number;
+    message: string;
+    path?: string;
+}
+
 export module InteractiveError {
     export class Base extends BaseError {
-        constructor(public code: number, message: string, public path: string = '') {
+        public code: number;
+        constructor(message: string) {
             super(message);
         }
     }
 
-    const errors = {};
+    const errors: { [code: number]: Base } = {};
 
-    export function fromSocketMessage({ code, message }: { code: number, message: string }) {
-        if (errors[code]) {
-            return new errors[code](message);
+    export function fromSocketMessage(error: IInteractiveError): Base {
+        if (errors[error.code]) {
+            return new errors[error.code](error.message);
         }
 
-        return new Base(code, message);
+        return new Base(error.code, error.message);
     }
 
     export class InvalidPayload extends Base {
         constructor(message: string) {
-            super(4000, message);
+            super(message);
+            this.code = 4000;
         }
     }
     errors[4000] = InvalidPayload;

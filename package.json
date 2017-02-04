@@ -8,7 +8,7 @@
     "build:ts": "rm -rf lib && tsc && tsc -d",
     "build:webpack": "rm -rf dist && webpack && webpack --config webpack.config.min.js",
     "build": "npm run build:ts && npm run build:webpack",
-    "test": "npm run build:ts && mocha -r test/_setup.js",
+    "test": "mocha --compilers ts:ts-node/register \"test/**/*.ts\"",
     "prepublish": "npm run build",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\""
   },
@@ -27,6 +27,11 @@
   },
   "homepage": "https://github.com/WatchBeam/beam-interactive-2#readme",
   "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.39",
+    "@types/sinon": "^1.16.34",
+    "@types/sinon-chai": "^2.7.27",
+    "@types/ws": "0.0.38",
     "awesome-typescript-loader": "^2.2.4",
     "chai": "^3.5.0",
     "chai-subset": "^1.3.0",
@@ -34,11 +39,12 @@
     "mocha": "^3.0.2",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
+    "ts-node": "^2.0.0",
+    "tslint": "^4.3.1",
+    "tslint-microsoft-contrib": "^4.0.0",
     "typescript": "~2.0.10",
     "webpack": "^1.13.1",
-    "ws": "^1.1.1",
-    "tslint": "^4.3.1",
-    "tslint-microsoft-contrib": "^4.0.0"
+    "ws": "^1.1.1"
   },
   "dependencies": {
     "@types/node": "^6.0.45",

@@ -1,20 +1,21 @@
-const Websocket = require('ws');
+import { assert, expect } from 'chai';
+import { stub } from 'sinon';
+import * as WebSocket from 'ws';
 
-const Errors = require('../lib/errors');
-const packets = require('../lib/packets');
-const Socket = require('../lib/socket').InteractiveSocket;
+import { CancelledError, TimeoutError } from '../lib/errors';
+import { InteractiveSocket } from '../lib/socket';
+import { Method } from '../src/packets';
 
 const port = process.env.SERVER_PORT || 1339;
-const METHOD = { id: 1, type: 'method', method:'hello', params:{ foo: 'bar' }, discard: false};
-const REPLY = { type: 'reply', id: 1, error: null, result: 'hi' };
+const METHOD = { id: 1, type: 'method', method: 'hello', params: { foo: 'bar' }, discard: false};
 
 describe('socket', () => {
-    let server;
-    let socket;
+    let server: WebSocket.Server;
+    let socket: InteractiveSocket;
     const url = `ws://127.0.0.1:${port}/`;
 
     beforeEach(ready => {
-        server = new Websocket.Server({ port }, ready);
+        server = new WebSocket.Server({ port }, ready);
     });
 
     afterEach(done => {
@@ -27,26 +28,32 @@ describe('socket', () => {
 
     describe('connecting', () => {
         it('connects with no auth', done => {
-            socket = new Socket({ url }).connect();
-            server.on('connection', ws => {
+            socket = new InteractiveSocket({ url }).connect();
+            server.on('connection', (ws: WebSocket) => {
                 expect(ws.upgradeReq.url).to.equal('/');
-                expect(ws.upgradeReq.headers.authorization).to.be.undefined;
+                expect(ws.upgradeReq.headers.authorization).to.equal(
+                    undefined,
+                    'authorization header should be undefined when no auth is used',
+                );
                 done();
             });
         });
 
         it('connects with JWT auth', done => {
-            socket = new Socket({ url, jwt: 'asdf!' }).connect();
-            server.on('connection', ws => {
+            socket = new InteractiveSocket({ url, jwt: 'asdf!' }).connect();
+            server.on('connection', (ws: WebSocket) => {
                 expect(ws.upgradeReq.url).to.equal('/?jwt=asdf!');
-                expect(ws.upgradeReq.headers.authorization).to.be.undefined;
+                expect(ws.upgradeReq.headers.authorization).to.equal(
+                    undefined,
+                    'authorization header should be undefined when jwt auth is used',
+                );
                 done();
             });
         });
 
         it('connects with an OAuth token', done => {
-            socket = new Socket({ url, authToken: 'asdf!' }).connect();
-            server.on('connection', ws => {
+            socket = new InteractiveSocket({ url, authToken: 'asdf!' }).connect();
+            server.on('connection', (ws: WebSocket) => {
                 expect(ws.upgradeReq.url).to.equal('/');
                 expect(ws.upgradeReq.headers.authorization).to.equal('Bearer asdf!');
                 done();
@@ -54,15 +61,15 @@ describe('socket', () => {
         });
 
         it('throws an error on ambiguous auth', () => {
-            expect(() => new Socket({ url, authToken: 'asdf!', jwt: 'wat?' }))
+            expect(() => new InteractiveSocket({ url, authToken: 'asdf!', jwt: 'wat?' }))
                 .to.throw(/both JWT and OAuth token/);
         });
     });
 
     it('bubbles error events', done => {
         const err = new Error('oh no!');
-        socket = new Socket({ url }).connect();
-        socket.once('error', e => {
+        socket = new InteractiveSocket({ url }).connect();
+        socket.once('error', (e: Error) => {
             expect(e).to.equal(err);
             done();
         });
@@ -70,7 +77,7 @@ describe('socket', () => {
     });
 
     it('ignores errors during socket teardown', done => {
-        socket = new Socket({ url }).connect();
+        socket = new InteractiveSocket({ url }).connect();
         socket.close();
         socket.socket.emit('error', new Error('oh no!'));
         socket.once('close', () => done());
@@ -99,50 +106,49 @@ describe('socket', () => {
     // });
 
     describe('sending packets', () => {
-        let ws;
-        let next, reset;
+        let ws: WebSocket;
+        let next: stub;
+        let reset: stub;
 
-        function greet () {
+        function greet() {
             ws.send(JSON.stringify(METHOD));
         }
 
-        function awaitConnect (callback) {
-            server.once('connection', _ws => {
+        function awaitConnect(callback: Function) {
+            server.once('connection', (_ws: WebSocket) => {
                 ws = _ws;
                 callback(ws);
             });
         }
 
-        function assertAndReplyTo(payload) {
+        function assertAndReplyTo(payload: any) {
             const data = JSON.parse(payload);
-            expect(data).to.deep.equal({
-                id: data.id,
-                type: 'method',
-                method: 'hello',
-                discard: false,
-                params: {
-                    foo: 'bar',
-                }
-            });
+            expect(data).to.deep.equal(
+                {
+                    id: data.id,
+                    type: 'method',
+                    method: 'hello',
+                    discard: false,
+                    params: {
+                        foo: 'bar',
+                    },
+                },
+                'received method should match sent method',
+            );
             ws.send(JSON.stringify({
                 type: 'reply',
                 id: data.id,
                 error: null,
-                result: 'hi'
+                result: 'hi',
             }));
-        }
-
-        function replyTo(result, payload) {
-            const data = JSON.parse(payload);
-            ws.send(JSON.stringify(REPLY));
         }
 
         beforeEach(ready => {
             awaitConnect(() => ready());
-            socket = new Socket({ url, pingInterval: 100, replyTimeout: 50 }).connect();
+            socket = new InteractiveSocket({ url, pingInterval: 100, replyTimeout: 50 }).connect();
 
-            next = sinon.stub(socket.options.reconnectionPolicy, 'next').returns(5);
-            reset = sinon.stub(socket.options.reconnectionPolicy, 'reset');
+            next = stub(socket.options.reconnectionPolicy, 'next').returns(5);
+            reset = stub(socket.options.reconnectionPolicy, 'reset');
         });
 
         it('reconnects if a connection is lost using the backoff interval', done => {
@@ -156,13 +162,13 @@ describe('socket', () => {
                 ws.close();
 
                 // Backs off when a healthy connection is lost
-                awaitConnect(ws => {
+                awaitConnect(newWs => {
                     expect(next).to.have.been.calledOnce;
                     expect(reset).to.have.been.calledOnce;
-                    ws.close();
+                    newWs.close();
 
                     // Backs off again if establishing fails
-                    awaitConnect(ws => {
+                    awaitConnect(() => {
                         expect(next).to.have.been.calledTwice;
                         expect(reset).to.have.been.calledTwice;
                         greet();
@@ -183,19 +189,21 @@ describe('socket', () => {
             socket.once('method', () => ws.close());
             setTimeout(() => socket.close(), 1);
 
-            awaitConnect(ws => assert.fail('Expected not to have reconnected with a closed socket'));
-            setTimeout(done, 20);
+            awaitConnect(newWs => {
+                assert.fail('Expected not to have reconnected with a closed socket');
+            });
+            setTimeout(() => done, 20);
         });
 
         it('times out message calls if no reply is received', () => {
             socket.options.replyTimeout = 5;
             return socket.execute('hello', { foo: 'bar'})
-            .catch(err => expect(err).to.be.an.instanceof(Errors.TimeoutError));
+            .catch(err => expect(err).to.be.an.instanceof(TimeoutError));
         });
 
         it('retries messages if the socket is closed before replying', () => {
-            ws.on('message', message =>{
-                 ws.close()
+            ws.on('message', message => {
+                 ws.close();
             });
             awaitConnect(newWs => {
                 newWs.on('message', payload => {
@@ -206,7 +214,7 @@ describe('socket', () => {
 
             return socket.execute('hello', { foo: 'bar'})
             .then(res => {
-                expect(res).to.equal('hi')
+                expect(res).to.equal('hi');
             });
         });
 
@@ -218,21 +226,21 @@ describe('socket', () => {
             return socket.execute('hello', { foo: 'bar'})
             .then(res => {
                 expect(res).to.equal('hi');
-            })
+            });
         });
 
         it('emits a method sent to it', done => {
             ws.send(JSON.stringify(METHOD));
             socket.on('method', method => {
-                expect(method).to.deep.equal(packets.Method.fromSocket(METHOD));
+                expect(method).to.deep.equal(Method.fromSocket(METHOD));
                 done();
             });
-        })
+        });
 
         it('cancels packets if the socket is closed mid-call', () => {
             ws.on('message', () => socket.close());
             return socket.execute('hello', { foo: 'bar'})
-            .catch(err => expect(err).be.an.instanceof(Errors.CancelledError));
+            .catch(err => expect(err).be.an.instanceof(CancelledError));
         });
     });
 });

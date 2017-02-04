@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import { InteractiveError } from './errors';
 import { MethodHandlerManager } from './methodhandler';
 import { onReadyParams } from './methodTypes';
-import { Reply } from './packets';
+import { Method, Reply } from './packets';
 import { CompressionScheme, InteractiveSocket, ISocketOptions } from './socket';
 import { only } from './util';
 
@@ -31,7 +31,7 @@ export class Client extends EventEmitter {
         super();
         this.socket = new InteractiveSocket(options);
 
-        this.socket.on('method', method => {
+        this.socket.on('method', (method: Method) => {
             this.methodHandler
                 .handle(method)
                 .then(reply => {
@@ -86,6 +86,6 @@ export class Client extends EventEmitter {
             params: preferences,
         }).then(res => {
             this.socket.setOptions({compressionScheme: <CompressionScheme> res.scheme});
-        }).then(res => undefined);
+        });
     }
 }

@@ -1,29 +1,28 @@
-const Websocket = require('ws');
+import * as WebSocket from 'ws';
 
-const clientModule = require('../lib/client');
-clientModule.Client.Websocket = Websocket;
+import { Client } from '../src/client';
+
+Client.WebSocket = WebSocket;
 const port = process.env.SERVER_PORT || 1339;
-
-
 
 describe('client', () => {
     const url = `ws://127.0.0.1:${port}/`;
-    let client;
-    let server;
-    let serverWs;
+    let client: Client;
+    let server: WebSocket.Server;
+    let ws: WebSocket;
 
-    function awaitConnect (callback) {
-        server.once('connection', _ws => {
+    function awaitConnect(callback: Function) {
+        server.once('connection', (_ws: WebSocket) => {
             ws = _ws;
             callback(ws);
         });
     }
     describe('connecting', () => {
         it('connects', done => {
-            client = new clientModule.Client();
+            client = new Client();
 
             client.setOptions({url});
-            server = new Websocket.Server({ port });
+            server = new WebSocket.Server({ port });
             client.open();
             awaitConnect(() => done());
         });
@@ -39,4 +38,4 @@ describe('client', () => {
             }
         });
     });
-})
+});
