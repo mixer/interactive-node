@@ -11,7 +11,7 @@ import * as pako from 'pako';
 export type CompressionScheme = 'none' | 'gzip';
 
 /**
- * SocketOptions are passed to the
+ * SocketOptions are passed to the Interactive Socket and control behaviour.
  */
 export interface SocketOptions {
     // Settings to use for reconnecting automatically to Constellation.
@@ -211,8 +211,8 @@ export class InteractiveSocket extends EventEmitter {
     }
 
     /**
-     * Send emits a packet over the websocket, or queues it for later sending
-     * if the socket is not open.
+     * Send emits a Method over the websocket, wrapped in a Packet to provide queueing and
+     * cancelation. It returns a promise which resolves with the reply payload from the Server.
      */
     public send(packet: Packet): Promise<any> {
         if (packet.getState() === PacketState.Cancelled) {

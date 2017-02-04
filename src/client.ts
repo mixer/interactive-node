@@ -1,6 +1,6 @@
-import { onReadyParams } from './methodTypes';
 import { InteractiveError } from './errors';
 import { EventEmitter } from 'events';
+import { onReadyParams } from './methodTypes';
 import { MethodHandlerManager } from './methodhandler';
 import { Reply } from './packets';
 import { CompressionScheme, InteractiveSocket, SocketOptions } from './socket';
@@ -42,10 +42,14 @@ export class Client extends EventEmitter {
                     }
                 })
                 .catch(only(InteractiveError.Base, err => {
+                    /**
+                     * Catch only InteractiveError's and send them up to the server.
+                     * Other errors indicate a programming issue.
+                     */
                     this.socket.reply(Reply.fromError(method.id, err));
                 }));
         });
-
+        // This is mostly to demonstrate how the methodHandler could work
         this.methodHandler.addHandler('onReady', readyMethod => {
             const params = <onReadyParams> readyMethod.params;
 
