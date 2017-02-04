@@ -16,7 +16,7 @@ export function resolveOn(
 ): Promise<any> {
     return new Promise((resolve, reject) => {
         let resolved = false;
-        const listener = data => {
+        const listener = (data: any) => {
             resolved = true;
             resolve(data);
         };
@@ -46,7 +46,7 @@ export function timeout(message: string, delay: number): Promise<void> {
     // often get mangled or dropped.
     const err = new TimeoutError(message);
 
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((_, reject) => {
         setTimeout(() => reject(err), delay);
     });
 }

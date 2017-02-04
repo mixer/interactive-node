@@ -38,6 +38,10 @@ export interface ISocketOptions {
     pingInterval?: number;
 }
 
+export interface IWebSocketOptions {
+    headers: IRawValues;
+}
+
 /**
  * State is used to record the status of the websocket connection.
  */
@@ -90,7 +94,7 @@ export class InteractiveSocket extends EventEmitter {
                 'running InteractiveSocket.WebSocket = myWebSocketModule;');
         }
 
-        this.on('message', msg => {
+        this.on('message', (msg: any) => {
             this.extractMessage(msg.data);
         });
 
@@ -100,7 +104,7 @@ export class InteractiveSocket extends EventEmitter {
             this.queue.forEach(data => this.send(data));
         });
 
-        this.on('close', err => {
+        this.on('close', () => {
             if (this.state === State.Refreshing) {
                 this.state = State.Idle;
                 this.connect();
@@ -141,10 +145,10 @@ export class InteractiveSocket extends EventEmitter {
     public connect(): InteractiveSocket {
         if (this.state === State.Closing) {
             this.state = State.Refreshing;
-            return;
+            return this;
         }
 
-        const extras = {
+        const extras: IWebSocketOptions = {
             //TODO X-Auth-User is temporary, used to mock against while service gets integrated with Beam stack
             headers: {
                 'X-Protocol-Version': '2.0',
@@ -263,7 +267,7 @@ export class InteractiveSocket extends EventEmitter {
             resolveOn(this, 'close', timeout + 1)
             .then(() => {
                 if (!this.queue.has(packet)) { // skip if we already resolved
-                    return;
+                    return null;
                 }
 
                 packet.setState(PacketState.Pending);
@@ -325,5 +329,9 @@ export class InteractiveSocket extends EventEmitter {
 
     private rebroadcastEvent(name: string) {
         this.socket.addEventListener(name, evt => this.emit(name, evt));
+    }
+
+    public getQueueSize(): number {
+        return this.queue.size;
     }
 }

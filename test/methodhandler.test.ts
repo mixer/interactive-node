@@ -2,28 +2,30 @@ import { expect } from 'chai';
 
 import { InteractiveError } from '../src/errors';
 import { MethodHandlerManager } from '../src/methodhandler';
-import { Method } from '../src/packets';
+import { Method, Reply } from '../src/packets';
 
 describe('method handler', () => {
-    let handler;
+    let handler: MethodHandlerManager;
     beforeEach(() => {
         handler = new MethodHandlerManager();
     });
 
     it('handles a registered method', () => {
-        handler.addHandler('hello', method => Promise.resolve('hi'));
+        handler.addHandler('hello', (method: Method) => {
+            return Promise.resolve(method.reply({bar: 'foo'}, null));
+        });
 
         return handler
             .handle(new Method('hello', {foo: 'bar'}))
-            .then(res => {
-                expect(res).to.equal('hi');
+            .then((res: Reply) => {
+                expect(res.result).to.deep.equal({bar: 'foo'});
             });
     });
 
     it('throws an error if an undiscardable method has no handler', () => {
         return handler
             .handle(new Method('hello', {foo: 'bar'}, false))
-            .catch(err => {
+            .catch((err: InteractiveError.Base) => {
                 expect(err).to.be.an.instanceof(InteractiveError.UnknownMethodName);
             });
     });
