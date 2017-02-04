@@ -1,14 +1,14 @@
 import { InteractiveError } from './errors';
 import { Method, Reply } from './packets';
 
-export interface IMethodHandler {
-    (method: Method) : Promise<Reply | null>;
+export interface IMethodHandler<T> {
+    (method: Method<T>) : Promise<Reply | null>;
 }
 
 export class MethodHandlerManager {
-    private handlers: {[key: string]: IMethodHandler} = {};
+    private handlers: {[key: string]: IMethodHandler<any>} = {};
 
-    public addHandler(method: string, handler: IMethodHandler) {
+    public addHandler<T>(method: string, handler: IMethodHandler<T>) {
         this.handlers[method] = handler;
     }
 
@@ -16,7 +16,7 @@ export class MethodHandlerManager {
         delete this.handlers[method];
     }
 
-    public handle(method: Method): Promise<Reply | null> {
+    public handle<T>(method: Method<T>): Promise<Reply | null> {
         if (this.handlers[method.method]) {
             return this.handlers[method.method](method);
         }

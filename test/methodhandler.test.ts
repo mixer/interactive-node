@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { InteractiveError } from '../src/errors';
 import { MethodHandlerManager } from '../src/methodhandler';
-import { Method, Reply } from '../src/packets';
+import { IRawValues, Method, Reply } from '../src/packets';
 
 describe('method handler', () => {
     let handler: MethodHandlerManager;
@@ -11,7 +11,7 @@ describe('method handler', () => {
     });
 
     it('handles a registered method', () => {
-        handler.addHandler('hello', (method: Method) => {
+        handler.addHandler<IRawValues>('hello', (method: Method<IRawValues>) => {
             return Promise.resolve(method.reply({bar: 'foo'}, null));
         });
 

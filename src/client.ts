@@ -31,7 +31,7 @@ export class Client extends EventEmitter {
         super();
         this.socket = new InteractiveSocket(options);
 
-        this.socket.on('method', (method: Method) => {
+        this.socket.on('method', (method: Method<any>) => {
             this.methodHandler
                 .handle(method)
                 .then(reply => {
@@ -48,8 +48,8 @@ export class Client extends EventEmitter {
                 }));
         });
         // This is mostly to demonstrate how the methodHandler could work
-        this.methodHandler.addHandler('onReady', readyMethod => {
-            const params = <onReadyParams> readyMethod.params;
+        this.methodHandler.addHandler<onReadyParams>('onReady', readyMethod => {
+            const params = readyMethod.params;
 
             this.ready = params.isReady;
 

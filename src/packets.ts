@@ -26,9 +26,9 @@ export class Packet extends EventEmitter {
     private state: PacketState = PacketState.Pending;
     private timeout: number;
 
-    private method: Method;
+    private method: Method<any>;
 
-    constructor(method: Method) {
+    constructor(method: Method<any>) {
         super();
         this.method = method;
     }
@@ -88,17 +88,17 @@ export class Packet extends EventEmitter {
     }
 }
 
-export class Method {
+export class Method<T> {
     public type = 'method'; //tslint:disable-line
 
     constructor(
         public method: string,
-        public params: IRawValues,
+        public params: T,
         public discard: boolean = false,
         public id: number = Math.floor(Math.random() * maxInt32),
     ) {}
 
-    public static fromSocket(message: any): Method {
+    public static fromSocket(message: any): Method<IRawValues> {
         return  new Method(message.method, message.params, message.discard, message.id);
     }
 

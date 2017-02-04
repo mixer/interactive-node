@@ -243,7 +243,7 @@ describe('socket', () => {
 
         it('emits a method sent to it', done => {
             ws.send(JSON.stringify(METHOD));
-            socket.on('method', (method: Method) => {
+            socket.on('method', (method: Method<any>) => {
                 expect(method).to.deep.equal(Method.fromSocket(METHOD));
                 done();
             });
