@@ -4,11 +4,10 @@ import { EventEmitter } from 'events';
  */
 export class ClockSync extends EventEmitter {
     private syncTimer: NodeJS.Timer;
-    private historyLength: number = 11;
     private deltas: number[] = [];
     private syncFunc: () => Promise<number>;
 
-    constructor(public syncInterval: number = 30 * 1000) {
+    constructor(public syncInterval: number = 30 * 1000, private historyLength: number = 11) {
         super();
     }
 
@@ -29,7 +28,7 @@ export class ClockSync extends EventEmitter {
     }
 
     private sync() {
-        const transmitTime = new Date().getTime();
+        const transmitTime = Date.now();
         this.syncFunc().then(serverTime => this.processResponse(transmitTime, serverTime));
     }
 
@@ -60,7 +59,7 @@ export class ClockSync extends EventEmitter {
     }
 
     private processResponse(transmitTime: number, serverTime: number) {
-        const recieveTime = new Date().getTime();
+        const recieveTime = Date.now();
         const rtt = recieveTime - transmitTime;
         const delta = serverTime - (rtt / 2) - transmitTime;
         this.addDelta(delta);
