@@ -20,9 +20,7 @@ export class ClockSync extends EventEmitter {
 
         this.sync();
         setInterval(
-            () => {
-                this.sync();
-            },
+            () => this.sync(),
             this.syncInterval,
         );
     }
@@ -54,7 +52,7 @@ export class ClockSync extends EventEmitter {
         if (sorted.length % 2) {
             return sorted[midPoint];
         } else {
-            return (sorted[midPoint - 1] + sorted[midPoint]) / 2;
+            return (sorted[midPoint + 1] + sorted[midPoint]) / 2;
         }
     }
 
