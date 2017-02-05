@@ -1,65 +1,33 @@
-import { TimeoutError, MessageParseError, ConstellationError, CancelledError } from './errors';
-import { ExponentialReconnectionPolicy, ReconnectionPolicy } from './reconnection';
 import { EventEmitter } from 'events';
-import { Packet, PacketState } from './packets';
-
-import { timeout, resolveOn } from './util';
-import * as querystring from 'querystring';
 import * as pako from 'pako';
+import * as querystring from 'querystring';
 
-const pkg = require('../package.json');
+import { CancelledError, MessageParseError } from './errors';
+import { IRawValues, Method, Packet, PacketState, Reply } from './packets';
+import { ExponentialReconnectionPolicy, IReconnectionPolicy } from './reconnection';
+import { resolveOn } from './util';
 
-/**
- * The GzipDetector is used to determine whether packets should be compressed
- * before sending to Constellation.
- */
-export interface GzipDetector {
-    /**
-     * shouldZip returns true if the packet, encoded as a string, should
-     * be gzipped before sending to Constellation.
-     * @param {string} packet `raw` encoded as a string
-     * @param {any}    raw    the JSON-serializable object to be sent
-     */
-    shouldZip(packet: string, raw: any);
-}
+//We don't support lz4 due to time constraints right now
+export type CompressionScheme = 'none' | 'gzip';
 
 /**
- * SizeThresholdGzipDetector is a GzipDetector which zips all packets longer
- * than a certain number of bytes.
+ * SocketOptions are passed to the Interactive Socket and control behaviour.
  */
-export class SizeThresholdGzipDetector implements GzipDetector {
-    constructor(private threshold: number) {}
-
-    shouldZip(packet: string, raw: { [key: string]: any }) {
-        return packet.length > this.threshold;
-    }
-}
-
-/**
- * SocketOptions are passed to the
- */
-export interface SocketOptions {
-    // Whether to announce that the client is a bot in the socket handshake.
-    // Note that setting it to `false` may result in a ban. Defaults to true.
-    isBot?: boolean;
-
-    // User agent header to advertise in connections.
-    userAgent?: string;
-
+export interface ISocketOptions {
     // Settings to use for reconnecting automatically to Constellation.
     // Defaults to automatically reconnecting with the ExponentialPolicy.
-    reconnectionPolicy?: ReconnectionPolicy;
+    reconnectionPolicy?: IReconnectionPolicy;
     autoReconnect?: boolean;
 
-    // Websocket URL to connect to, defaults to wss://constellation.beam.pro
+    // Websocket URL to connect to, defaults to <TODO>
     url?: string;
 
-    // Interface used to determine whether messages should be gzipped.
-    // Defaults to a strategy which gzipps messages greater than 1KB in size.
-    gzip?: GzipDetector;
+    //compression scheme, defaults to none, Will remain none until pako typings are updated
+    compressionScheme?: CompressionScheme;
 
     // Optional JSON web token to use for authentication.
     jwt?: string;
+
     // Optional OAuth token to use for authentication.
     authToken?: string;
 
@@ -68,6 +36,10 @@ export interface SocketOptions {
 
     // Duration upon which to send a ping to the server. Defaults to 10 seconds.
     pingInterval?: number;
+}
+
+export interface IWebSocketOptions {
+    headers: IRawValues;
 }
 
 /**
@@ -88,51 +60,51 @@ export enum State {
     Refreshing,
 }
 
-function getDefaults(): SocketOptions {
+function getDefaults(): ISocketOptions {
     return {
         url: 'wss://constellation.beam.pro',
-        userAgent: `Carina ${pkg.version}`,
         replyTimeout: 10000,
-        isBot: false,
-        gzip: new SizeThresholdGzipDetector(1024),
+        compressionScheme: 'none',
         autoReconnect: true,
         reconnectionPolicy: new ExponentialReconnectionPolicy(),
         pingInterval: 10 * 1000,
     };
 }
 
-export class ConstellationSocket extends EventEmitter {
+export class InteractiveSocket extends EventEmitter {
     // WebSocket constructor, may be overridden if the environment
     // does not natively support it.
+
+    //tslint:disable-next-line:variable-name
     public static WebSocket: any = typeof WebSocket === 'undefined' ? null : WebSocket;
 
     private reconnectTimeout: NodeJS.Timer;
-    private pingTimeout: NodeJS.Timer;
-    private options: SocketOptions;
+    private options: ISocketOptions;
     private state: State;
     private socket: WebSocket;
     private queue: Set<Packet> = new Set<Packet>();
 
-    constructor(options: SocketOptions = {}) {
+    constructor(options: ISocketOptions = {}) {
         super();
         this.setMaxListeners(Infinity);
         this.setOptions(options);
 
-        if (ConstellationSocket.WebSocket === undefined) {
+        if (InteractiveSocket.WebSocket === undefined) {
             throw new Error('Cannot find a websocket implementation; please provide one by ' +
-                'running ConstellationSocket.WebSocket = myWebSocketModule;')
+                'running InteractiveSocket.WebSocket = myWebSocketModule;');
         }
 
-        this.on('message', msg => this.extractMessage(msg.data));
-        this.on('open', () => this.schedulePing());
+        this.on('message', (msg: any) => {
+            this.extractMessage(msg.data);
+        });
 
-        this.on('event:hello', () => {
+        this.on('open', () => {
             this.options.reconnectionPolicy.reset();
             this.state = State.Connected;
             this.queue.forEach(data => this.send(data));
         });
 
-        this.on('close', err => {
+        this.on('close', () => {
             if (this.state === State.Refreshing) {
                 this.state = State.Idle;
                 this.connect();
@@ -145,9 +117,12 @@ export class ConstellationSocket extends EventEmitter {
             }
 
             this.state = State.Reconnecting;
-            this.reconnectTimeout = setTimeout(() => {
-                this.connect();
-            }, this.options.reconnectionPolicy.next());
+            this.reconnectTimeout = setTimeout(
+                () => {
+                    this.connect();
+                },
+                this.options.reconnectionPolicy.next(),
+            );
         });
     }
 
@@ -155,9 +130,9 @@ export class ConstellationSocket extends EventEmitter {
      * Set the given options.
      * Defaults and previous option values will be used if not supplied.
      */
-    setOptions(options: SocketOptions) {
+    public setOptions(options: ISocketOptions) {
         this.options = Object.assign({}, this.options || getDefaults(), options);
-
+        //TODO: Clear up auth here later
         if (this.options.jwt && this.options.authToken) {
             throw new Error('Cannot connect to Constellation with both JWT and OAuth token.');
         }
@@ -167,17 +142,17 @@ export class ConstellationSocket extends EventEmitter {
      * Open a new socket connection. By default, the socket will auto
      * connect when creating a new instance.
      */
-    public connect(): ConstellationSocket {
+    public connect(): InteractiveSocket {
         if (this.state === State.Closing) {
             this.state = State.Refreshing;
-            return;
+            return this;
         }
 
-        const protocol = this.options.gzip ? 'cnstl-gzip' : 'cnstl';
-        const extras = {
+        const extras: IWebSocketOptions = {
+            //TODO X-Auth-User is temporary, used to mock against while service gets integrated with Beam stack
             headers: {
-                'User-Agent': this.options.userAgent,
-                'X-Is-Bot': this.options.isBot,
+                'X-Protocol-Version': '2.0',
+                'X-Auth-User': '{"ID":1, "Username":"connor","XP":100}',
             },
         };
 
@@ -185,10 +160,11 @@ export class ConstellationSocket extends EventEmitter {
         if (this.options.authToken) {
             extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
         } else if (this.options.jwt) {
+            //TODO: Clear up auth here later
             url += '?' + querystring.stringify({ jwt: this.options.jwt });
         }
 
-        this.socket = new ConstellationSocket.WebSocket(url, protocol, extras);
+        this.socket = new InteractiveSocket.WebSocket(url, extras);
         this.socket.binaryType = 'arraybuffer';
 
         this.state = State.Connecting;
@@ -229,7 +205,6 @@ export class ConstellationSocket extends EventEmitter {
 
         this.state = State.Closing;
         this.socket.close();
-
         this.queue.forEach(packet => packet.cancel());
         this.queue.clear();
     }
@@ -238,13 +213,14 @@ export class ConstellationSocket extends EventEmitter {
      * Executes an RPC method on the server. Returns a promise which resolves
      * after it completes, or after a timeout occurs.
      */
-    public execute(method: string, params: { [key: string]: any } = {}): Promise<any> {
-        return this.send(new Packet(method, params));
+    public execute(method: string, params: IRawValues = {}, discard: boolean = false): Promise<any> {
+        const methodObj = new Method(method, params, discard);
+        return this.send(new Packet(methodObj));
     }
 
     /**
-     * Send emits a packet over the websocket, or queues it for later sending
-     * if the socket is not open.
+     * Send emits a Method over the websocket, wrapped in a Packet to provide queueing and
+     * cancelation. It returns a promise which resolves with the reply payload from the Server.
      */
     public send(packet: Packet): Promise<any> {
         if (packet.getState() === PacketState.Cancelled) {
@@ -259,7 +235,9 @@ export class ConstellationSocket extends EventEmitter {
             return Promise.race([
                 resolveOn(packet, 'send'),
                 resolveOn(packet, 'cancel')
-                .then(() => { throw new CancelledError() }),
+                .then(() => {
+                    throw new CancelledError();
+                }),
             ]);
         }
 
@@ -267,11 +245,11 @@ export class ConstellationSocket extends EventEmitter {
         const promise = Promise.race([
             // Wait for replies to that packet ID:
             resolveOn(this, `reply:${packet.id()}`, timeout)
-            .then((result: { err: Error, result: any }) => {
+            .then((result: Reply) => {
                 this.queue.delete(packet);
 
-                if (result.err) {
-                    throw result.err;
+                if (result.error) {
+                    throw result.error;
                 }
 
                 return result.result;
@@ -282,12 +260,14 @@ export class ConstellationSocket extends EventEmitter {
             }),
             // Never resolve if the consumer cancels the packets:
             resolveOn(packet, 'cancel', timeout + 1)
-            .then(() => { throw new CancelledError() }),
+            .then(() => {
+                throw new CancelledError();
+            }),
             // Re-queue packets if the socket closes:
             resolveOn(this, 'close', timeout + 1)
             .then(() => {
                 if (!this.queue.has(packet)) { // skip if we already resolved
-                    return;
+                    return null;
                 }
 
                 packet.setState(PacketState.Pending);
@@ -302,11 +282,17 @@ export class ConstellationSocket extends EventEmitter {
         return promise;
     }
 
+    public reply(reply: Reply) {
+        this.sendRaw(reply);
+    }
+
     private sendPacketInner(packet: Packet) {
+        this.sendRaw(packet);
+    }
+
+    private sendRaw(packet: any) {
         const data = JSON.stringify(packet);
-        const payload = this.options.gzip.shouldZip(data, packet.toJSON())
-            ? pako.gzip(data)
-            : data;
+        const payload = data;
 
         this.emit('send', payload);
         this.socket.send(payload);
@@ -316,6 +302,7 @@ export class ConstellationSocket extends EventEmitter {
         let messageString: string;
         // If the packet is binary, then we need to unzip it
         if (typeof packet !== 'string') {
+            //TODO Review this after we update pako typings.
             messageString = <string> <any> pako.ungzip(packet, { to: 'string' });
         } else {
             messageString = packet;
@@ -328,16 +315,12 @@ export class ConstellationSocket extends EventEmitter {
             throw new MessageParseError('Message returned was not valid JSON');
         }
 
-        // Bump the ping timeout whenever we get a message reply.
-        this.schedulePing();
-
         switch (message.type) {
-        case 'event':
-            this.emit(`event:${message.event}`, message.data);
+        case 'method':
+            this.emit('method', Method.fromSocket(message));
             break;
         case 'reply':
-            let err = message.error ? ConstellationError.from(message.error) : null;
-            this.emit(`reply:${message.id}`, { err, result: message.result });
+            this.emit(`reply:${message.id}`, Reply.fromSocket(message));
             break;
         default:
             throw new MessageParseError(`Unknown message type "${message.type}"`);
@@ -348,28 +331,7 @@ export class ConstellationSocket extends EventEmitter {
         this.socket.addEventListener(name, evt => this.emit(name, evt));
     }
 
-    private schedulePing() {
-        clearTimeout(this.pingTimeout);
-
-        this.pingTimeout = setTimeout(() => {
-            if (this.state !== State.Connected) {
-                return;
-            }
-
-            const packet = new Packet('ping', null);
-            const timeout = this.options.replyTimeout;
-
-            setTimeout(() => {
-                this.sendPacketInner(packet);
-                this.emit('ping');
-            });
-
-            return Promise.race([
-                resolveOn(this, `reply:${packet.id()}`, timeout),
-                resolveOn(this, 'close', timeout + 1),
-            ])
-            .then(() => this.emit('pong'))
-            .catch(err => this.socket.close());
-        }, this.options.pingInterval);
+    public getQueueSize(): number {
+        return this.queue.size;
     }
 }
