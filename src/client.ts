@@ -1,4 +1,7 @@
+import { getHeapStatistics } from 'v8';
 import { EventEmitter } from 'events';
+
+import { ClockSync } from './ClockSync';
 import { InteractiveError } from './errors';
 import { MethodHandlerManager } from './methodhandler';
 import { Method, Reply } from './packets';
@@ -7,6 +10,8 @@ import { only } from './util';
 
 export class Client extends EventEmitter {
     public ready = false;
+    public delta: number = 0;
+    public clockSyncer = new ClockSync();
     public methodHandler = new MethodHandlerManager();
     /**
      * Set the websocket implementation.
@@ -53,6 +58,11 @@ export class Client extends EventEmitter {
             this.emit('ready', this.ready);
             return Promise.resolve(null);
         });
+
+        //Setup syncer
+        this.socket.on('open', () => this.clockSyncer.start(() => this.getTime()));
+        this.socket.on('close', () => this.clockSyncer.stop());
+        this.clockSyncer.on('delta', (delta: number) => this.delta = delta);
     }
 
     /**
@@ -84,5 +94,10 @@ export class Client extends EventEmitter {
         }).then(res => {
             this.socket.setOptions({compressionScheme: <CompressionScheme> res.scheme});
         });
+    }
+
+    public getTime(): Promise<number> {
+        return this.socket.execute('getTime')
+            .then(res => res.time);
     }
 }
