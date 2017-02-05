@@ -1,4 +1,3 @@
-import { getHeapStatistics } from 'v8';
 import { EventEmitter } from 'events';
 
 import { ClockSync } from './ClockSync';

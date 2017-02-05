@@ -3,9 +3,10 @@ import { EventEmitter } from 'events';
  * Clock sync's goal is to keep a local clock in sync with a server clock.
  */
 export class ClockSync extends EventEmitter {
-    public syncTimer: NodeJS.Timer;
-    public historyLength: number = 11;
-    public deltas: number[] = [];
+    private syncTimer: NodeJS.Timer;
+    private historyLength: number = 11;
+    private deltas: number[] = [];
+    private syncFunc: () => Promise<number>;
 
     constructor(public syncInterval: number = 30 * 1000) {
         super();
@@ -15,13 +16,21 @@ export class ClockSync extends EventEmitter {
         if (this.syncTimer) {
             this.stop();
         }
+
+        this.syncFunc = syncFunc;
+
+        this.sync();
         setInterval(
             () => {
-                const transmitTime = new Date().getTime();
-                syncFunc().then(serverTime => this.processResponse(transmitTime, serverTime));
+                this.sync();
             },
             this.syncInterval,
         );
+    }
+
+    private sync() {
+        const transmitTime = new Date().getTime();
+        this.syncFunc().then(serverTime => this.processResponse(transmitTime, serverTime));
     }
 
     public stop() {
@@ -32,8 +41,17 @@ export class ClockSync extends EventEmitter {
     }
 
     public getDelta(): number {
-        const sorted = this.deltas.sort();
-        const midPoint = sorted.length / 2;
+        if (this.deltas.length === 0) {
+            return 0;
+        }
+
+        if (this.deltas.length === 1) {
+            return this.deltas[0];
+        }
+
+        const sorted = this.deltas.slice(0).sort();
+        const midPoint = Math.floor(sorted.length / 2);
+
         if (sorted.length % 2) {
             return sorted[midPoint];
         } else {
