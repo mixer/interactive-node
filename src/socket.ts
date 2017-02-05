@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import * as pako from 'pako';
 import * as querystring from 'querystring';
 
 import { CancelledError, MessageParseError } from './errors';
