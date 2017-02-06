@@ -12,7 +12,7 @@ export interface IClockSyncOptions {
 }
 
 const defaultOptions = {
-    checkInterval: 10 * 1000,
+    checkInterval: 30 * 1000,
     sampleSize: 3,
     threshold: 1000,
 }
