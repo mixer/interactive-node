@@ -14,8 +14,11 @@ describe('clock syncer', () => {
     it('calls a sync function at specified interval', () => {
         const spy = sinon.stub();
         spy.returns(Promise.resolve(1));
-        syncer = new ClockSync(10);
-        syncer.start(spy);
+        syncer = new ClockSync({
+            sampleFunc: spy,
+            checkInterval: 10,
+        });
+        syncer.start();
         clock.tick(10);
         expect(spy).to.have.been.calledOnce;
     });
@@ -27,8 +30,11 @@ describe('clock syncer', () => {
         const spy = sinon.stub();
 
         spy.returns(Promise.resolve(new Date().getTime() + artificialDifference));
-        syncer = new ClockSync(tickInterval);
-        syncer.start(spy);
+        syncer = new ClockSync({
+            sampleFunc: spy,
+            checkInterval: 10,
+        });
+        syncer.start();
 
         syncer.on('delta', (delta: number) => {
             expect(delta).to.equal(artificialDifference - tickInterval);
