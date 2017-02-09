@@ -1,5 +1,7 @@
 import { EventEmitter } from 'events';
 
+import { delay } from './util';
+
 export interface IClockSyncOptions {
     // How often should we check for a sync status
     checkInterval?: number;
@@ -9,12 +11,15 @@ export interface IClockSyncOptions {
     threshold?: number;
     // the function to call to check the server time. Should resolve with the unix timestamp of the server.
     sampleFunc: () => Promise<number>;
+    // How long to wait between sampling during a sync call
+    sampleDelay?: number;
 }
 
 const defaultOptions = {
     checkInterval: 30 * 1000,
     sampleSize: 3,
     threshold: 1000,
+    sampleDelay: 5000,
 }
 /**
  * Clock sync's goal is to keep a local clock in sync with a server clock.
@@ -36,10 +41,6 @@ export class ClockSync extends EventEmitter {
 
     public start(): void {
         this.deltas = [];
-
-        if (this.checkTimer) {
-            this.stop();
-        }
 
         this.sync()
             .then(() => {
@@ -63,8 +64,8 @@ export class ClockSync extends EventEmitter {
     public sync(): Promise<void> {
         const samplePromises: Promise<number>[] = [];
 
-        for(var i=0; i< this.options.sampleSize; i++) {
-            samplePromises.push(this.sample());
+        for (let i = 0; i < this.options.sampleSize; i++) {
+            samplePromises.push(delay(this.options.sampleDelay).then(() => this.sample()));
         }
         this.syncing = Promise.all(samplePromises)
             .then(() => {
