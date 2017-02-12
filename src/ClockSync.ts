@@ -65,7 +65,7 @@ export class ClockSync extends EventEmitter {
         const samplePromises: Promise<number>[] = [];
 
         for (let i = 0; i < this.options.sampleSize; i++) {
-            samplePromises.push(delay(this.options.sampleDelay).then(() => this.sample()));
+            samplePromises.push(delay(i * this.options.sampleDelay).then(() => this.sample()));
         }
         this.syncing = Promise.all(samplePromises)
             .then(() => {
