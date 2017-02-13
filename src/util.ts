@@ -50,6 +50,18 @@ export function timeout(message: string, delay: number): Promise<void> {
         setTimeout(() => reject(err), delay);
     });
 }
+
+/**
+ * Returns a promise which is resolved with an optional value after the provided delay
+ * @param delay The time in milliseconds to wait before resolving the promise
+ * @param value The value to resolve the promise with optional
+ */
+export function delay(delay: number): Promise<void>;
+export function delay<T>(delay: number, value?: T): Promise<T> {
+    return new Promise<T>(resolve => {
+        setTimeout(() => resolve(value), delay);
+    });
+}
 /**
  * Returns a function that calls the wrapped function with only instances of
  * the provided class, and throws them otherwise. This is meant to be used
