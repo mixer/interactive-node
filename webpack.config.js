@@ -10,7 +10,7 @@ module.exports = {
         libraryTarget: 'umd',
     },
     resolve: {
-        extensions: ['', '.webpack.js', '.web.js', '.ts', '.js'],
+        extensions: ['.webpack.js', '.web.js', '.ts', '.js'],
     },
     module: {
         loaders: [

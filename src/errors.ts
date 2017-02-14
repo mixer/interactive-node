@@ -1,19 +1,50 @@
 export class BaseError extends Error {
-    constructor(public message: string) {
-        super(message);
+    constructor(public readonly message: string) {
+        super();
+        if (Error.captureStackTrace) { // chrome etc.
+            Error.captureStackTrace(this, this.constructor);
+            return;
+        }
+        const stack = new Error().stack.split('\n'); // removes useless stack frame
+        stack.splice(1, 1);
+        this.stack = stack.join('\n');
+    }
+
+    protected static setProto(error: BaseError) {
+        if (Object.setPrototypeOf) {
+            Object.setPrototypeOf(error, this.prototype);
+            return;
+        }
+        (<any>error).__proto__ = this.prototype; // Super emergency fallback
     }
 }
 
 export class CancelledError extends BaseError {
     constructor() {
         super('Packet was cancelled or socket was closed before a reply was received.');
+        CancelledError.setProto(this);
+    }
+}
+
+export class PermissionDeniedError extends BaseError {
+    constructor(operation: string, source: string) {
+        super(`You don't have permission to ${operation} from ${source}!`);
+        PermissionDeniedError.setProto(this);
     }
 }
 
 export class TimeoutError extends BaseError {
+    constructor(message: string) {
+        super(message);
+        TimeoutError.setProto(this);
+    }
 }
 
 export class MessageParseError extends BaseError {
+    constructor(message: string) {
+        super(message);
+        MessageParseError.setProto(this);
+    }
 }
 
 export interface IInteractiveError {
@@ -42,6 +73,7 @@ export module InteractiveError {
     export class InvalidPayload extends Base {
         constructor(message: string) {
             super(message, 4000);
+            InvalidPayload.setProto(this);
         }
     }
     errors[4000] = InvalidPayload;
@@ -49,6 +81,7 @@ export module InteractiveError {
     export class PayloadDecompression extends Base {
         constructor(message: string) {
             super(message, 4001);
+            PayloadDecompression.setProto(this);
         }
     }
     errors[4001] = PayloadDecompression;
@@ -56,6 +89,7 @@ export module InteractiveError {
     export class UnknownPacketType extends Base {
         constructor(message: string) {
             super(message, 4002);
+            UnknownPacketType.setProto(this);
         }
     }
     errors[4002] = UnknownPacketType;
@@ -63,6 +97,7 @@ export module InteractiveError {
     export class UnknownMethodName extends Base {
         constructor(message: string) {
             super(message, 4003);
+            UnknownMethodName.setProto(this);
         }
     }
     errors[4003] = UnknownMethodName;
@@ -70,6 +105,7 @@ export module InteractiveError {
     export class InvalidMethodArguments extends Base {
         constructor(message: string) {
             super(message, 4004);
+            InvalidMethodArguments.setProto(this);
         }
     }
     errors[4004] = InvalidMethodArguments;
@@ -77,6 +113,7 @@ export module InteractiveError {
     export class EtagMismatch extends Base {
         constructor(message: string) {
             super(message, 4005);
+            EtagMismatch.setProto(this);
         }
     }
     errors[4005] = EtagMismatch;
@@ -84,6 +121,7 @@ export module InteractiveError {
     export class InvalidTransactionId extends Base {
         constructor(message: string) {
             super(message, 4007);
+            InvalidTransactionId.setProto(this);
         }
     }
 
@@ -92,6 +130,7 @@ export module InteractiveError {
     export class NotEnoughSparks extends Base {
         constructor(message: string) {
             super(message, 4008);
+            NotEnoughSparks.setProto(this);
         }
     }
 
@@ -100,6 +139,7 @@ export module InteractiveError {
     export class UnknownGroup extends Base {
         constructor(message: string) {
             super(message, 4009);
+            UnknownGroup.setProto(this);
         }
     }
 
@@ -108,6 +148,7 @@ export module InteractiveError {
     export class GroupAlreadyExists extends Base {
         constructor(message: string) {
             super(message, 4010);
+            GroupAlreadyExists.setProto(this);
         }
     }
 
@@ -116,6 +157,7 @@ export module InteractiveError {
     export class UnknownSceneId extends Base {
         constructor(message: string) {
             super(message, 4011);
+            UnknownSceneId.setProto(this);
         }
     }
 
@@ -124,6 +166,7 @@ export module InteractiveError {
     export class SceneAlreadyExists extends Base {
         constructor(message: string) {
             super(message, 4012);
+            SceneAlreadyExists.setProto(this);
         }
     }
 
@@ -132,6 +175,7 @@ export module InteractiveError {
     export class UnkownControlId extends Base {
         constructor(message: string) {
             super(message, 4013);
+            UnkownControlId.setProto(this);
         }
     }
 
@@ -140,16 +184,18 @@ export module InteractiveError {
     export class ControlAlreadyExists extends Base {
         constructor(message: string) {
             super(message, 4014);
+            ControlAlreadyExists.setProto(this);
         }
     }
 
     errors[4014] = ControlAlreadyExists;
 
-    export class UnkownControlType extends Base {
+    export class UnknownControlType extends Base {
         constructor(message: string) {
             super(message, 4015);
+            UnknownControlType.setProto(this);
         }
     }
 
-    errors[4015] = UnkownControlType;
+    errors[4015] = UnknownControlType;
 }

@@ -1,0 +1,52 @@
+{
+    "scenes": [
+        {
+            "sceneID": "my awesome scene",
+            "etag": "252185589",
+            "controls": [
+                {
+                    "controlID": "win_the_game_btn",
+                    "etag": "262111379",
+                    "kind": "button",
+                    "text": "Win the Game",
+                    "cost": 0,
+                    "progress": 0.25,
+                    "keyCode": 30,
+                    "disabled": false,
+                    "meta": {
+                        "glow": {
+                            "etag": "254353748",
+                            "value": {
+                                "color": "#f00",
+                                "radius": 10
+                            }
+                        }
+                    },
+                    "position": [
+                        {
+                            "size":"large",
+                            "width":2,
+                            "height":2,
+                            "x":2,
+                            "y":3
+                        },
+                        {
+                            "size":"medium",
+                            "width":2,
+                            "height":2,
+                            "x":2,
+                            "y":3
+                        },
+                        {
+                            "size":"small",
+                            "width":2,
+                            "height":2,
+                            "x":2,
+                            "y":3
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
