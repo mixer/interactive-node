@@ -155,7 +155,7 @@ export class InteractiveSocket extends EventEmitter {
             //TODO X-Auth-User is temporary, used to mock against while service gets integrated with Beam stack
             headers: {
                 'X-Protocol-Version': '2.0',
-                'X-Auth-User': '{"ID":1, "Username":"connor","XP":100}',
+                'X-Interactive-Version': 3419,
             },
         };
 
