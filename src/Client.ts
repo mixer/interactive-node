@@ -27,7 +27,7 @@ export class Client extends EventEmitter implements IClient {
 
     public state = new State();
 
-    private socket: InteractiveSocket;
+    protected socket: InteractiveSocket;
 
     constructor(options: IClientOptions) {
         super();
@@ -53,6 +53,10 @@ export class Client extends EventEmitter implements IClient {
             this.getScenes()
                  .then(res => this.state.initialize(res.scenes));
         });
+
+        // Re-emit these for debugging reasons
+        this.socket.on('message', (data: any) => this.emit('message', data));
+        this.socket.on('send', (data: any) => this.emit('send', data));
     }
 
     /**
@@ -88,21 +92,6 @@ export class Client extends EventEmitter implements IClient {
         }).then(res => {
             this.socket.setOptions({compressionScheme: <CompressionScheme> res.scheme});
         });
-    }
-
-     /**
-      * Set the websocket implementation.
-      * You will likely not need to set this in a browser environment.
-      * You will not need to set this if WebSocket is globally available.
-      *
-      * @example
-      * client.WebSocket = require('ws');
-      */
-    public static set WebSocket(ws: any) {
-        InteractiveSocket.WebSocket = ws;
-    }
-    public static get WebSocket() {
-        return InteractiveSocket.WebSocket;
     }
 
     public reply(reply: Reply) {

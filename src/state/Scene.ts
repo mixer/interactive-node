@@ -26,10 +26,12 @@ export class Scene extends EventEmitter implements IScene {
     constructor(data: ISceneData) {
         super();
         this.sceneID = data.sceneID;
-        this.controls = this.addControls(data.controls);
+        if (data.controls) {
+            this.controls = this.addControls(data.controls);
+        }
     }
 
-    public addControls(controls: IControlData[]) {
+    public addControls(controls: IControlData[]): IControl[] {
         return controls.map(control => this.addControl(control));
     }
     public addControl(controlData: IControlData): IControl {
