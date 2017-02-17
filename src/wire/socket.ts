@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import * as querystring from 'querystring';
+import * as WebSocket from 'ws';
 
 import { CancelledError, MessageParseError } from '../errors';
 import { IRawValues } from '../interfaces';
@@ -36,6 +37,8 @@ export interface ISocketOptions {
 
     // Duration upon which to send a ping to the server. Defaults to 10 seconds.
     pingInterval?: number;
+    // Any extra headers to include in the socket connection.
+    extraHeaders?: IRawValues;
 }
 
 export interface IWebSocketOptions {
@@ -68,6 +71,7 @@ function getDefaults(): ISocketOptions {
         autoReconnect: true,
         reconnectionPolicy: new ExponentialReconnectionPolicy(),
         pingInterval: 10 * 1000,
+        extraHeaders: {},
     };
 }
 
@@ -150,13 +154,14 @@ export class InteractiveSocket extends EventEmitter {
             this.state = State.Refreshing;
             return this;
         }
+        const defaultHeaders = {
+            'X-Protocol-Version': '2.0',
+        };
+
+        const headers = Object.assign({}, defaultHeaders, this.options.extraHeaders);
 
         const extras: IWebSocketOptions = {
-            //TODO X-Auth-User is temporary, used to mock against while service gets integrated with Beam stack
-            headers: {
-                'X-Protocol-Version': '2.0',
-                'X-Interactive-Version': 3419,
-            },
+            headers,
         };
 
         let url = this.options.url;
@@ -166,8 +171,8 @@ export class InteractiveSocket extends EventEmitter {
             //TODO: Clear up auth here later
             url += '?' + querystring.stringify({ jwt: this.options.jwt });
         }
-
-        this.socket = new InteractiveSocket.WebSocket(url, extras);
+        //console.log(InteractiveSocket.WebSocket());
+        this.socket = new WebSocket(url, extras);
 
         this.state = State.Connecting;
 
