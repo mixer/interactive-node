@@ -4,13 +4,6 @@
         "node_modules/tslint-microsoft-contrib"
     ],
     "rules": {
-        // Basic
-        "import-blacklist": [
-            true,
-            "lodash",
-            "rxjs/Rx",
-            "rxjs"
-        ],
         "no-multiline-string": false,
         "arrow-parens": [true, "ban-single-arg-parens"],
         "max-file-line-count": [true, 600],

@@ -10,23 +10,39 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "strictNullChecks": false,
+        "suppressImplicitAnyIndexErrors": true,
         "module": "commonjs",
         "sourceMap": true,
         "target": "es5",
         "outDir": "lib",
         "lib": [
-            "dom",
             "es5",
             "es2015.collection",
             "es2015.promise",
             "es2015.iterable",
             "es2015.core"
         ],
+        "types": [
+            "node",
+            "mocha",
+            "sinon",
+            "sinon-chai"
+        ],
          "typeRoots": [
-            "node_modules/@types"
-        ]
+            "node_modules/@types",
+            "./types"
+        ],
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "./types/*"
+            ]
+        }
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "test",
+        "dist",
+        "lib"
     ]
 }
