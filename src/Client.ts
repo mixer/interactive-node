@@ -4,7 +4,7 @@ import { PermissionDeniedError } from './errors';
 import { IClient } from './IClient';
 import { onReadyParams } from './methods/methodTypes';
 import { IInput } from './state/interfaces/controls/IInput';
-import { ISceneDataArray } from './state/interfaces/IScene';
+import { ISceneData, ISceneDataArray } from './state/interfaces/IScene';
 import { State } from './state/State';
 import { Method, Reply } from './wire/packets';
 import { CompressionScheme, InteractiveSocket, ISocketOptions } from './wire/Socket';
@@ -121,6 +121,11 @@ export class Client extends EventEmitter implements IClient {
             });
     }
 
+    public createControls(data: ISceneData) {
+        return this.execute('createControls', data, false);
+    }
+
+    public execute(method: 'createControls', params: ISceneData, discard: false ): Promise<void>;
     public execute(method: 'ready', params: onReadyParams, discard: false ): Promise<void>;
     public execute(method: 'getTime', params: null, discard: false ): Promise<{time: number}>;
     public execute(method: 'getScenes', params: null, discard: false ): Promise<ISceneDataArray>;

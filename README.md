@@ -15,7 +15,7 @@ Checkout the `interactive2` branch for the wip
 - [ ] deleteScene
 - [ ] updateScenes
 
-- [ ] createControls
+- [X] createControls
 - [ ] deleteControls
 - [ ] updateControls
 
