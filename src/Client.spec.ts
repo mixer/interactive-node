@@ -1,8 +1,9 @@
 import * as WebSocket from 'ws';
+import { setWebSocket } from './';
 
 import { Client, ClientType, IClientOptions } from './Client';
 
-Client.WebSocket = WebSocket;
+setWebSocket(WebSocket);
 const port = process.env.SERVER_PORT || 1339;
 
 describe('client', () => {
