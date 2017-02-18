@@ -171,7 +171,7 @@ export class InteractiveSocket extends EventEmitter {
             url += '?' + querystring.stringify({ jwt: this.options.jwt });
         }
         //console.log(InteractiveSocket.WebSocket());
-        this.socket = new InteractiveSocket.WebSocket(url, [], extras);
+        this.socket = new InteractiveSocket.WebSocket(url, null, extras);
 
         this.state = State.Connecting;
 
