@@ -1,7 +1,9 @@
 import { InteractiveSocket } from './wire/socket';
 
+export * from './state/interfaces';
 export * from './GameClient';
 export * from './ParticipantClient';
+
 
 /**
  * You will likely not need to set this in a browser environment.
