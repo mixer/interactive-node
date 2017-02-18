@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events';
 import * as querystring from 'querystring';
-import * as WebSocket from 'ws';
 
 import { CancelledError, MessageParseError } from '../errors';
 import { IRawValues } from '../interfaces';
@@ -80,7 +79,7 @@ export class InteractiveSocket extends EventEmitter {
     // does not natively support it.
 
     //tslint:disable-next-line:variable-name
-    public static WebSocket: any = typeof InteractiveSocket.WebSocket === 'undefined' ? null : InteractiveSocket.WebSocket;
+    public static WebSocket: any = typeof WebSocket === 'undefined' ? null : WebSocket;
 
     private reconnectTimeout: NodeJS.Timer;
     private options: ISocketOptions;
@@ -172,13 +171,13 @@ export class InteractiveSocket extends EventEmitter {
             url += '?' + querystring.stringify({ jwt: this.options.jwt });
         }
         //console.log(InteractiveSocket.WebSocket());
-        this.socket = new WebSocket(url, extras);
+        this.socket = new InteractiveSocket.WebSocket(url, [], extras);
 
         this.state = State.Connecting;
 
-        this.socket.on('close', (evt: any) => this.emit('close', evt));
-        this.socket.on('open', () => this.emit('open'));
-        this.socket.on('message', (evt: any) => this.emit('message', evt));
+        this.socket.addEventListener('close', (evt: any) => this.emit('close', evt));
+        this.socket.addEventListener('open', () => this.emit('open'));
+        this.socket.addEventListener('message', (evt: any) => this.emit('message', evt.data));
 
         this.socket.addEventListener('error', (err: any) => {
             if (this.state === State.Closing) {
@@ -191,6 +190,7 @@ export class InteractiveSocket extends EventEmitter {
 
         return this;
     }
+
 
     /**
      * Returns the current state of the socket.
