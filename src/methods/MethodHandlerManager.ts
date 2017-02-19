@@ -5,7 +5,7 @@ import { onReadyParams } from './methodTypes';
 import { ISceneData, ISceneDataArray, ISceneDeletionParams } from '../state/interfaces/IScene';
 
 export interface IMethodHandler<T> {
-    (method: Method<T>) : Promise<Reply | null> | void;
+    (method: Method<T>) : Reply | void;
 }
 
 export class MethodHandlerManager {
@@ -29,7 +29,7 @@ export class MethodHandlerManager {
         delete this.handlers[method];
     }
 
-    public handle<T>(method: Method<T>): Promise<Reply | null> | void {
+    public handle<T>(method: Method<T>): Reply | void {
         if (this.handlers[method.method]) {
             return this.handlers[method.method](method);
         }
@@ -42,9 +42,8 @@ export class MethodHandlerManager {
          * if discard is true, otherwise throw UnknownMethodName
          */
         if (method.discard) {
-            return Promise.resolve(null);
-        } else {
-            return Promise.reject(new InteractiveError.UnknownMethodName(''));
+            return null;
         }
+        throw new InteractiveError.UnknownMethodName(`Client cannot process ${method.method}`);
     }
 }

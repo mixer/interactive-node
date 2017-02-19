@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
-import { merge, pull } from 'lodash';
+import { merge } from 'lodash';
 
+import { InteractiveError } from '../errors';
 import { IClient } from '../IClient';
 import { IControl, IControlData } from './interfaces/controls/IControl';
 import { IMeta } from './interfaces/controls/IMeta';
@@ -9,7 +10,7 @@ import { StateFactory } from './StateFactory';
 
 export class Scene extends EventEmitter implements IScene {
     public sceneID: string;
-    public controls: IControl[] = [];
+    public controls = new Map<string, IControl>();
     public groups: any;
     public etag: string;
     public meta: IMeta = {};
@@ -27,26 +28,25 @@ export class Scene extends EventEmitter implements IScene {
         super();
         this.sceneID = data.sceneID;
         if (data.controls) {
-            this.controls = this.addControls(data.controls);
+            this.addControls(data.controls);
         }
     }
 
-    public addControls(controls: IControlData[]): IControl[] {
-        return controls.map(control => this.addControl(control));
+    public addControls(controls: IControlData[]) {
+        controls.forEach(control => this.addControl(control));
     }
     public addControl(controlData: IControlData): IControl {
+        if (this.controls.has(controlData.controlID)) {
+            throw new InteractiveError.ControlAlreadyExists(`Control ${controlData.controlID} already exists`);
+        }
         const control = this.stateFactory.createControl(controlData.kind, controlData, this);
-        this.controls.push(control);
+        this.controls.set(control.controlID, control);
         this.emit('controlAdded', control);
         return control;
     }
 
-    public getControls(): IControl[] {
-        return this.controls;
-    }
-
     public getControl(id: string): IControl {
-        return this.controls.find(control => control.controlID === id);
+        return this.controls.get(id);
     }
 
     public deleteControls(controls: IControlData[]) {
@@ -54,11 +54,8 @@ export class Scene extends EventEmitter implements IScene {
     }
 
     public deleteControl(controlData: IControlData) {
-        const control = this.getControl(controlData.controlID);
-        if (control) {
-            pull(this.controls, control);
-            this.emit('controlDeleted', control);
-        }
+        this.controls.delete(controlData.controlID);
+        this.emit('controlDeleted', controlData.controlID);
     }
     public updateControl(controlData: IControlData) {
         const control = this.getControl(controlData.controlID);

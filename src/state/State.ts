@@ -1,11 +1,9 @@
 import { EventEmitter } from 'events';
-import { pull } from 'lodash';
 
 import { ClockSync } from '../ClockSync';
 import { InteractiveError } from '../errors';
 import { IClient } from '../IClient';
 import { MethodHandlerManager } from '../methods/MethodHandlerManager';
-import { only } from '../util';
 import { Method, Reply } from '../wire/packets';
 import { IControl } from './interfaces/controls/IControl';
 import { ISceneData } from './interfaces/IScene';
@@ -13,11 +11,12 @@ import { Scene } from './Scene';
 import { StateFactory } from './StateFactory';
 
 export class State extends EventEmitter {
-    private scenes: Scene[] = [];
     public groups: any;
     public isReady: boolean;
     private methodHandler = new MethodHandlerManager();
     private stateFactory = new StateFactory();
+    private scenes = new Map<string, Scene>();
+
     private client: IClient;
 
     private clockDelta: number = 0;
@@ -32,7 +31,6 @@ export class State extends EventEmitter {
         this.methodHandler.addHandler('onReady', readyMethod => {
             this.isReady = readyMethod.params.isReady;
             this.emit('ready', this.isReady);
-            return Promise.resolve(null);
         });
 
         // Scene Events
@@ -78,21 +76,15 @@ export class State extends EventEmitter {
         this.stateFactory.setClient(client);
         this.clockSyncer.start();
     }
-    public processMethod(method: Method<any>): Promise<Reply> | void | Reply {
-        const result = this.methodHandler.handle(method);
-        if (!result) {
-            return;
+    public processMethod(method: Method<any>): void | Reply {
+        try {
+            return this.methodHandler.handle(method);
+        } catch (e) {
+            if (e instanceof InteractiveError.Base) {
+                return Reply.fromError(method.id, e);
+            }
+            throw e;
         }
-        if (result instanceof Promise) {
-            return result
-                .catch(only(InteractiveError.Base, err => {
-                    /**
-                     * Catch only InteractiveError's and return them as a Reply packet
-                     */
-                    return Reply.fromError(method.id, err);
-                }));
-        }
-        return result;
     }
 
     public initialize(scenes: ISceneData[]) {
@@ -109,20 +101,20 @@ export class State extends EventEmitter {
     public deleteScene(sceneID: string, reassignSceneID: string) {
         const targetScene = this.getScene(sceneID);
         if (targetScene) {
-            pull(this.scenes, targetScene);
             targetScene.destroy();
-            this.emit('sceneDeleted', targetScene, reassignSceneID);
+            this.scenes.delete(sceneID);
+            this.emit('sceneDeleted', sceneID, reassignSceneID);
         }
     }
 
     public addScene(data: ISceneData) {
         const scene = this.stateFactory.createScene(data);
-        this.scenes.push(scene);
+        this.scenes.set(data.sceneID, scene);
         this.emit('sceneCreated', scene);
     }
 
     public getScene(id: string): Scene {
-        return this.scenes.find(scene => scene.sceneID === id);
+        return this.scenes.get(id);
     }
 
     public getControl(id: string): IControl {

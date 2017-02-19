@@ -17,15 +17,13 @@ export interface ISceneData {
     etag?: string;
 }
 
-export interface IScene extends ISceneData {
-    controls: IControl[];
+export interface IScene {
+    controls: Map<string, IControl>;
     meta: IMeta;
     etag: string;
     //TODO groups
     groups: any;
 
-
-    getControls(): IControl[];
     getControl(id: string): IControl;
 
     update(scene: ISceneData): void;

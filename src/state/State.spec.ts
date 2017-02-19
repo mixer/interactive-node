@@ -112,7 +112,7 @@ describe('state', () => {
             const scene = state.getScene('my awesome scene');
             expect(scene).to.exist;
             expect(scene.meta).to.deep.equal(meta);
-        })
+        });
     });
 
     describe('controls', () => {
@@ -150,14 +150,7 @@ describe('state', () => {
                 },
             ));
         });
-        it('creates and places a new control within the state tree', done => {
-            const scene = state.getScene('my awesome scene');
-            scene.on('controlAdded', (addedControl: IControl) => {
-                expect(addedControl.controlID).to.equal('lose_the_game_btn');
-                const foundControl = state.getControl('lose_the_game_btn');
-                expect(foundControl).to.exist;
-                done();
-            });
+        it('creates and places a new control within the state tree', () => {
             state.processMethod(new Method(
                 'onControlCreate',
                 {
@@ -184,13 +177,49 @@ describe('state', () => {
                     ],
                 },
             ));
+            control = state.getScene('my awesome scene').getControl('lose_the_game_btn');
+            expect(control).to.exist;
+            expect(control.controlID).to.equal('lose_the_game_btn');
+        });
+        it('handles duplicate control ids', () => {
+            const method = new Method(
+                'onControlCreate',
+                {
+                    sceneID: 'my awesome scene',
+                    controls: [
+                        {
+                            controlID: 'lose_the_game_btn',
+                            etag: '262111379',
+                            kind: 'button',
+                            text: 'Lose the Game',
+                            cost: 0,
+                            progress: 0.25,
+                            disabled: false,
+                            meta: {
+                                glow: {
+                                    etag: '254353748',
+                                    value: {
+                                        color: '#f00',
+                                        radius: 10,
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                },
+            );
+            const reply = state.processMethod(method);
+            expect(reply).to.exist;
+            if (reply) {
+                expect(reply.error.code).to.be.equal(4014);
+            }
         });
         it('deletes a control', done => {
             const scene = state.getScene('my awesome scene');
             // TODO How do we overload this?
-            scene.on('controlDeleted', (eventControl: IControl) => {
-                expect(eventControl.controlID).to.equal('lose_the_game_btn');
-                const searchControl = scene.getControl('lose_the_game_btn');
+            scene.on('controlDeleted', (id: string) => {
+                expect(id).to.equal('lose_the_game_btn');
+                const searchControl = scene.getControl(id);
                 expect(searchControl).to.not.exist;
                 done();
             });

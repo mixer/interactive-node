@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { InteractiveError } from '../errors';
+import { IInteractiveError, InteractiveError } from '../errors';
 import { IRawValues } from '../interfaces';
 
 export enum PacketState {
@@ -109,7 +109,7 @@ export class Reply {
     constructor(
         public id: number,
         public result: IRawValues = null,
-        public error: InteractiveError.Base = null,
+        public error: IInteractiveError = null,
     ) {}
 
     /**
@@ -124,6 +124,9 @@ export class Reply {
      * Construct a reply packet that indicates an error
      */
     public static fromError(id: number, error: InteractiveError.Base): Reply {
-        return new Reply(id, null, error);
+        return new Reply(id, null, {
+            message: error.message,
+            code: error.code,
+        });
     }
 }
