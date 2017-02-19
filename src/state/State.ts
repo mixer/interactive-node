@@ -74,12 +74,6 @@ export class State extends EventEmitter {
             this.clockDelta = delta;
         });
 
-        this.methodHandler.addHandler('giveInput', res => {
-            const control = this.getControl(res.params.input.control.controlID);
-            if (control) {
-                control.receiveInput(res.params);
-            }
-        });
         // Here we're deciding to discard all participant messages, if this is a participant client
         // I wasn't sure if participants got these events at the time. Checking with Connor.
         // Either way we don't need to store potentially thousands of these records in memory on
@@ -107,6 +101,15 @@ export class State extends EventEmitter {
             res.params.participants.forEach(participant => {
                 merge(this.participants.get(participant.sessionID), participant);
             });
+        });
+
+        this.methodHandler.addHandler('giveInput', res => {
+            const control = this.getControl(res.params.input.control.controlID);
+            if (control) {
+                // Hydrate the participant
+                res.params.participant = this.getParticipantBySessionID(res.params.participant.sessionID);
+                control.receiveInput(res.params);
+            }
         });
     }
     public setClient(client: IClient) {
