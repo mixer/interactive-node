@@ -115,6 +115,26 @@ describe('state', () => {
         });
     });
 
+    describe('participants', () => {
+        it('adds participants', () => {
+            state.processMethod(new Method(
+                'onParticipantJoin',
+                {
+                    participants: [
+                        {
+                            sessionID: 'abc123',
+                            username: 'connor',
+                            userID: 1337,
+                        },
+                    ],
+                },
+                false,
+            ));
+            expect(state.getParticipantBySessionID('abc123').username).to.equal('connor');
+            expect(state.getParticipantByUsername('connor').sessionID).to.equal('abc123');
+        });
+    });
+
     describe('controls', () => {
         let control: IControl;
         before(() => {

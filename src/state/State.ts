@@ -1,10 +1,13 @@
+import { ClientType } from '../Client';
 import { EventEmitter } from 'events';
+import { merge } from 'lodash';
 
 import { ClockSync } from '../ClockSync';
 import { InteractiveError } from '../errors';
 import { IClient } from '../IClient';
 import { MethodHandlerManager } from '../methods/MethodHandlerManager';
 import { Method, Reply } from '../wire/packets';
+import { IParticipant } from './interfaces';
 import { IControl } from './interfaces/controls/IControl';
 import { ISceneData } from './interfaces/IScene';
 import { Scene } from './Scene';
@@ -17,7 +20,7 @@ export class State extends EventEmitter {
     private stateFactory = new StateFactory();
     private scenes = new Map<string, Scene>();
 
-    private client: IClient;
+    private participants = new Map<string, IParticipant>();
 
     private clockDelta: number = 0;
 
@@ -25,7 +28,7 @@ export class State extends EventEmitter {
         sampleFunc: () => this.client.getTime(),
     });
 
-    constructor() {
+    constructor(private client: IClient) {
         super();
 
         this.methodHandler.addHandler('onReady', readyMethod => {
@@ -58,13 +61,6 @@ export class State extends EventEmitter {
             }
         });
 
-        this.methodHandler.addHandler('giveInput', res => {
-            const control = this.getControl(res.params.input.control.controlID);
-            if (control) {
-                control.receiveInput(res.params);
-            }
-        });
-
         this.methodHandler.addHandler('onControlUpdate', res => {
             res.params.scenes.forEach(sceneData => {
                 const scene = this.getScene(sceneData.sceneID);
@@ -76,6 +72,41 @@ export class State extends EventEmitter {
         this.clockSyncer.on('delta', (delta: number) => {
             // TODO pass delta into state, that involve times. Just buttons right now?
             this.clockDelta = delta;
+        });
+
+        this.methodHandler.addHandler('giveInput', res => {
+            const control = this.getControl(res.params.input.control.controlID);
+            if (control) {
+                control.receiveInput(res.params);
+            }
+        });
+        // Here we're deciding to discard all participant messages, if this is a participant client
+        // I wasn't sure if participants got these events at the time. Checking with Connor.
+        // Either way we don't need to store potentially thousands of these records in memory on
+        // the Participant side.
+        //
+        // Only remaining query is how a Participant knows who they are in the loop.
+        if (this.client.clientType !== ClientType.GameClient) {
+            return;
+        }
+        this.methodHandler.addHandler('onParticipantJoin', res => {
+            res.params.participants.forEach(participant => {
+                this.participants.set(participant.sessionID, participant);
+                this.emit('participantJoin', participant);
+            });
+        });
+
+        this.methodHandler.addHandler('onParticipantLeave', res => {
+            res.params.participants.forEach(participant => {
+                this.participants.delete(participant.sessionID);
+                this.emit('participantLeave', participant.sessionID);
+            });
+        });
+
+        this.methodHandler.addHandler('onParticipantUpdate', res => {
+            res.params.participants.forEach(participant => {
+                merge(this.participants.get(participant.sessionID), participant);
+            });
         });
     }
     public setClient(client: IClient) {
@@ -134,5 +165,34 @@ export class State extends EventEmitter {
             result = scene.getControl(id);
         });
         return result;
+    }
+
+    private getParticipantBy(field: string, value: any): IParticipant {
+        let result;
+        this.participants.forEach(participant => {
+            if (participant[field] === value) {
+                result = participant;
+            }
+        });
+        return result;
+    }
+    /**
+     * Retrieve a participant by their Beam UserId.
+     */
+    public getParticipantByUserID(id: number): IParticipant {
+        return this.getParticipantBy('userID', id);
+    }
+
+    /**
+     * Retrieve a participant by their Beam Username.
+     */
+    public getParticipantByUsername(name: string): IParticipant {
+        return this.getParticipantBy('username', name);
+    }
+    /**
+     * Retrieve a participant by their sessionID
+     */
+    public getParticipantBySessionID(id: string): IParticipant {
+        return this.participants.get(id);
     }
 }

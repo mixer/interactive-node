@@ -33,9 +33,9 @@ Checkout the `interactive2` branch for the wip
 ## Events
 - [ ] issueMemoryWarning
 - [X] onReady
-- [ ] onParticipantJoin
-- [ ] onParticipantLeave
-- [ ] onParticipantUpdate
+- [X] onParticipantJoin
+- [X] onParticipantLeave
+- [X] onParticipantUpdate
 - [X] onSceneCreate
 - [X] onSceneDelete
 - [X] onSceneUpdate

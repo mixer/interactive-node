@@ -1,5 +1,6 @@
-import { IInputEvent } from '../state/interfaces/controls/IInput';
 import { InteractiveError } from '../errors';
+import { IInputEvent } from '../state/interfaces/controls/IInput';
+import { IParticipantArray } from '../state/interfaces/IParticipant';
 import { Method, Reply } from '../wire/packets';
 import { onReadyParams } from './methodTypes';
 
@@ -11,6 +12,11 @@ export interface IMethodHandler<T> {
 
 export class MethodHandlerManager {
     private handlers: {[key: string]: IMethodHandler<any>} = {};
+
+    public addHandler(method: 'onParticipantJoin', handler: IMethodHandler<IParticipantArray>): void;
+    public addHandler(method: 'onParticipantLeave', handler: IMethodHandler<IParticipantArray>): void;
+    public addHandler(method: 'onParticipantUpdate', handler: IMethodHandler<IParticipantArray>): void;
+
 
     public addHandler(method: 'onSceneCreate', handler: IMethodHandler<ISceneDataArray>): void;
     public addHandler(method: 'onSceneDelete', handler: IMethodHandler<ISceneDeletionParams>): void;

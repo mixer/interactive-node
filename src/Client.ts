@@ -20,17 +20,16 @@ export interface IClientOptions {
 }
 
 export class Client extends EventEmitter implements IClient {
-    private clientType: ClientType;
+    public clientType: ClientType;
     public isReady: boolean;
 
-    public state = new State();
+    public state = new State(this);
 
     protected socket: InteractiveSocket;
 
     constructor(options: IClientOptions) {
         super();
         this.clientType = options.clientType;
-        this.state.setClient(this);
         this.socket = new InteractiveSocket(options.socketOptions);
         this.socket.on('method', (method: Method<any>) => {
             // As process method can return a reply or nothing
