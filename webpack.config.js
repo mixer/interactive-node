@@ -1,8 +1,12 @@
 'use strict';
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
-    entry: './src',
+    entry: './src/index.ts',
     devtool: 'source-map',
+    plugins: [
+        //new BundleAnalyzerPlugin()
+    ],
     output: {
         path: './dist',
         filename: 'interactive.js',
@@ -14,7 +18,6 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.json$/, loaders: ['json'] },
             { test: /\.ts$/, loader: 'awesome-typescript-loader' },
         ]
     },
