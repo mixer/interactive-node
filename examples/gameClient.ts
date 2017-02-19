@@ -1,3 +1,4 @@
+import { IInputEvent } from '../src/state/interfaces/controls/IInput';
 import * as WebSocket from 'ws';
 
 import {
@@ -36,5 +37,11 @@ function makeControls(amount: number): IControlData[] {
 client.createControls({
     sceneID: 'default',
     controls: makeControls(5),
-});
+}).then(controls => {
+    controls.forEach(control => {
+        control.on('mousedown', (data: IInputEvent) => {
+            console.log(`${data.participant.username} pushed me!`);
+        });
+    });
+})
 
