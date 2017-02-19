@@ -97,14 +97,6 @@ export class Client extends EventEmitter implements IClient {
         return this.execute('getScenes', null, false);
     }
 
-    public updateControls(params: ISceneDataArray): Promise<void> {
-        return this.execute('updateControls', params, false);
-    }
-
-    public updateScenes(scenes: ISceneDataArray): Promise<any> {
-        return this.execute('updateScenes', scenes, false);
-    }
-
     public ready(isReady: boolean = true): Promise<any> {
         return this.execute('ready', { isReady }, false);
     }
