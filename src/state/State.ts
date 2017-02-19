@@ -78,18 +78,21 @@ export class State extends EventEmitter {
         this.stateFactory.setClient(client);
         this.clockSyncer.start();
     }
-    public processMethod(method: Method<any>): Promise<Reply | null> | void {
+    public processMethod(method: Method<any>): Promise<Reply> | void | Reply {
         const result = this.methodHandler.handle(method);
         if (!result) {
             return;
         }
-        return result
-            .catch(only(InteractiveError.Base, err => {
-                /**
-                 * Catch only InteractiveError's and return them as a Reply packet
-                 */
-                return Reply.fromError(method.id, err);
-            }));
+        if (result instanceof Promise) {
+            return result
+                .catch(only(InteractiveError.Base, err => {
+                    /**
+                     * Catch only InteractiveError's and return them as a Reply packet
+                     */
+                    return Reply.fromError(method.id, err);
+                }));
+        }
+        return result;
     }
 
     public initialize(scenes: ISceneData[]) {

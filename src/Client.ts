@@ -35,16 +35,21 @@ export class Client extends EventEmitter implements IClient {
         this.state.setClient(this);
         this.socket = new InteractiveSocket(options.socketOptions);
         this.socket.on('method', (method: Method<any>) => {
-            // As process method can return a promise or void here,
+            // As process method can return a promise or void or a reply
             // Check it has a value and then wait, or just ignore it
             // if there is no value
             const waitingForReply = this.state.processMethod(method);
-            if (waitingForReply) {
+            if (!waitingForReply) {
+                return;
+            }
+            if (waitingForReply instanceof Promise) {
                 waitingForReply.then(reply => {
                     if (reply) {
                         this.reply(reply);
                     }
                 });
+            } else {
+                this.reply(waitingForReply);
             }
         });
 
