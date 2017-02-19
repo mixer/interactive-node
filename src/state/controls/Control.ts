@@ -3,7 +3,7 @@ import { merge } from 'lodash';
 
 import { IClient } from '../../IClient';
 import { ControlKind, IControl, IControlData, IPosition } from '../interfaces/controls/IControl';
-import { IInput } from '../interfaces/controls/IInput';
+import { IInput, IInputEvent } from '../interfaces/controls/IInput';
 import { IMeta } from '../interfaces/controls/IMeta';
 import { Scene } from '../Scene';
 
@@ -33,6 +33,10 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
 
     // A base control class cannot give input
     public abstract giveInput<T extends IInput>(input: T): Promise<void>;
+
+    public receiveInput(input: IInputEvent) {
+        this.emit(input.input.event, input);
+    }
 
     protected sendInput<K extends IInput>(input: K): Promise<void> {
         return this.client.giveInput(input);

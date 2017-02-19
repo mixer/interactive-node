@@ -1,3 +1,4 @@
+import { IParticipant } from '../../../../lib/src/state/interfaces';
 import { ControlKind } from './IControl';
 import { ITransaction } from './ITransaction';
 
@@ -20,4 +21,9 @@ export interface IJoystickInput extends IInput {
     event: 'move';
     x: number;
     y: number;
+}
+
+export interface IInputEvent {
+    participant: IParticipant;
+    input: IInput;
 }

@@ -1,3 +1,4 @@
+import { IInputEvent } from '../state/interfaces/controls/IInput';
 import { InteractiveError } from '../errors';
 import { Method, Reply } from '../wire/packets';
 import { onReadyParams } from './methodTypes';
@@ -20,6 +21,9 @@ export class MethodHandlerManager {
     public addHandler(method: 'onControlUpdate', handler: IMethodHandler<ISceneDataArray>): void;
 
     public addHandler(method: 'onReady', handler: IMethodHandler<onReadyParams>): void;
+
+    public addHandler(method: 'giveInput', handler: IMethodHandler<IInputEvent>): void;
+
     public addHandler<T>(method: string, handler: IMethodHandler<T>): void;
     public addHandler(method: string, handler: IMethodHandler<any>): void {
         this.handlers[method] = handler;

@@ -58,6 +58,13 @@ export class State extends EventEmitter {
             }
         });
 
+        this.methodHandler.addHandler('giveInput', res => {
+            const control = this.getControl(res.params.input.control.controlID);
+            if (control) {
+                control.receiveInput(res.params);
+            }
+        });
+
         this.methodHandler.addHandler('onControlUpdate', res => {
             res.params.scenes.forEach(sceneData => {
                 const scene = this.getScene(sceneData.sceneID);
