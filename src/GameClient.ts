@@ -1,5 +1,6 @@
 import { Client, ClientType } from './Client';
 import { ISceneData, ISceneDataArray } from './state/interfaces';
+import { IControl } from './state/interfaces/controls/IControl';
 
 export interface IGameClientOptions {
     experienceId: number;
@@ -21,10 +22,10 @@ export class GameClient extends Client {
         });
     }
 
-    public createControls(data: ISceneData) {
+    public createControls(data: ISceneData): Promise<IControl[]> {
         return this.execute('createControls', data, false).then(res => {
             const scene = this.state.getScene(data.sceneID);
-            res.controls.forEach(control => scene.addControl(control));
+            return res.controls.map(control => scene.addControl(control));
         });
     }
 
