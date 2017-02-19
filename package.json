@@ -7,7 +7,8 @@
   "scripts": {
     "build:ts": "rm -rf lib && tsc && tsc -d",
     "build:webpack": "rm -rf dist && webpack && webpack --config webpack.config.min.js",
-    "build": "npm run build:ts && npm run build:webpack",
+    "build:examples": "cp dist/* examples/browser",
+    "build": "npm run build:ts && npm run build:webpack && npm run build:examples",
     "test": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
     "prepublish": "npm run build",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",

@@ -1,11 +1,11 @@
 'use strict';
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     entry: './src/index.ts',
     devtool: 'source-map',
     plugins: [
-        //new BundleAnalyzerPlugin()
+        //new BundleAnalyzerPlugin(),
     ],
     output: {
         path: './dist',
