@@ -1,4 +1,4 @@
-import { IParticipant } from '../../../../lib/src/state/interfaces';
+import { IParticipant } from '../IParticipant';
 import { ControlKind } from './IControl';
 import { ITransaction } from './ITransaction';
 
