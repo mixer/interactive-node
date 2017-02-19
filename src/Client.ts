@@ -9,8 +9,6 @@ import { State } from './state/State';
 import { Method, Reply } from './wire/packets';
 import { CompressionScheme, InteractiveSocket, ISocketOptions } from './wire/Socket';
 
-const participantMethods = ['giveInput', 'getScenes', 'getTime'];
-
 export enum ClientType {
     Participant,
     GameClient,
@@ -116,14 +114,6 @@ export class Client extends EventEmitter implements IClient {
     public execute(method: 'updateControls', params: ISceneDataArray, discard: false): Promise<void>;
     public execute<T>(method: string, params: T, discard: boolean): Promise<any>
     public execute(method: string, params: any, discard: boolean): Promise<any> {
-        if (this.clientType === ClientType.Participant && !participantMethods.indexOf(method)) {
-            throw new PermissionDeniedError(method, 'Participant');
-        }
-
-        if (this.clientType === ClientType.GameClient && method === 'giveInput') {
-            throw new PermissionDeniedError(method, 'GameClient');
-        }
-
         return this.socket.execute(method, params, discard);
     }
 
