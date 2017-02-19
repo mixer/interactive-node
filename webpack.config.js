@@ -5,8 +5,8 @@ module.exports = {
     devtool: 'source-map',
     output: {
         path: './dist',
-        filename: 'carina.js',
-        library: 'carina',
+        filename: 'interactive.js',
+        library: 'interactive',
         libraryTarget: 'umd',
     },
     resolve: {

@@ -43,5 +43,5 @@ client.createControls({
             console.log(`${data.participant.username} pushed me!`);
         });
     });
-})
+});
 
