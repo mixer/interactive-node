@@ -1,3 +1,4 @@
+import { ISceneData } from '../lib/src/state/interfaces';
 import { Client, ClientType } from './Client';
 
 export interface IGameClientOptions {
@@ -17,6 +18,13 @@ export class GameClient extends Client {
                     'X-Interactive-Version': options.experienceId,
                 },
             },
+        });
+    }
+
+    public createControls(data: ISceneData) {
+        return this.execute('createControls', data, false).then(res => {
+            const scene = this.state.getScene(data.sceneID);
+            res.controls.forEach(control => scene.addControl(control));
         });
     }
 }

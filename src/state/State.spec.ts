@@ -181,39 +181,6 @@ describe('state', () => {
             expect(control).to.exist;
             expect(control.controlID).to.equal('lose_the_game_btn');
         });
-        it('handles duplicate control ids', () => {
-            const method = new Method(
-                'onControlCreate',
-                {
-                    sceneID: 'my awesome scene',
-                    controls: [
-                        {
-                            controlID: 'lose_the_game_btn',
-                            etag: '262111379',
-                            kind: 'button',
-                            text: 'Lose the Game',
-                            cost: 0,
-                            progress: 0.25,
-                            disabled: false,
-                            meta: {
-                                glow: {
-                                    etag: '254353748',
-                                    value: {
-                                        color: '#f00',
-                                        radius: 10,
-                                    },
-                                },
-                            },
-                        },
-                    ],
-                },
-            );
-            const reply = state.processMethod(method);
-            expect(reply).to.exist;
-            if (reply) {
-                expect(reply.error.code).to.be.equal(4014);
-            }
-        });
         it('deletes a control', done => {
             const scene = state.getScene('my awesome scene');
             // TODO How do we overload this?

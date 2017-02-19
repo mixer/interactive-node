@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import { merge } from 'lodash';
 
-import { InteractiveError } from '../errors';
 import { IClient } from '../IClient';
 import { IControl, IControlData } from './interfaces/controls/IControl';
 import { IMeta } from './interfaces/controls/IMeta';
@@ -37,7 +36,7 @@ export class Scene extends EventEmitter implements IScene {
     }
     public addControl(controlData: IControlData): IControl {
         if (this.controls.has(controlData.controlID)) {
-            throw new InteractiveError.ControlAlreadyExists(`Control ${controlData.controlID} already exists`);
+            return this.controls.get(controlData.controlID);
         }
         const control = this.stateFactory.createControl(controlData.kind, controlData, this);
         this.controls.set(control.controlID, control);

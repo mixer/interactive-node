@@ -116,11 +116,7 @@ export class Client extends EventEmitter implements IClient {
             });
     }
 
-    public createControls(data: ISceneData) {
-        return this.execute('createControls', data, false);
-    }
-
-    public execute(method: 'createControls', params: ISceneData, discard: false ): Promise<void>;
+    public execute(method: 'createControls', params: ISceneData, discard: false ): Promise<ISceneData>;
     public execute(method: 'ready', params: onReadyParams, discard: false ): Promise<void>;
     public execute(method: 'getTime', params: null, discard: false ): Promise<{time: number}>;
     public execute(method: 'getScenes', params: null, discard: false ): Promise<ISceneDataArray>;

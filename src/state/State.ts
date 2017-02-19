@@ -107,10 +107,14 @@ export class State extends EventEmitter {
         }
     }
 
-    public addScene(data: ISceneData) {
+    public addScene(data: ISceneData): Scene {
+        if (this.scenes.has(data.sceneID)) {
+            return this.scenes.get(data.sceneID);
+        }
         const scene = this.stateFactory.createScene(data);
         this.scenes.set(data.sceneID, scene);
         this.emit('sceneCreated', scene);
+        return scene;
     }
 
     public getScene(id: string): Scene {
