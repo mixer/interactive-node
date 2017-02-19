@@ -116,7 +116,6 @@ export class Client extends EventEmitter implements IClient {
     public execute(method: 'updateControls', params: ISceneDataArray, discard: false): Promise<void>;
     public execute<T>(method: string, params: T, discard: boolean): Promise<any>
     public execute(method: string, params: any, discard: boolean): Promise<any> {
-
         if (this.clientType === ClientType.Participant && !participantMethods.indexOf(method)) {
             throw new PermissionDeniedError(method, 'Participant');
         }
@@ -126,6 +125,14 @@ export class Client extends EventEmitter implements IClient {
         }
 
         return this.socket.execute(method, params, discard);
+    }
+
+    public updateControls(_: ISceneDataArray): Promise<void> {
+        throw new PermissionDeniedError('updateControls', 'Participant');
+    }
+
+    public updateScenes(_: ISceneDataArray): Promise<void> {
+        throw new PermissionDeniedError('updateScenes', 'Participant');
     }
 
 }

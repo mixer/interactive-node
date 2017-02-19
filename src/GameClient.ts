@@ -32,7 +32,7 @@ export class GameClient extends Client {
         return this.execute('updateControls', params, false);
     }
 
-    public updateScenes(scenes: ISceneDataArray): Promise<any> {
+    public updateScenes(scenes: ISceneDataArray): Promise<void> {
         return this.execute('updateScenes', scenes, false);
     }
 }
