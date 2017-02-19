@@ -1,4 +1,4 @@
-import { InteractiveSocket } from './wire/socket';
+import { InteractiveSocket } from './wire/Socket';
 
 export * from './state/interfaces';
 export * from './GameClient';
