@@ -125,4 +125,8 @@ export class Client extends EventEmitter implements IClient {
         throw new PermissionDeniedError('updateScenes', 'Participant');
     }
 
+    public giveInput<T extends IInput>(_: T): Promise<void> {
+        throw new PermissionDeniedError('giveInput', 'GameClient');
+    }
+
 }

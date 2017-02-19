@@ -35,7 +35,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     public abstract giveInput<T extends IInput>(input: T): Promise<void>;
 
     protected sendInput<K extends IInput>(input: K): Promise<void> {
-        return this.client.execute('giveInput', input, false);
+        return this.client.giveInput(input);
     }
 
     public disable(): Promise<void> {

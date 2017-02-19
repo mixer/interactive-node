@@ -1,3 +1,4 @@
+import { IInput } from './state/interfaces/controls';
 import { Client, ClientType } from './Client';
 
 export interface IParticipantOptions {
@@ -14,5 +15,8 @@ export class ParticipantClient extends Client {
                 url: options.url,
             },
         });
+    }
+    public giveInput<T extends IInput>(input: T): Promise<void> {
+        return this.execute('giveInput', input, false);
     }
 }

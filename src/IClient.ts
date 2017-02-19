@@ -1,3 +1,4 @@
+import { IInput } from './state/interfaces/controls';
 import { ISceneDataArray } from './state/interfaces/IScene';
 
 export interface IClient {
@@ -5,6 +6,7 @@ export interface IClient {
 
     updateControls(controls: ISceneDataArray): Promise<void>;
     updateScenes(scenes: ISceneDataArray): Promise<void>;
+    giveInput<T extends IInput>(_: T): Promise<void>;
 
     getTime(): Promise<number>;
 }
