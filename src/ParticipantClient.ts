@@ -1,5 +1,5 @@
-import { IInput } from './state/interfaces/controls';
 import { Client, ClientType } from './Client';
+import { IInput } from './state/interfaces/controls';
 
 export interface IParticipantOptions {
     jwt: string;

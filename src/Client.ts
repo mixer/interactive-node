@@ -49,6 +49,8 @@ export class Client extends EventEmitter implements IClient {
         // Re-emit these for debugging reasons
         this.socket.on('message', (data: any) => this.emit('message', data));
         this.socket.on('send', (data: any) => this.emit('send', data));
+
+        this.state.setClient(this);
     }
 
     /**
