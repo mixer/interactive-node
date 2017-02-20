@@ -23,7 +23,7 @@ export class Client extends EventEmitter implements IClient {
     public clientType: ClientType;
     public isReady: boolean;
 
-    public state = new State(this);
+    public state = new State(this.clientType);
 
     protected socket: InteractiveSocket;
 

@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { ClientType } from '../Client';
 import { Method } from '../wire/packets';
 import { IControl } from './interfaces/controls/IControl';
 import { ISceneDataArray } from './interfaces/IScene';
@@ -14,7 +15,7 @@ function loadFixture(name: string): ISceneDataArray {
 describe('state', () => {
     let state: State;
     function initializeState(fixture: string) {
-        state = new State();
+        state = new State(ClientType.GameClient);
         const data = loadFixture(path.join(__dirname, '../../test/fixtures', fixture));
         state.initialize(data.scenes);
     }

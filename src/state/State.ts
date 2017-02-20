@@ -20,6 +20,8 @@ export class State extends EventEmitter {
     private stateFactory = new StateFactory();
     private scenes = new Map<string, Scene>();
 
+    private client: IClient;
+
     private participants = new Map<string, IParticipant>();
 
     private clockDelta: number = 0;
@@ -28,7 +30,7 @@ export class State extends EventEmitter {
         sampleFunc: () => this.client.getTime(),
     });
 
-    constructor(private client: IClient) {
+    constructor(private clientType: ClientType) {
         super();
 
         this.methodHandler.addHandler('onReady', readyMethod => {
@@ -80,7 +82,7 @@ export class State extends EventEmitter {
         // the Participant side.
         //
         // Only remaining query is how a Participant knows who they are in the loop.
-        if (this.client.clientType !== ClientType.GameClient) {
+        if (this.clientType !== ClientType.GameClient) {
             return;
         }
         this.methodHandler.addHandler('onParticipantJoin', res => {
