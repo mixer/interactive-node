@@ -4,6 +4,7 @@ import { Client, ClientType } from './Client';
 export interface IParticipantOptions {
     jwt: string;
     url: string;
+    channelID: number;
 }
 
 export class ParticipantClient extends Client {
@@ -13,6 +14,9 @@ export class ParticipantClient extends Client {
             socketOptions: {
                 jwt: options.jwt,
                 url: options.url,
+                queryParams: {
+                    channel: options.channelID,
+                },
             },
         });
     }

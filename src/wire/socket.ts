@@ -28,6 +28,9 @@ export interface ISocketOptions {
     // Optional JSON web token to use for authentication.
     jwt?: string;
 
+    // Query params to add
+    queryParams?: IRawValues;
+
     // Optional OAuth token to use for authentication.
     authToken?: string;
 
@@ -71,6 +74,7 @@ function getDefaults(): ISocketOptions {
         reconnectionPolicy: new ExponentialReconnectionPolicy(),
         pingInterval: 10 * 1000,
         extraHeaders: {},
+        queryParams: {},
     };
 }
 
@@ -167,10 +171,10 @@ export class InteractiveSocket extends EventEmitter {
         if (this.options.authToken) {
             extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
         } else if (this.options.jwt) {
-            //TODO: Clear up auth here later
-            url += '?' + querystring.stringify({ jwt: this.options.jwt });
+            const queryString = Object.assign({}, { Authorization: `JWT ${this.options.jwt}` }, this.options.queryParams);
+            url += '?' + querystring.stringify(queryString);
         }
-        //console.log(InteractiveSocket.WebSocket());
+        console.log(url, extras);
         this.socket = new InteractiveSocket.WebSocket(url, null, extras);
 
         this.state = State.Connecting;
