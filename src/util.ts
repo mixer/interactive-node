@@ -87,3 +87,9 @@ export function only<T extends Error, U>(
         return handler(err);
     };
 }
+
+export function mapToArray<T>(map: Map<string, T>) {
+    const res: T[] = [];
+    map.forEach((value: T) => res.push(value));
+    return res;
+}

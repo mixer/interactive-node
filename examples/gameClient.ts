@@ -1,3 +1,4 @@
+import { IParticipant } from '../src/state/interfaces';
 import { IInputEvent } from '../src/state/interfaces/controls/IInput';
 import * as WebSocket from 'ws';
 
@@ -39,9 +40,11 @@ client.createControls({
     controls: makeControls(5),
 }).then(controls => {
     controls.forEach(control => {
-        control.on('mousedown', (data: IInputEvent) => {
-            console.log(`${data.participant.username} pushed me!`);
+        control.on('mousedown', (_: IInputEvent, participant: IParticipant) => {
+            console.log(participant);
+            console.log(`${participant.username} pushed me!`);
         });
     });
+    client.ready(true);
 });
 

@@ -1,4 +1,6 @@
 import { EventEmitter } from 'events';
+
+import { IParticipant } from '../';
 import { ISceneDataArray } from '../IScene';
 import { IGridSize } from './IGridConfig';
 import { IInput, IInputEvent } from './IInput';
@@ -26,7 +28,7 @@ export interface IControl extends IControlData, EventEmitter {
      */
     giveInput<T extends IInput>(input: T): Promise<void>;
 
-    receiveInput(input: IInputEvent): void;
+    receiveInput(input: IInputEvent, participant: IParticipant): void;
 
     // GameClient
     /**

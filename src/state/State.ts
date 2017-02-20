@@ -82,6 +82,8 @@ export class State extends EventEmitter {
         // the Participant side.
         //
         // Only remaining query is how a Participant knows who they are in the loop.
+        console.log('testing client type');
+        console.log(this.clientType);
         if (this.clientType !== ClientType.GameClient) {
             return;
         }
@@ -104,13 +106,16 @@ export class State extends EventEmitter {
                 merge(this.participants.get(participant.sessionID), participant);
             });
         });
-
+        console.log('registering giveInput');
         this.methodHandler.addHandler('giveInput', res => {
-            const control = this.getControl(res.params.input.control.controlID);
+            console.log('got input');
+            console.log(res);
+            const control = this.getControl(res.params.input.controlID);
             if (control) {
                 // Hydrate the participant
-                res.params.participant = this.getParticipantBySessionID(res.params.participant.sessionID);
-                control.receiveInput(res.params);
+                console.log(this.participants);
+                const participant = this.getParticipantBySessionID(res.params.participantID);
+                control.receiveInput(res.params, participant);
             }
         });
     }
@@ -155,6 +160,9 @@ export class State extends EventEmitter {
             return this.scenes.get(data.sceneID);
         }
         const scene = this.stateFactory.createScene(data);
+        if (data.controls) {
+            scene.addControls(data.controls);
+        }
         this.scenes.set(data.sceneID, scene);
         this.emit('sceneCreated', scene);
         return scene;

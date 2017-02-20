@@ -1,3 +1,4 @@
+import { IParticipant } from '../interfaces';
 import { EventEmitter } from 'events';
 import { merge } from 'lodash';
 
@@ -34,11 +35,13 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     // A base control class cannot give input
     public abstract giveInput<T extends IInput>(input: T): Promise<void>;
 
-    public receiveInput(input: IInputEvent) {
-        this.emit(input.input.event, input);
+    public receiveInput(input: IInputEvent, participant: IParticipant) {
+        this.emit(input.input.event, input, participant);
     }
 
     protected sendInput<K extends IInput>(input: K): Promise<void> {
+        //add this on behalf on
+        input.controlID = this.controlID;
         return this.client.giveInput(input);
     }
 

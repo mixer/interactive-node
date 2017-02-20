@@ -6,6 +6,7 @@ import { IControl, IControlData } from './interfaces/controls/IControl';
 import { IMeta } from './interfaces/controls/IMeta';
 import { IScene, ISceneData } from './interfaces/IScene';
 import { StateFactory } from './StateFactory';
+import { mapToArray } from '../util';
 
 export class Scene extends EventEmitter implements IScene {
     public sceneID: string;
@@ -26,9 +27,8 @@ export class Scene extends EventEmitter implements IScene {
     constructor(data: ISceneData) {
         super();
         this.sceneID = data.sceneID;
-        if (data.controls) {
-            this.addControls(data.controls);
-        }
+        this.etag = data.etag;
+        this.meta = data.meta;
     }
 
     public addControls(controls: IControlData[]) {
@@ -46,6 +46,9 @@ export class Scene extends EventEmitter implements IScene {
 
     public getControl(id: string): IControl {
         return this.controls.get(id);
+    }
+    public getControls(): IControl[] {
+        return mapToArray(this.controls);
     }
 
     public deleteControls(controls: IControlData[]) {

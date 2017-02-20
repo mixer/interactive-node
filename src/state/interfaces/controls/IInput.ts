@@ -1,13 +1,8 @@
 import { IParticipant } from '../IParticipant';
-import { ControlKind } from './IControl';
 import { ITransaction } from './ITransaction';
 
-export interface IInputControlData {
-    controlID: string;
-    kind: ControlKind;
-}
 export interface IInput {
-    control: IInputControlData;
+    controlID?: string;
     event: string;
 }
 
@@ -24,6 +19,6 @@ export interface IJoystickInput extends IInput {
 }
 
 export interface IInputEvent {
-    participant: IParticipant;
+    participantID: string;
     input: IInput;
 }

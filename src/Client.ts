@@ -23,13 +23,15 @@ export class Client extends EventEmitter implements IClient {
     public clientType: ClientType;
     public isReady: boolean;
 
-    public state = new State(this.clientType);
+    public state: State;
 
     protected socket: InteractiveSocket;
 
     constructor(options: IClientOptions) {
         super();
         this.clientType = options.clientType;
+        this.state = new State(this.clientType);
+        this.state.setClient(this);
         this.socket = new InteractiveSocket(options.socketOptions);
         this.socket.on('method', (method: Method<any>) => {
             // As process method can return a reply or nothing
@@ -49,8 +51,6 @@ export class Client extends EventEmitter implements IClient {
         // Re-emit these for debugging reasons
         this.socket.on('message', (data: any) => this.emit('message', data));
         this.socket.on('send', (data: any) => this.emit('send', data));
-
-        this.state.setClient(this);
     }
 
     /**
