@@ -2,11 +2,11 @@ import { EventEmitter } from 'events';
 import { merge } from 'lodash';
 
 import { IClient } from '../IClient';
+import { mapToArray } from '../util';
 import { IControl, IControlData } from './interfaces/controls/IControl';
 import { IMeta } from './interfaces/controls/IMeta';
 import { IScene, ISceneData } from './interfaces/IScene';
 import { StateFactory } from './StateFactory';
-import { mapToArray } from '../util';
 
 export class Scene extends EventEmitter implements IScene {
     public sceneID: string;

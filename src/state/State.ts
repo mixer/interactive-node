@@ -1,7 +1,7 @@
-import { ClientType } from '../Client';
 import { EventEmitter } from 'events';
 import { merge } from 'lodash';
 
+import { ClientType } from '../Client';
 import { ClockSync } from '../ClockSync';
 import { InteractiveError } from '../errors';
 import { IClient } from '../IClient';
