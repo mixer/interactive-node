@@ -82,8 +82,6 @@ export class State extends EventEmitter {
         // the Participant side.
         //
         // Only remaining query is how a Participant knows who they are in the loop.
-        console.log('testing client type');
-        console.log(this.clientType);
         if (this.clientType !== ClientType.GameClient) {
             return;
         }

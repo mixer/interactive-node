@@ -27,8 +27,8 @@ export class Scene extends EventEmitter implements IScene {
     constructor(data: ISceneData) {
         super();
         this.sceneID = data.sceneID;
-        this.etag = data.etag;
-        this.meta = data.meta;
+        this.etag = data.etag || '';
+        this.meta = data.meta || {};
     }
 
     public addControls(controls: IControlData[]) {
@@ -81,5 +81,6 @@ export class Scene extends EventEmitter implements IScene {
             merge(this.meta, scene.meta);
             this.emit('update', this);
         }
+        console.log(this.meta);
     }
 }
