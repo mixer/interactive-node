@@ -47,7 +47,7 @@ describe('socket', () => {
         it('connects with JWT auth', done => {
             socket = new InteractiveSocket({ url, jwt: 'asdf!' }).connect();
             server.on('connection', (ws: WebSocketModule) => {
-                expect(ws.upgradeReq.url).to.equal('/?jwt=asdf!');
+                expect(ws.upgradeReq.url).to.equal('/?Authorization=JWT%20asdf!');
                 expect(ws.upgradeReq.headers.authorization).to.equal(
                     undefined,
                     'authorization header should be undefined when jwt auth is used',
