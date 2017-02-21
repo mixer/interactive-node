@@ -81,6 +81,5 @@ export class Scene extends EventEmitter implements IScene {
             merge(this.meta, scene.meta);
             this.emit('update', this);
         }
-        console.log(this.meta);
     }
 }
