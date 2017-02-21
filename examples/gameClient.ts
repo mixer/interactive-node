@@ -1,6 +1,7 @@
+import * as WebSocket from 'ws';
+
 import { IParticipant } from '../src/state/interfaces';
 import { IInputEvent } from '../src/state/interfaces/controls/IInput';
-import * as WebSocket from 'ws';
 
 import {
     GameClient,
@@ -9,16 +10,21 @@ import {
     setWebSocket,
 } from '../src';
 
+if (process.argv.length < 5) {
+    console.log('Usage gameClient.exe <token> <url> <experienceId>');
+}
+
 setWebSocket(WebSocket);
 
+
 const client = new GameClient({
-    authToken: 'Ory24TyaivZFbeGX3MHbx9MexiSxAuWOd6VoSya1J1iwbuu7B96s1NgPNgr8TypQ',
-    experienceId: 3419,
-    url: 'wss://interactive1-dal.beam.pro',
+    authToken: process.argv[2],
+    url: process.argv[3] || 'wss://interactive1-dal.beam.pro',
+    experienceId: parseInt(process.argv[4], 10) || 3419,
 });
-client.on('message', (err: any) => console.log('<<<', err));
-client.on('send', (err: any) => console.log('>>>', err));
-client.on('error', (err: any) => console.log(err));
+// client.on('message', (err: any) => console.log('<<<', err));
+// client.on('send', (err: any) => console.log('>>>', err));
+// client.on('error', (err: any) => console.log(err));
 
 client.open();
 
@@ -41,7 +47,6 @@ client.createControls({
 }).then(controls => {
     controls.forEach(control => {
         control.on('mousedown', (_: IInputEvent, participant: IParticipant) => {
-            console.log(participant);
             console.log(`${participant.username} pushed me!`);
         });
     });

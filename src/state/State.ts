@@ -106,14 +106,10 @@ export class State extends EventEmitter {
                 merge(this.participants.get(participant.sessionID), participant);
             });
         });
-        console.log('registering giveInput');
+
         this.methodHandler.addHandler('giveInput', res => {
-            console.log('got input');
-            console.log(res);
             const control = this.getControl(res.params.input.controlID);
             if (control) {
-                // Hydrate the participant
-                console.log(this.participants);
                 const participant = this.getParticipantBySessionID(res.params.participantID);
                 control.receiveInput(res.params, participant);
             }
