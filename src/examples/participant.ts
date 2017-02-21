@@ -1,9 +1,9 @@
 import * as WebSocket from 'ws';
 
-import { Button } from '../src/state/controls';
-import { Scene } from '../src/state/Scene';
+import { Button } from '../state/controls';
+import { Scene } from '../state/Scene';
 
-import * as Interactive from '../src';
+import * as Interactive from '../';
 
 import { request } from './client';
 

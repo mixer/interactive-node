@@ -1,14 +1,14 @@
 import * as WebSocket from 'ws';
 
-import { IParticipant } from '../src/state/interfaces';
-import { IInputEvent } from '../src/state/interfaces/controls/IInput';
+import { IParticipant } from '../state/interfaces';
+import { IInputEvent } from '../state/interfaces/controls/IInput';
 
 import {
     GameClient,
     IButtonData,
     IControlData,
     setWebSocket,
-} from '../src';
+} from '../';
 
 if (process.argv.length < 5) {
     console.log('Usage gameClient.exe <token> <url> <experienceId>');
