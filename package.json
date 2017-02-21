@@ -1,14 +1,14 @@
 {
   "name": "beam-interactive-2",
-  "version": "0.5.4",
-  "description": "Interactive Frontend!",
+  "version": "0.1.0-beta",
+  "description": "A NodeJS and Browser compatible client for Beam.pro's interactive 2 Protocol",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "build:ts": "rm -rf lib && tsc && tsc -d",
     "build:webpack": "rm -rf dist && webpack && webpack --config webpack.config.min.js",
     "build:examples": "cp dist/* examples/browser",
-    "build": "npm run build:ts && npm run build:webpack && npm run build:examples",
+    "build": "npm run build:ts && npm run build:webpack",
     "test": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
     "prepublish": "npm run build",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
