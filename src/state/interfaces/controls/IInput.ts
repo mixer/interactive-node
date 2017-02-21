@@ -1,4 +1,3 @@
-import { IParticipant } from '../IParticipant';
 import { ITransaction } from './ITransaction';
 
 export interface IInput {
