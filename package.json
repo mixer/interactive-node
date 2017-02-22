@@ -5,8 +5,8 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "build:ts": "rm -rf lib && tsc && tsc -d",
-    "build:webpack": "rm -rf dist && webpack && webpack --config webpack.config.min.js",
+    "build:ts": "rimraf lib && tsc && tsc -d",
+    "build:webpack": "rimraf dist && webpack && webpack --config webpack.config.min.js",
     "build:examples": "cp dist/* examples/browser",
     "build": "npm run build:ts && npm run build:webpack",
     "test": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
@@ -43,6 +43,7 @@
     "json-loader": "^0.5.4",
     "mocha": "^3.0.2",
     "node-fetch": "^1.6.3",
+    "rimraf": "^2.6.0",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
     "ts-node": "^2.0.0",
