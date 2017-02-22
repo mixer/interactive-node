@@ -47,7 +47,5 @@ yarn.lock
 /dist
 /lib
 /dist
-/examples/browser/*.js
-/examples/browser/*.map
 
 docs/
