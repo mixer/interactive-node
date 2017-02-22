@@ -7,7 +7,7 @@ import { InteractiveError } from '../errors';
 import { IClient } from '../IClient';
 import { MethodHandlerManager } from '../methods/MethodHandlerManager';
 import { Method, Reply } from '../wire/packets';
-import { IParticipant } from './interfaces';
+import { IParticipant, IScene } from './interfaces';
 import { IControl } from './interfaces/controls/IControl';
 import { ISceneData } from './interfaces/IScene';
 import { Scene } from './Scene';
@@ -50,14 +50,14 @@ export class State extends EventEmitter {
         });
 
         this.methodHandler.addHandler('onControlCreate', res => {
-            const scene = this.getScene(res.params.sceneID);
+            const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
                 scene.addControls(res.params.controls);
             }
         });
 
         this.methodHandler.addHandler('onControlDelete', res => {
-            const scene = this.getScene(res.params.sceneID);
+            const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
                 scene.deleteControls(res.params.controls);
             }
@@ -65,7 +65,7 @@ export class State extends EventEmitter {
 
         this.methodHandler.addHandler('onControlUpdate', res => {
             res.params.scenes.forEach(sceneData => {
-                const scene = this.getScene(sceneData.sceneID);
+                const scene = this.scenes.get(sceneData.sceneID);
                 if (scene) {
                     scene.updateControls(sceneData.controls);
                 }
@@ -168,7 +168,7 @@ export class State extends EventEmitter {
         return scene;
     }
 
-    public getScene(id: string): Scene {
+    public getScene(id: string): IScene {
         return this.scenes.get(id);
     }
 
