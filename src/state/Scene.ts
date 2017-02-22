@@ -53,18 +53,8 @@ export class Scene extends EventEmitter implements IScene {
 
     public getControl(id: string): IControl {
         return this.controls.get(id);
-        // if (!control) {
-        //     return null;
-        // }
-        // switch (control.kind) {
-        //     case 'button':
-        //         return <IButton> control;
-        //     case 'joystick':
-        //         return <IJoystick> control;
-        //     default:
-        //         return control;
-        // }
     }
+
     public getControls(): IControl[] {
         return mapToArray(this.controls);
     }
