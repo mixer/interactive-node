@@ -43,6 +43,7 @@ export class Client extends EventEmitter implements IClient {
         });
 
         this.socket.on('open', () => {
+            this.emit('open');
             // Hydrate the state store with the current state on a connection.
             this.getScenes()
                  .then(res => this.state.initialize(res.scenes));
