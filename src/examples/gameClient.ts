@@ -12,6 +12,7 @@ import {
 
 if (process.argv.length < 5) {
     console.log('Usage gameClient.exe <token> <url> <experienceId>');
+    process.exit();
 }
 
 setWebSocket(WebSocket);
@@ -22,6 +23,7 @@ const client = new GameClient({
     url: process.argv[3] || 'wss://interactive1-dal.beam.pro',
     experienceId: parseInt(process.argv[4], 10) || 3419,
 });
+client.on('open', () => console.log('Connected to interactive'));
 // client.on('message', (err: any) => console.log('<<<', err));
 // client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
