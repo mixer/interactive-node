@@ -150,10 +150,16 @@ export class State extends EventEmitter {
     }
 
     public addScene(data: ISceneData): Scene {
-        if (this.scenes.has(data.sceneID)) {
-            return this.scenes.get(data.sceneID);
+        let scene = this.scenes.get(data.sceneID);
+        if (scene) {
+            if (scene.etag === data.etag) {
+                return this.scenes.get(data.sceneID);
+            } else {
+                this.updateScene(data);
+                return scene;
+            }
         }
-        const scene = this.stateFactory.createScene(data);
+        scene = this.stateFactory.createScene(data);
         if (data.controls) {
             scene.addControls(data.controls);
         }

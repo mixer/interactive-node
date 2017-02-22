@@ -34,11 +34,18 @@ export class Scene extends EventEmitter implements IScene {
     public addControls(controls: IControlData[]) {
         controls.forEach(control => this.addControl(control));
     }
+
     public addControl(controlData: IControlData): IControl {
-        if (this.controls.has(controlData.controlID)) {
-            return this.controls.get(controlData.controlID);
+        let control = this.controls.get(controlData.controlID);
+        if (control) {
+            if (control.etag === controlData.etag) {
+                return control;
+            } else {
+                this.updateControl(controlData);
+                return control;
+            }
         }
-        const control = this.stateFactory.createControl(controlData.kind, controlData, this);
+        control = this.stateFactory.createControl(controlData.kind, controlData, this);
         this.controls.set(control.controlID, control);
         this.emit('controlAdded', control);
         return control;
