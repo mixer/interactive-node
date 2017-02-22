@@ -5,7 +5,6 @@ import {
 } from './controls';
 import { IControlData } from './interfaces/controls';
 
-
 import { IClient } from '../IClient';
 import { ISceneData } from './interfaces/IScene';
 import { Scene } from './Scene';

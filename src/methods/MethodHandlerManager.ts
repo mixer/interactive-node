@@ -17,7 +17,6 @@ export class MethodHandlerManager {
     public addHandler(method: 'onParticipantLeave', handler: IMethodHandler<IParticipantArray>): void;
     public addHandler(method: 'onParticipantUpdate', handler: IMethodHandler<IParticipantArray>): void;
 
-
     public addHandler(method: 'onSceneCreate', handler: IMethodHandler<ISceneDataArray>): void;
     public addHandler(method: 'onSceneDelete', handler: IMethodHandler<ISceneDeletionParams>): void;
     public addHandler(method: 'onSceneUpdate', handler: IMethodHandler<ISceneDataArray>): void;

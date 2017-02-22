@@ -17,7 +17,6 @@ if (process.argv.length < 5) {
 
 setWebSocket(WebSocket);
 
-
 const client = new GameClient({
     authToken: process.argv[2],
     url: process.argv[3] || 'wss://interactive1-dal.beam.pro',
@@ -54,4 +53,3 @@ client.createControls({
     });
     client.ready(true);
 });
-

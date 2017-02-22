@@ -4,7 +4,6 @@ export * from './state/interfaces';
 export * from './GameClient';
 export * from './ParticipantClient';
 
-
 /**
  * You will likely not need to set this in a browser environment.
  * You will not need to set this if WebSocket is globally available.

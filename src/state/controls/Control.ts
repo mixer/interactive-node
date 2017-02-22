@@ -1,8 +1,8 @@
-import { IParticipant } from '../interfaces';
 import { EventEmitter } from 'events';
 import { merge } from 'lodash';
 
 import { IClient } from '../../IClient';
+import { IParticipant } from '../interfaces';
 import { ControlKind, IControl, IControlData, IPosition } from '../interfaces/controls/IControl';
 import { IInput, IInputEvent } from '../interfaces/controls/IInput';
 import { IMeta } from '../interfaces/controls/IMeta';

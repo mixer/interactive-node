@@ -20,7 +20,7 @@ const defaultOptions = {
     sampleSize: 3,
     threshold: 1000,
     sampleDelay: 5000,
-}
+};
 /**
  * Clock sync's goal is to keep a local clock in sync with a server clock.
  */

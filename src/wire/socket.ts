@@ -134,8 +134,6 @@ export class InteractiveSocket extends EventEmitter {
         });
     }
 
-
-
     /**
      * Set the given options.
      * Defaults and previous option values will be used if not supplied.
@@ -194,7 +192,6 @@ export class InteractiveSocket extends EventEmitter {
 
         return this;
     }
-
 
     /**
      * Returns the current state of the socket.
