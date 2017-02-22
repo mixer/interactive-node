@@ -1,13 +1,9 @@
+import * as readline from 'readline';
 import * as WebSocket from 'ws';
 
-import { Button } from '../state/controls';
-import { Scene } from '../state/Scene';
-
 import * as Interactive from '../';
-
+import { IScene } from '../state/interfaces';
 import { request } from './client';
-
-import * as readline from 'readline';
 
 if (process.argv.length < 6) {
     console.log('Usage participant.exe <username> <password> <url> <channelid>');
@@ -34,7 +30,7 @@ request('POST', 'users/login', auth)
     // client.on('error', (err: any) => console.log(err));
     client.open();
 
-    client.state.on('sceneCreated', (scene: Scene ) => {
+    client.state.on('sceneCreated', (scene: IScene ) => {
         const buttons: string[] = [];
         scene.controls.forEach(control => {
             buttons.push(control.controlID);
@@ -44,7 +40,7 @@ request('POST', 'users/login', auth)
 
         rl.on('line', line => {
             const cmd = line.trim();
-            const control = <Button> scene.getControl(cmd);
+            const control = scene.getControl(cmd);
             if (!control) {
                 console.log('cant find that control');
                 rl.prompt();
@@ -64,4 +60,3 @@ request('POST', 'users/login', auth)
         });
     });
 });
-
