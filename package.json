@@ -1,5 +1,5 @@
 {
-  "name": "beam-interactive-2",
+  "name": "@mcph/beam-interactive-2",
   "version": "0.1.0-beta",
   "description": "A NodeJS and Browser compatible client for Beam.pro's interactive 2 Protocol",
   "main": "lib/index.js",
