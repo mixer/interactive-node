@@ -1,3 +1,4 @@
+/* tslint:disable:no-console */
 import * as readline from 'readline';
 import * as WebSocket from 'ws';
 
@@ -60,3 +61,4 @@ request('POST', 'users/login', auth)
         });
     });
 });
+/* tslint:enable:no-console */

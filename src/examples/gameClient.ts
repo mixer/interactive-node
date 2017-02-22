@@ -1,3 +1,4 @@
+/* tslint:disable:no-console */
 import * as WebSocket from 'ws';
 
 import { IParticipant } from '../state/interfaces';
@@ -53,3 +54,4 @@ client.createControls({
     });
     client.ready(true);
 });
+/* tslint:enable:no-console */
