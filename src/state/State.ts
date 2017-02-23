@@ -154,10 +154,9 @@ export class State extends EventEmitter {
         if (scene) {
             if (scene.etag === data.etag) {
                 return this.scenes.get(data.sceneID);
-            } else {
-                this.updateScene(data);
-                return scene;
             }
+            this.updateScene(data);
+            return scene;
         }
         scene = this.stateFactory.createScene(data);
         if (data.controls) {
@@ -180,7 +179,7 @@ export class State extends EventEmitter {
         return result;
     }
 
-    private getParticipantBy(field: string, value: any): IParticipant {
+    private getParticipantBy< K extends keyof IParticipant>(field: K, value: IParticipant[K]): IParticipant {
         let result;
         this.participants.forEach(participant => {
             if (participant[field] === value) {

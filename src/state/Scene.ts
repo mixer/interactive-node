@@ -40,10 +40,9 @@ export class Scene extends EventEmitter implements IScene {
         if (control) {
             if (control.etag === controlData.etag) {
                 return control;
-            } else {
-                this.updateControl(controlData);
-                return control;
             }
+            this.updateControl(controlData);
+            return control;
         }
         control = this.stateFactory.createControl(controlData.kind, controlData, this);
         this.controls.set(control.controlID, control);
