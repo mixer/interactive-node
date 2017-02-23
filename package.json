@@ -18,7 +18,6 @@
     "type": "git",
     "url": "git+https://github.com/WatchBeam/beam-interactive-2.git"
   },
-  "private": true,
   "keywords": [
     "Interactive",
     "Beam"
