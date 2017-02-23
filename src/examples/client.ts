@@ -1,4 +1,4 @@
-import fetch , { Request, Response, RequestInit } from 'node-fetch'; //tslint:disable-line
+import fetch,{ Request, Response, RequestInit } from 'node-fetch'; //tslint:disable-line
 
 const fetchCookie: (url: string | Request, init?: RequestInit) => Promise<Response> = require('fetch-cookie')(fetch); //tslint:disable-line
 
