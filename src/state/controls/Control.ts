@@ -40,7 +40,8 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     }
 
     protected sendInput<K extends IInput>(input: K): Promise<void> {
-        //add this on behalf on
+        // We add this on behalf of the controls so that they don't have to worry about the
+        // Protocol side too much
         input.controlID = this.controlID;
         return this.client.giveInput(input);
     }

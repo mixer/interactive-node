@@ -1,9 +1,11 @@
+import { IJSON } from '../../../interfaces';
+
 /**
  * An IMeta property is one property within an IMeta map,
  * It is comprised on an etag and a value which can be any Valid JSON type.
  */
 export interface IMetaProperty {
-    value: any;
+    value: IJSON;
     etag: string;
 }
 
