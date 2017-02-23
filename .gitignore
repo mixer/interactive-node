@@ -47,3 +47,5 @@ yarn.lock
 /dist
 /lib
 /dist
+
+docs/

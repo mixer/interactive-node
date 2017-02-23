@@ -3,6 +3,7 @@ import {
     Control,
     Joystick,
 } from './controls';
+import { IControlData } from './interfaces/controls';
 
 import { IClient } from '../IClient';
 import { ISceneData } from './interfaces/IScene';
@@ -15,8 +16,9 @@ export class StateFactory {
         this.client = client;
     }
 
-    public createControl<T>(controlKind: string, values: T, scene: Scene): Control<T> {
+    public createControl<T extends IControlData>(controlKind: string, values: T, scene: Scene): Control<T> {
         let control: Control<T>;
+
         switch (controlKind) {
             case 'button':
                  control = new Button(values);

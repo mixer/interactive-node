@@ -2,8 +2,9 @@ import { EventEmitter } from 'events';
 import { merge } from 'lodash';
 
 import { IClient } from '../../IClient';
+import { IParticipant } from '../interfaces';
 import { ControlKind, IControl, IControlData, IPosition } from '../interfaces/controls/IControl';
-import { IInput } from '../interfaces/controls/IInput';
+import { IInput, IInputEvent } from '../interfaces/controls/IInput';
 import { IMeta } from '../interfaces/controls/IMeta';
 import { Scene } from '../Scene';
 
@@ -34,8 +35,15 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     // A base control class cannot give input
     public abstract giveInput<T extends IInput>(input: T): Promise<void>;
 
+    public receiveInput(input: IInputEvent, participant: IParticipant) {
+        this.emit(input.input.event, input, participant);
+    }
+
     protected sendInput<K extends IInput>(input: K): Promise<void> {
-        return this.client.execute('giveInput', input, false);
+        // We add this on behalf of the controls so that they don't have to worry about the
+        // Protocol side too much
+        input.controlID = this.controlID;
+        return this.client.giveInput(input);
     }
 
     public disable(): Promise<void> {

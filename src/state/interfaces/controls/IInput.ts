@@ -1,12 +1,7 @@
-import { ControlKind } from './IControl';
 import { ITransaction } from './ITransaction';
 
-export interface IInputControlData {
-    controlID: string;
-    kind: ControlKind;
-}
 export interface IInput {
-    control: IInputControlData;
+    controlID?: string;
     event: string;
 }
 
@@ -20,4 +15,9 @@ export interface IJoystickInput extends IInput {
     event: 'move';
     x: number;
     y: number;
+}
+
+export interface IInputEvent {
+    participantID: string;
+    input: IInput;
 }

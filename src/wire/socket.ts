@@ -28,6 +28,9 @@ export interface ISocketOptions {
     // Optional JSON web token to use for authentication.
     jwt?: string;
 
+    // Query params to add
+    queryParams?: IRawValues;
+
     // Optional OAuth token to use for authentication.
     authToken?: string;
 
@@ -36,6 +39,8 @@ export interface ISocketOptions {
 
     // Duration upon which to send a ping to the server. Defaults to 10 seconds.
     pingInterval?: number;
+    // Any extra headers to include in the socket connection.
+    extraHeaders?: IRawValues;
 }
 
 export interface IWebSocketOptions {
@@ -68,6 +73,8 @@ function getDefaults(): ISocketOptions {
         autoReconnect: true,
         reconnectionPolicy: new ExponentialReconnectionPolicy(),
         pingInterval: 10 * 1000,
+        extraHeaders: {},
+        queryParams: {},
     };
 }
 
@@ -76,7 +83,7 @@ export class InteractiveSocket extends EventEmitter {
     // does not natively support it.
 
     //tslint:disable-next-line:variable-name
-    public static WebSocket: any = typeof InteractiveSocket.WebSocket === 'undefined' ? null : InteractiveSocket.WebSocket;
+    public static WebSocket: any = typeof WebSocket === 'undefined' ? null : WebSocket;
 
     private reconnectTimeout: NodeJS.Timer;
     private options: ISocketOptions;
@@ -127,8 +134,6 @@ export class InteractiveSocket extends EventEmitter {
         });
     }
 
-
-
     /**
      * Set the given options.
      * Defaults and previous option values will be used if not supplied.
@@ -150,30 +155,31 @@ export class InteractiveSocket extends EventEmitter {
             this.state = State.Refreshing;
             return this;
         }
+        const defaultHeaders = {
+            'X-Protocol-Version': '2.0',
+        };
+
+        const headers = Object.assign({}, defaultHeaders, this.options.extraHeaders);
 
         const extras: IWebSocketOptions = {
-            //TODO X-Auth-User is temporary, used to mock against while service gets integrated with Beam stack
-            headers: {
-                'X-Protocol-Version': '2.0',
-                'X-Auth-User': '{"ID":1, "Username":"connor","XP":100}',
-            },
+            headers,
         };
 
         let url = this.options.url;
         if (this.options.authToken) {
             extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
         } else if (this.options.jwt) {
-            //TODO: Clear up auth here later
-            url += '?' + querystring.stringify({ jwt: this.options.jwt });
+            const queryString = Object.assign({}, { Authorization: `JWT ${this.options.jwt}` }, this.options.queryParams);
+            url += '?' + querystring.stringify(queryString);
         }
 
-        this.socket = new InteractiveSocket.WebSocket(url, extras);
+        this.socket = new InteractiveSocket.WebSocket(url, null, extras);
 
         this.state = State.Connecting;
 
-        this.socket.on('close', (evt: any) => this.emit('close', evt));
-        this.socket.on('open', () => this.emit('open'));
-        this.socket.on('message', (evt: any) => this.emit('message', evt));
+        this.socket.addEventListener('close', (evt: any) => this.emit('close', evt));
+        this.socket.addEventListener('open', () => this.emit('open'));
+        this.socket.addEventListener('message', (evt: any) => this.emit('message', evt.data));
 
         this.socket.addEventListener('error', (err: any) => {
             if (this.state === State.Closing) {

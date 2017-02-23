@@ -1,3 +1,5 @@
+import { EventEmitter } from 'events';
+
 import { IControl, IControlData } from './controls/IControl';
 import { IMeta } from './controls/IMeta';
 
@@ -17,18 +19,20 @@ export interface ISceneData {
     etag?: string;
 }
 
-export interface IScene extends ISceneData {
-    controls: IControl[];
+export interface IScene extends EventEmitter {
+    sceneID: string;
+    controls: Map<string, IControl>;
     meta: IMeta;
     etag: string;
     //TODO groups
     groups: any;
 
-
-    getControls(): IControl[];
     getControl(id: string): IControl;
+    addControl(controlData: IControlData): IControl;
 
     update(scene: ISceneData): void;
+
+    destroy(): void;
     // Frontend
 
     // GameClient

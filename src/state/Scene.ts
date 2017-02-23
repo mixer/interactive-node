@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { merge, pull } from 'lodash';
+import { merge } from 'lodash';
 
 import { IClient } from '../IClient';
 import { IControl, IControlData } from './interfaces/controls/IControl';
@@ -9,7 +9,7 @@ import { StateFactory } from './StateFactory';
 
 export class Scene extends EventEmitter implements IScene {
     public sceneID: string;
-    public controls: IControl[] = [];
+    public controls = new Map<string, IControl>();
     public groups: any;
     public etag: string;
     public meta: IMeta = {};
@@ -26,25 +26,35 @@ export class Scene extends EventEmitter implements IScene {
     constructor(data: ISceneData) {
         super();
         this.sceneID = data.sceneID;
-        this.controls = this.addControls(data.controls);
+        this.etag = data.etag || '';
+        this.meta = data.meta || {};
     }
 
     public addControls(controls: IControlData[]) {
-        return controls.map(control => this.addControl(control));
+        controls.forEach(control => this.addControl(control));
     }
+
     public addControl(controlData: IControlData): IControl {
-        const control = this.stateFactory.createControl(controlData.kind, controlData, this);
-        this.controls.push(control);
+        let control = this.controls.get(controlData.controlID);
+        if (control) {
+            if (control.etag === controlData.etag) {
+                return control;
+            }
+            this.updateControl(controlData);
+            return control;
+        }
+        control = this.stateFactory.createControl(controlData.kind, controlData, this);
+        this.controls.set(control.controlID, control);
         this.emit('controlAdded', control);
         return control;
     }
 
-    public getControls(): IControl[] {
-        return this.controls;
+    public getControl(id: string): IControl {
+        return this.controls.get(id);
     }
 
-    public getControl(id: string): IControl {
-        return this.controls.find(control => control.controlID === id);
+    public getControls(): IControl[] {
+        return Array.from(this.controls.values());
     }
 
     public deleteControls(controls: IControlData[]) {
@@ -52,11 +62,8 @@ export class Scene extends EventEmitter implements IScene {
     }
 
     public deleteControl(controlData: IControlData) {
-        const control = this.getControl(controlData.controlID);
-        if (control) {
-            pull(this.controls, control);
-            this.emit('controlDeleted', control);
-        }
+        this.controls.delete(controlData.controlID);
+        this.emit('controlDeleted', controlData.controlID);
     }
     public updateControl(controlData: IControlData) {
         const control = this.getControl(controlData.controlID);

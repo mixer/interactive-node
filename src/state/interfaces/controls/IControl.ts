@@ -1,7 +1,9 @@
 import { EventEmitter } from 'events';
+
+import { IParticipant } from '../';
 import { ISceneDataArray } from '../IScene';
 import { IGridSize } from './IGridConfig';
-import { IInput } from './IInput';
+import { IInput, IInputEvent } from './IInput';
 import { IMeta } from './IMeta';
 
 export type ControlKind = 'button' | 'joystick';
@@ -25,6 +27,8 @@ export interface IControl extends IControlData, EventEmitter {
      * @memberOf IControl
      */
     giveInput<T extends IInput>(input: T): Promise<void>;
+
+    receiveInput(input: IInputEvent, participant: IParticipant): void;
 
     // GameClient
     /**

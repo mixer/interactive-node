@@ -198,4 +198,13 @@ export module InteractiveError {
     }
 
     errors[4015] = UnknownControlType;
+
+    export class BadUserInput extends Base {
+        constructor(message: string) {
+            super(message, 4999);
+            BadUserInput.setProto(this);
+        }
+    }
+
+    errors[4999] = BadUserInput;
 }

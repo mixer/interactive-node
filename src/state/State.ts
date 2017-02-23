@@ -1,24 +1,28 @@
 import { EventEmitter } from 'events';
-import { pull } from 'lodash';
+import { merge } from 'lodash';
 
+import { ClientType } from '../Client';
 import { ClockSync } from '../ClockSync';
 import { InteractiveError } from '../errors';
 import { IClient } from '../IClient';
 import { MethodHandlerManager } from '../methods/MethodHandlerManager';
-import { only } from '../util';
 import { Method, Reply } from '../wire/packets';
+import { IParticipant, IScene } from './interfaces';
 import { IControl } from './interfaces/controls/IControl';
 import { ISceneData } from './interfaces/IScene';
 import { Scene } from './Scene';
 import { StateFactory } from './StateFactory';
 
 export class State extends EventEmitter {
-    private scenes: Scene[] = [];
     public groups: any;
     public isReady: boolean;
     private methodHandler = new MethodHandlerManager();
     private stateFactory = new StateFactory();
+    private scenes = new Map<string, Scene>();
+
     private client: IClient;
+
+    private participants = new Map<string, IParticipant>();
 
     private clockDelta: number = 0;
 
@@ -26,13 +30,12 @@ export class State extends EventEmitter {
         sampleFunc: () => this.client.getTime(),
     });
 
-    constructor() {
+    constructor(private clientType: ClientType) {
         super();
 
         this.methodHandler.addHandler('onReady', readyMethod => {
             this.isReady = readyMethod.params.isReady;
             this.emit('ready', this.isReady);
-            return Promise.resolve(null);
         });
 
         // Scene Events
@@ -47,14 +50,14 @@ export class State extends EventEmitter {
         });
 
         this.methodHandler.addHandler('onControlCreate', res => {
-            const scene = this.getScene(res.params.sceneID);
+            const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
                 scene.addControls(res.params.controls);
             }
         });
 
         this.methodHandler.addHandler('onControlDelete', res => {
-            const scene = this.getScene(res.params.sceneID);
+            const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
                 scene.deleteControls(res.params.controls);
             }
@@ -62,7 +65,7 @@ export class State extends EventEmitter {
 
         this.methodHandler.addHandler('onControlUpdate', res => {
             res.params.scenes.forEach(sceneData => {
-                const scene = this.getScene(sceneData.sceneID);
+                const scene = this.scenes.get(sceneData.sceneID);
                 if (scene) {
                     scene.updateControls(sceneData.controls);
                 }
@@ -72,24 +75,58 @@ export class State extends EventEmitter {
             // TODO pass delta into state, that involve times. Just buttons right now?
             this.clockDelta = delta;
         });
+
+        // Here we're deciding to discard all participant messages, if this is a participant client
+        // I wasn't sure if participants got these events at the time. Checking with Connor.
+        // Either way we don't need to store potentially thousands of these records in memory on
+        // the Participant side.
+        //
+        // Only remaining query is how a Participant knows who they are in the loop.
+        if (this.clientType !== ClientType.GameClient) {
+            return;
+        }
+        this.methodHandler.addHandler('onParticipantJoin', res => {
+            res.params.participants.forEach(participant => {
+                this.participants.set(participant.sessionID, participant);
+                this.emit('participantJoin', participant);
+            });
+        });
+
+        this.methodHandler.addHandler('onParticipantLeave', res => {
+            res.params.participants.forEach(participant => {
+                this.participants.delete(participant.sessionID);
+                this.emit('participantLeave', participant.sessionID);
+            });
+        });
+
+        this.methodHandler.addHandler('onParticipantUpdate', res => {
+            res.params.participants.forEach(participant => {
+                merge(this.participants.get(participant.sessionID), participant);
+            });
+        });
+
+        this.methodHandler.addHandler('giveInput', res => {
+            const control = this.getControl(res.params.input.controlID);
+            if (control) {
+                const participant = this.getParticipantBySessionID(res.params.participantID);
+                control.receiveInput(res.params, participant);
+            }
+        });
     }
     public setClient(client: IClient) {
         this.client = client;
         this.stateFactory.setClient(client);
         this.clockSyncer.start();
     }
-    public processMethod(method: Method<any>): Promise<Reply | null> | void {
-        const result = this.methodHandler.handle(method);
-        if (!result) {
-            return;
+    public processMethod(method: Method<any>): void | Reply {
+        try {
+            return this.methodHandler.handle(method);
+        } catch (e) {
+            if (e instanceof InteractiveError.Base) {
+                return Reply.fromError(method.id, e);
+            }
+            throw e;
         }
-        return result
-            .catch(only(InteractiveError.Base, err => {
-                /**
-                 * Catch only InteractiveError's and return them as a Reply packet
-                 */
-                return Reply.fromError(method.id, err);
-            }));
     }
 
     public initialize(scenes: ISceneData[]) {
@@ -106,20 +143,32 @@ export class State extends EventEmitter {
     public deleteScene(sceneID: string, reassignSceneID: string) {
         const targetScene = this.getScene(sceneID);
         if (targetScene) {
-            pull(this.scenes, targetScene);
             targetScene.destroy();
-            this.emit('sceneDeleted', targetScene, reassignSceneID);
+            this.scenes.delete(sceneID);
+            this.emit('sceneDeleted', sceneID, reassignSceneID);
         }
     }
 
-    public addScene(data: ISceneData) {
-        const scene = this.stateFactory.createScene(data);
-        this.scenes.push(scene);
+    public addScene(data: ISceneData): Scene {
+        let scene = this.scenes.get(data.sceneID);
+        if (scene) {
+            if (scene.etag === data.etag) {
+                return this.scenes.get(data.sceneID);
+            }
+            this.updateScene(data);
+            return scene;
+        }
+        scene = this.stateFactory.createScene(data);
+        if (data.controls) {
+            scene.addControls(data.controls);
+        }
+        this.scenes.set(data.sceneID, scene);
         this.emit('sceneCreated', scene);
+        return scene;
     }
 
-    public getScene(id: string): Scene {
-        return this.scenes.find(scene => scene.sceneID === id);
+    public getScene(id: string): IScene {
+        return this.scenes.get(id);
     }
 
     public getControl(id: string): IControl {
@@ -128,5 +177,34 @@ export class State extends EventEmitter {
             result = scene.getControl(id);
         });
         return result;
+    }
+
+    private getParticipantBy< K extends keyof IParticipant>(field: K, value: IParticipant[K]): IParticipant {
+        let result;
+        this.participants.forEach(participant => {
+            if (participant[field] === value) {
+                result = participant;
+            }
+        });
+        return result;
+    }
+    /**
+     * Retrieve a participant by their Beam UserId.
+     */
+    public getParticipantByUserID(id: number): IParticipant {
+        return this.getParticipantBy('userID', id);
+    }
+
+    /**
+     * Retrieve a participant by their Beam Username.
+     */
+    public getParticipantByUsername(name: string): IParticipant {
+        return this.getParticipantBy('username', name);
+    }
+    /**
+     * Retrieve a participant by their sessionID
+     */
+    public getParticipantBySessionID(id: string): IParticipant {
+        return this.participants.get(id);
     }
 }

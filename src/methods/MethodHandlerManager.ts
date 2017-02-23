@@ -1,15 +1,21 @@
 import { InteractiveError } from '../errors';
+import { IInputEvent } from '../state/interfaces/controls/IInput';
+import { IParticipantArray } from '../state/interfaces/IParticipant';
 import { Method, Reply } from '../wire/packets';
 import { onReadyParams } from './methodTypes';
 
 import { ISceneData, ISceneDataArray, ISceneDeletionParams } from '../state/interfaces/IScene';
 
 export interface IMethodHandler<T> {
-    (method: Method<T>) : Promise<Reply | null> | void;
+    (method: Method<T>) : Reply | void;
 }
 
 export class MethodHandlerManager {
     private handlers: {[key: string]: IMethodHandler<any>} = {};
+
+    public addHandler(method: 'onParticipantJoin', handler: IMethodHandler<IParticipantArray>): void;
+    public addHandler(method: 'onParticipantLeave', handler: IMethodHandler<IParticipantArray>): void;
+    public addHandler(method: 'onParticipantUpdate', handler: IMethodHandler<IParticipantArray>): void;
 
     public addHandler(method: 'onSceneCreate', handler: IMethodHandler<ISceneDataArray>): void;
     public addHandler(method: 'onSceneDelete', handler: IMethodHandler<ISceneDeletionParams>): void;
@@ -20,6 +26,9 @@ export class MethodHandlerManager {
     public addHandler(method: 'onControlUpdate', handler: IMethodHandler<ISceneDataArray>): void;
 
     public addHandler(method: 'onReady', handler: IMethodHandler<onReadyParams>): void;
+
+    public addHandler(method: 'giveInput', handler: IMethodHandler<IInputEvent>): void;
+
     public addHandler<T>(method: string, handler: IMethodHandler<T>): void;
     public addHandler(method: string, handler: IMethodHandler<any>): void {
         this.handlers[method] = handler;
@@ -29,7 +38,7 @@ export class MethodHandlerManager {
         delete this.handlers[method];
     }
 
-    public handle<T>(method: Method<T>): Promise<Reply | null> | void {
+    public handle<T>(method: Method<T>): Reply | void {
         if (this.handlers[method.method]) {
             return this.handlers[method.method](method);
         }
@@ -42,9 +51,8 @@ export class MethodHandlerManager {
          * if discard is true, otherwise throw UnknownMethodName
          */
         if (method.discard) {
-            return Promise.resolve(null);
-        } else {
-            return Promise.reject(new InteractiveError.UnknownMethodName(''));
+            return null;
         }
+        throw new InteractiveError.UnknownMethodName(`Client cannot process ${method.method}`);
     }
 }

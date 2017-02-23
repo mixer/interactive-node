@@ -1,12 +1,14 @@
 'use strict';
-
 module.exports = {
-    entry: './src',
+    entry: './src/index.ts',
     devtool: 'source-map',
+    plugins: [
+
+    ],
     output: {
         path: './dist',
-        filename: 'carina.js',
-        library: 'carina',
+        filename: 'interactive.js',
+        library: 'interactive',
         libraryTarget: 'umd',
     },
     resolve: {
@@ -14,7 +16,6 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.json$/, loaders: ['json'] },
             { test: /\.ts$/, loader: 'awesome-typescript-loader' },
         ]
     },

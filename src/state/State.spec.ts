@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { ClientType } from '../Client';
 import { Method } from '../wire/packets';
 import { IControl } from './interfaces/controls/IControl';
 import { ISceneDataArray } from './interfaces/IScene';
@@ -14,7 +15,7 @@ function loadFixture(name: string): ISceneDataArray {
 describe('state', () => {
     let state: State;
     function initializeState(fixture: string) {
-        state = new State();
+        state = new State(ClientType.GameClient);
         const data = loadFixture(path.join(__dirname, '../../test/fixtures', fixture));
         state.initialize(data.scenes);
     }
@@ -112,7 +113,27 @@ describe('state', () => {
             const scene = state.getScene('my awesome scene');
             expect(scene).to.exist;
             expect(scene.meta).to.deep.equal(meta);
-        })
+        });
+    });
+
+    describe('participants', () => {
+        it('adds participants', () => {
+            state.processMethod(new Method(
+                'onParticipantJoin',
+                {
+                    participants: [
+                        {
+                            sessionID: 'abc123',
+                            username: 'connor',
+                            userID: 1337,
+                        },
+                    ],
+                },
+                false,
+            ));
+            expect(state.getParticipantBySessionID('abc123').username).to.equal('connor');
+            expect(state.getParticipantByUsername('connor').sessionID).to.equal('abc123');
+        });
     });
 
     describe('controls', () => {
@@ -150,14 +171,7 @@ describe('state', () => {
                 },
             ));
         });
-        it('creates and places a new control within the state tree', done => {
-            const scene = state.getScene('my awesome scene');
-            scene.on('controlAdded', (addedControl: IControl) => {
-                expect(addedControl.controlID).to.equal('lose_the_game_btn');
-                const foundControl = state.getControl('lose_the_game_btn');
-                expect(foundControl).to.exist;
-                done();
-            });
+        it('creates and places a new control within the state tree', () => {
             state.processMethod(new Method(
                 'onControlCreate',
                 {
@@ -184,13 +198,16 @@ describe('state', () => {
                     ],
                 },
             ));
+            control = state.getScene('my awesome scene').getControl('lose_the_game_btn');
+            expect(control).to.exist;
+            expect(control.controlID).to.equal('lose_the_game_btn');
         });
         it('deletes a control', done => {
             const scene = state.getScene('my awesome scene');
             // TODO How do we overload this?
-            scene.on('controlDeleted', (eventControl: IControl) => {
-                expect(eventControl.controlID).to.equal('lose_the_game_btn');
-                const searchControl = scene.getControl('lose_the_game_btn');
+            scene.on('controlDeleted', (id: string) => {
+                expect(id).to.equal('lose_the_game_btn');
+                const searchControl = scene.getControl(id);
                 expect(searchControl).to.not.exist;
                 done();
             });
@@ -206,4 +223,3 @@ describe('state', () => {
         });
     });
 });
-

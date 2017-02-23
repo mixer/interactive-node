@@ -4,12 +4,10 @@ import { PermissionDeniedError } from './errors';
 import { IClient } from './IClient';
 import { onReadyParams } from './methods/methodTypes';
 import { IInput } from './state/interfaces/controls/IInput';
-import { ISceneDataArray } from './state/interfaces/IScene';
+import { ISceneData, ISceneDataArray } from './state/interfaces/IScene';
 import { State } from './state/State';
 import { Method, Reply } from './wire/packets';
 import { CompressionScheme, InteractiveSocket, ISocketOptions } from './wire/Socket';
-
-const participantMethods = ['giveInput', 'getScenes', 'getTime'];
 
 export enum ClientType {
     Participant,
@@ -22,37 +20,38 @@ export interface IClientOptions {
 }
 
 export class Client extends EventEmitter implements IClient {
-    private clientType: ClientType;
+    public clientType: ClientType;
     public isReady: boolean;
 
-    public state = new State();
+    public state: State;
 
-    private socket: InteractiveSocket;
+    protected socket: InteractiveSocket;
 
     constructor(options: IClientOptions) {
         super();
         this.clientType = options.clientType;
+        this.state = new State(this.clientType);
         this.state.setClient(this);
         this.socket = new InteractiveSocket(options.socketOptions);
         this.socket.on('method', (method: Method<any>) => {
-            // As process method can return a promise or void here,
-            // Check it has a value and then wait, or just ignore it
-            // if there is no value
-            const waitingForReply = this.state.processMethod(method);
-            if (waitingForReply) {
-                waitingForReply.then(reply => {
-                    if (reply) {
-                        this.reply(reply);
-                    }
-                });
+            // As process method can return a reply or nothing
+            const reply = this.state.processMethod(method);
+            if (!reply) {
+                return;
             }
+            this.reply(reply);
         });
 
         this.socket.on('open', () => {
+            this.emit('open');
             // Hydrate the state store with the current state on a connection.
             this.getScenes()
                  .then(res => this.state.initialize(res.scenes));
         });
+
+        // Re-emit these for debugging reasons
+        this.socket.on('message', (data: any) => this.emit('message', data));
+        this.socket.on('send', (data: any) => this.emit('send', data));
     }
 
     /**
@@ -90,35 +89,12 @@ export class Client extends EventEmitter implements IClient {
         });
     }
 
-     /**
-      * Set the websocket implementation.
-      * You will likely not need to set this in a browser environment.
-      * You will not need to set this if WebSocket is globally available.
-      *
-      * @example
-      * client.WebSocket = require('ws');
-      */
-    public static set WebSocket(ws: any) {
-        InteractiveSocket.WebSocket = ws;
-    }
-    public static get WebSocket() {
-        return InteractiveSocket.WebSocket;
-    }
-
     public reply(reply: Reply) {
         return this.socket.reply(reply);
     }
 
     public getScenes(): Promise<ISceneDataArray> {
         return this.execute('getScenes', null, false);
-    }
-
-    public updateControls(params: ISceneDataArray): Promise<void> {
-        return this.execute('updateControls', params, false);
-    }
-
-    public updateScenes(scenes: ISceneDataArray): Promise<any> {
-        return this.execute('updateScenes', scenes, false);
     }
 
     public ready(isReady: boolean = true): Promise<any> {
@@ -132,6 +108,7 @@ export class Client extends EventEmitter implements IClient {
             });
     }
 
+    public execute(method: 'createControls', params: ISceneData, discard: false ): Promise<ISceneData>;
     public execute(method: 'ready', params: onReadyParams, discard: false ): Promise<void>;
     public execute(method: 'getTime', params: null, discard: false ): Promise<{time: number}>;
     public execute(method: 'getScenes', params: null, discard: false ): Promise<ISceneDataArray>;
@@ -139,16 +116,19 @@ export class Client extends EventEmitter implements IClient {
     public execute(method: 'updateControls', params: ISceneDataArray, discard: false): Promise<void>;
     public execute<T>(method: string, params: T, discard: boolean): Promise<any>
     public execute(method: string, params: any, discard: boolean): Promise<any> {
-
-        if (this.clientType === ClientType.Participant && !participantMethods.indexOf(method)) {
-            throw new PermissionDeniedError(method, 'Participant');
-        }
-
-        if (this.clientType === ClientType.GameClient && method === 'giveInput') {
-            throw new PermissionDeniedError(method, 'GameClient');
-        }
-
         return this.socket.execute(method, params, discard);
+    }
+
+    public updateControls(_: ISceneDataArray): Promise<void> {
+        throw new PermissionDeniedError('updateControls', 'Participant');
+    }
+
+    public updateScenes(_: ISceneDataArray): Promise<void> {
+        throw new PermissionDeniedError('updateScenes', 'Participant');
+    }
+
+    public giveInput<T extends IInput>(_: T): Promise<void> {
+        throw new PermissionDeniedError('giveInput', 'GameClient');
     }
 
 }
