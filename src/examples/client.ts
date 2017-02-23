@@ -16,5 +16,4 @@ export function request(method: string, url: string, body: Object): Promise<Resp
             body: JSON.stringify(body),
         },
     );
-    //.then(res => res.json());
 }

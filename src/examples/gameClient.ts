@@ -31,14 +31,13 @@ client.on('open', () => console.log('Connected to interactive'));
 client.open();
 
 function makeControls(amount: number): IControlData[] {
-    const controls: IControlData[] = [];
+    const controls: IButtonData[] = [];
     for (let i = 0; i < amount; i++) {
-        const button: IButtonData = {
+        controls.push({
             controlID: `${i}`,
             kind: 'button',
             text: `Button ${i}`,
-        };
-        controls.push(button);
+        });
     }
     return controls;
 }
