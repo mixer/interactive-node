@@ -28,6 +28,7 @@ export interface IScene extends EventEmitter {
     groups: any;
 
     getControl(id: string): IControl;
+    getControls(): IControl[];
     addControl(controlData: IControlData): IControl;
 
     update(scene: ISceneData): void;
