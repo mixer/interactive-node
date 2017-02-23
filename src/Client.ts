@@ -7,7 +7,12 @@ import { IInput } from './state/interfaces/controls/IInput';
 import { ISceneData, ISceneDataArray } from './state/interfaces/IScene';
 import { State } from './state/State';
 import { Method, Reply } from './wire/packets';
-import { CompressionScheme, InteractiveSocket, ISocketOptions } from './wire/Socket';
+import {
+    CompressionScheme,
+    InteractiveSocket,
+    ISocketOptions,
+    State as InteractiveSocketState
+} from './wire/Socket';
 
 export enum ClientType {
     Participant,
@@ -32,7 +37,9 @@ export class Client extends EventEmitter implements IClient {
     private createSocket(options: ISocketOptions): void {
         if (this.socket) {
             // GC the old socket
-            this.socket.close();
+            if (this.socket.getState() !== InteractiveSocketState.Closing) {
+                this.socket.close();
+            }
             this.socket = null;
         }
         this.socket = new InteractiveSocket(options);
