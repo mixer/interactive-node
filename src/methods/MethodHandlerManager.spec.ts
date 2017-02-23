@@ -24,11 +24,8 @@ describe('method handler', () => {
     });
 
     it('throws an error if an undiscardable method has no handler', () => {
-        try {
-            handler.handle(new Method('hello', {foo: 'bar'}, false));
-        } catch (e) {
-            expect(e).to.be.an.instanceof(InteractiveError.UnknownMethodName);
-        }
+        expect(() => handler.handle(new Method('hello', {foo: 'bar'}, false)))
+            .to.throw(InteractiveError.UnknownMethodName);
     });
 
     it('does throws an error if a discardable method has no handler', () => {
