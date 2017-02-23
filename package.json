@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "build:ts": "rimraf lib && tsc && tsc -d",
+    "build:ts": "rimraf lib dist && tsc",
     "build:webpack": "rimraf dist && webpack && webpack --config webpack.config.min.js",
     "build:examples": "cp dist/* examples/browser",
     "build": "npm run build:ts && npm run build:webpack",
@@ -29,7 +29,8 @@
   "homepage": "https://github.com/WatchBeam/beam-interactive-2#readme",
   "devDependencies": {
     "@types/chai": "^3.4.34",
-    "@types/lodash": "^4.14.52",
+    "@types/lodash": "4.14.50",
+    "@types/lodash.merge": "^4.6.1",
     "@types/mocha": "^2.2.39",
     "@types/node": "^6.0.45",
     "@types/node-fetch": "^1.6.7",
@@ -39,7 +40,6 @@
     "awesome-typescript-loader": "^3.0.4-rc.2",
     "chai": "^3.5.0",
     "fetch-cookie": "^0.4.1",
-    "json-loader": "^0.5.4",
     "mocha": "^3.0.2",
     "node-fetch": "^1.6.3",
     "rimraf": "^2.6.0",
@@ -55,6 +55,6 @@
     "ws": "^1.1.1"
   },
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash.merge": "^4.6.0"
   }
 }
