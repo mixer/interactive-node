@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import merge = require('lodash.merge'); // tslint:disable-line
+import { merge } from 'lodash';
 
 import { IClient } from '../../IClient';
 import { IParticipant } from '../interfaces';
