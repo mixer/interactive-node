@@ -2,7 +2,6 @@ import { EventEmitter } from 'events';
 import { merge } from 'lodash';
 
 import { IClient } from '../IClient';
-import { mapToArray } from '../util';
 import { IControl, IControlData } from './interfaces/controls/IControl';
 import { IMeta } from './interfaces/controls/IMeta';
 import { IScene, ISceneData } from './interfaces/IScene';
@@ -55,7 +54,7 @@ export class Scene extends EventEmitter implements IScene {
     }
 
     public getControls(): IControl[] {
-        return mapToArray(this.controls);
+        return Array.from(this.controls.values());
     }
 
     public deleteControls(controls: IControlData[]) {
