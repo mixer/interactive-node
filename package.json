@@ -29,7 +29,7 @@
   "homepage": "https://github.com/WatchBeam/beam-interactive-2#readme",
   "devDependencies": {
     "@types/chai": "^3.4.34",
-    "@types/lodash": "4.14.50",
+    "@types/lodash": "^4.14.52",
     "@types/mocha": "^2.2.39",
     "@types/node": "^6.0.45",
     "@types/node-fetch": "^1.6.7",
