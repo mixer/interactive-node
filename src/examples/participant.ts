@@ -21,15 +21,15 @@ const auth = {
 request('POST', 'users/login', auth)
 .then(() => request('POST', 'jwt/authorize', {}))
 .then(res => {
-    const client = new Interactive.ParticipantClient({
-         jwt: res.headers.get('x-jwt'),
-         url: process.argv[4] || 'wss://interactive1-dal.beam.pro/participant',
-         channelID: parseInt(process.argv[5], 10) || 36241,
-    });
+    const client = new Interactive.ParticipantClient();
     // client.on('message', (err: any) => console.log('<<<', err));
     // client.on('send', (err: any) => console.log('>>>', err));
     // client.on('error', (err: any) => console.log(err));
-    client.open();
+    client.open({
+        jwt: res.headers.get('x-jwt'),
+        url: process.argv[4] || 'wss://interactive1-dal.beam.pro/participant',
+        channelID: parseInt(process.argv[5], 10) || 36241,
+    });
 
     client.state.on('sceneCreated', (scene: IScene ) => {
         const buttons: string[] = [];

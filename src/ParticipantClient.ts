@@ -8,18 +8,21 @@ export interface IParticipantOptions {
 }
 
 export class ParticipantClient extends Client {
-    constructor(options: IParticipantOptions) {
-        super({
-            clientType: ClientType.Participant,
-            socketOptions: {
-                jwt: options.jwt,
-                url: options.url,
-                queryParams: {
-                    channel: options.channelID,
-                },
+    constructor() {
+        super(ClientType.Participant);
+    }
+
+    public open(options: IParticipantOptions): this {
+        super.open({
+            jwt: options.jwt,
+            url: options.url,
+            queryParams: {
+                channel: options.channelID,
             },
         });
+        return this;
     }
+
     public giveInput<T extends IInput>(input: T): Promise<void> {
         return this.execute('giveInput', input, false);
     }

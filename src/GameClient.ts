@@ -9,17 +9,19 @@ export interface IGameClientOptions {
 }
 
 export class GameClient extends Client {
-    constructor(options: IGameClientOptions) {
-        super({
-            clientType: ClientType.GameClient,
-            socketOptions: {
-                authToken: options.authToken,
-                url: `${options.url}/gameClient`,
-                extraHeaders: {
-                    'X-Interactive-Version': options.experienceId,
-                },
+    constructor() {
+        super(ClientType.GameClient);
+    }
+
+    public open(options: IGameClientOptions): this {
+        super.open({
+            authToken: options.authToken,
+            url: `${options.url}/gameClient`,
+            extraHeaders: {
+                'X-Interactive-Version': options.experienceId,
             },
         });
+        return this;
     }
 
     public createControls(data: ISceneData): Promise<IControl[]> {

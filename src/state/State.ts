@@ -115,8 +115,9 @@ export class State extends EventEmitter {
     }
     public setClient(client: IClient) {
         this.client = client;
+        this.client.on('open', () => this.clockSyncer.start());
+        this.client.on('close', () => this.clockSyncer.stop());
         this.stateFactory.setClient(client);
-        this.clockSyncer.start();
     }
     public processMethod(method: Method<any>): void | Reply {
         try {
@@ -131,6 +132,13 @@ export class State extends EventEmitter {
 
     public initialize(scenes: ISceneData[]) {
         scenes.forEach(scene => this.addScene(scene));
+    }
+    public reset() {
+        this.scenes.forEach(scene => scene.destroy());
+        this.scenes.clear();
+        this.clockDelta = 0;
+        this.isReady = false;
+        this.participants.clear();
     }
 
     public updateScene(scene: ISceneData) {
