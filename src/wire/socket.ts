@@ -150,7 +150,7 @@ export class InteractiveSocket extends EventEmitter {
      * Open a new socket connection. By default, the socket will auto
      * connect when creating a new instance.
      */
-    public connect(): InteractiveSocket {
+    public connect(): this {
         if (this.state === State.Closing) {
             this.state = State.Refreshing;
             return this;

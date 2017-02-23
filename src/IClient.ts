@@ -1,8 +1,9 @@
+import { EventEmitter } from 'events';
 import { ClientType } from './Client';
 import { IInput } from './state/interfaces/controls';
 import { ISceneDataArray } from './state/interfaces/IScene';
 
-export interface IClient {
+export interface IClient extends EventEmitter {
     clientType: ClientType;
     execute<T>(method: string, params: T, discard: boolean): Promise<any>;
 

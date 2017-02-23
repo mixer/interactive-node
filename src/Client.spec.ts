@@ -1,7 +1,7 @@
 import * as WebSocket from 'ws';
 import { setWebSocket } from './';
 
-import { Client, ClientType, IClientOptions } from './Client';
+import { Client, ClientType } from './Client';
 
 setWebSocket(WebSocket);
 const port = process.env.SERVER_PORT || 1339;
@@ -18,14 +18,12 @@ describe('client', () => {
             callback(ws);
         });
     }
-    const defaultOptions = {
-        clientType: ClientType.GameClient,
-        socketOptions: {
-            url,
-        },
+
+    const socketOptions = {
+        url,
     };
-    function createClient(options: IClientOptions = defaultOptions): Client {
-        return new Client(options);
+    function createClient(): Client {
+        return new Client(ClientType.GameClient);
     }
     function tearDown(done: (err?: any) => void) {
         if (client) {
@@ -42,7 +40,7 @@ describe('client', () => {
             client = createClient();
 
             server = new WebSocket.Server({ port });
-            client.open();
+            client.open(socketOptions);
             awaitConnect(() => done());
         });
     });

@@ -7,16 +7,16 @@ import { IInput } from './state/interfaces/controls/IInput';
 import { ISceneData, ISceneDataArray } from './state/interfaces/IScene';
 import { State } from './state/State';
 import { Method, Reply } from './wire/packets';
-import { CompressionScheme, InteractiveSocket, ISocketOptions } from './wire/Socket';
+import {
+    CompressionScheme,
+    InteractiveSocket,
+    ISocketOptions,
+    State as InteractiveSocketState
+} from './wire/Socket';
 
 export enum ClientType {
     Participant,
     GameClient,
-}
-
-export interface IClientOptions {
-    clientType: ClientType;
-    socketOptions: ISocketOptions;
 }
 
 export class Client extends EventEmitter implements IClient {
@@ -27,12 +27,22 @@ export class Client extends EventEmitter implements IClient {
 
     protected socket: InteractiveSocket;
 
-    constructor(options: IClientOptions) {
+    constructor(clientType: ClientType) {
         super();
-        this.clientType = options.clientType;
-        this.state = new State(this.clientType);
+        this.clientType = clientType;
+        this.state = new State(clientType);
         this.state.setClient(this);
-        this.socket = new InteractiveSocket(options.socketOptions);
+    }
+
+    private createSocket(options: ISocketOptions): void {
+        if (this.socket) {
+            // GC the old socket
+            if (this.socket.getState() !== InteractiveSocketState.Closing) {
+                this.socket.close();
+            }
+            this.socket = null;
+        }
+        this.socket = new InteractiveSocket(options);
         this.socket.on('method', (method: Method<any>) => {
             // As process method can return a reply or nothing
             const reply = this.state.processMethod(method);
@@ -52,6 +62,7 @@ export class Client extends EventEmitter implements IClient {
         // Re-emit these for debugging reasons
         this.socket.on('message', (data: any) => this.emit('message', data));
         this.socket.on('send', (data: any) => this.emit('send', data));
+        this.socket.on('close', (data: any) => this.emit('close', data));
     }
 
     /**
@@ -64,7 +75,9 @@ export class Client extends EventEmitter implements IClient {
     /**
      * Boots the connection to interactive
      */
-    public open(): Client {
+    public open(options: ISocketOptions): this {
+        this.state.reset();
+        this.createSocket(options);
         this.socket.connect();
         return this;
     }
@@ -130,5 +143,4 @@ export class Client extends EventEmitter implements IClient {
     public giveInput<T extends IInput>(_: T): Promise<void> {
         throw new PermissionDeniedError('giveInput', 'GameClient');
     }
-
 }

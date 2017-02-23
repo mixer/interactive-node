@@ -18,17 +18,17 @@ if (process.argv.length < 5) {
 
 setWebSocket(WebSocket);
 
-const client = new GameClient({
-    authToken: process.argv[2],
-    url: process.argv[3] || 'wss://interactive1-dal.beam.pro',
-    experienceId: parseInt(process.argv[4], 10) || 3419,
-});
+const client = new GameClient();
 client.on('open', () => console.log('Connected to interactive'));
 // client.on('message', (err: any) => console.log('<<<', err));
 // client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
 
-client.open();
+client.open({
+    authToken: process.argv[2],
+    url: process.argv[3] || 'wss://interactive1-dal.beam.pro',
+    experienceId: parseInt(process.argv[4], 10) || 3419,
+});
 
 function makeControls(amount: number): IControlData[] {
     const controls: IButtonData[] = [];
