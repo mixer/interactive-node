@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import * as querystring from 'querystring';
+import { stringify as stringifyQueryString } from 'querystring';
 
 import { CancelledError, MessageParseError } from '../errors';
 import { IRawValues } from '../interfaces';
@@ -174,7 +174,7 @@ export class InteractiveSocket extends EventEmitter {
         if (this.options.jwt) {
             queryParams['Authorization'] = `JWT ${this.options.jwt}`;
         }
-        const queryString = querystring.stringify(queryParams);
+        const queryString = stringifyQueryString(queryParams);
 
         if (queryString.length > 0) {
             url += '?' + queryString;
