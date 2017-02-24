@@ -13,7 +13,7 @@ export interface IControlData {
     kind?: ControlKind;
     disabled?: boolean;
     meta?: IMeta;
-    position?: IPosition;
+    position?: IGridPlacement[];
     etag?: string;
 }
 /**
@@ -46,10 +46,6 @@ export interface IControl extends IControlData, EventEmitter {
     update(controlData: IControlData): void;
 
     destroy(): void;
-}
-
-export interface IPosition {
-    grids: IGridPlacement[];
 }
 
 export interface IGridPlacement {

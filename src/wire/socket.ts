@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import * as querystring from 'querystring';
+import { stringify as stringifyQueryString } from 'querystring';
 
 import { CancelledError, MessageParseError } from '../errors';
 import { IRawValues } from '../interfaces';
@@ -168,12 +168,19 @@ export class InteractiveSocket extends EventEmitter {
         let url = this.options.url;
         if (this.options.authToken) {
             extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
-        } else if (this.options.jwt) {
-            const queryString = Object.assign({}, { Authorization: `JWT ${this.options.jwt}` }, this.options.queryParams);
-            url += '?' + querystring.stringify(queryString);
+        }
+        const queryParams = this.options.queryParams;
+
+        if (this.options.jwt) {
+            queryParams['Authorization'] = `JWT ${this.options.jwt}`;
+        }
+        const queryString = stringifyQueryString(queryParams);
+
+        if (queryString.length > 0) {
+            url += '?' + queryString;
         }
 
-        this.socket = new InteractiveSocket.WebSocket(url, null, extras);
+        this.socket = new InteractiveSocket.WebSocket(url, [], extras);
 
         this.state = State.Connecting;
 

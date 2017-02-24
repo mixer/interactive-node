@@ -1,6 +1,6 @@
 import { InteractiveSocket } from './wire/Socket';
-
 export * from './state/interfaces';
+export * from './IClient';
 export * from './GameClient';
 export * from './ParticipantClient';
 

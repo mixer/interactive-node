@@ -3,7 +3,12 @@ import { merge } from 'lodash';
 
 import { IClient } from '../../IClient';
 import { IParticipant } from '../interfaces';
-import { ControlKind, IControl, IControlData, IPosition } from '../interfaces/controls/IControl';
+import {
+    ControlKind,
+    IControl,
+    IControlData,
+    IGridPlacement,
+} from '../interfaces/controls/IControl';
 import { IInput, IInputEvent } from '../interfaces/controls/IInput';
 import { IMeta } from '../interfaces/controls/IMeta';
 import { Scene } from '../Scene';
@@ -12,7 +17,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     public controlID: string;
     public kind: ControlKind;
     public disabled: boolean;
-    public position: IPosition;
+    public position: IGridPlacement[];
     public etag: string;
     public meta: IMeta;
 

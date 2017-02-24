@@ -1,10 +1,12 @@
 import { Client, ClientType } from './Client';
+import { IJSON } from './interfaces';
 import { IInput } from './state/interfaces/controls';
 
 export interface IParticipantOptions {
     jwt: string;
     url: string;
     channelID: number;
+    extraParams?: IJSON;
 }
 
 export class ParticipantClient extends Client {
@@ -15,10 +17,14 @@ export class ParticipantClient extends Client {
     public open(options: IParticipantOptions): this {
         super.open({
             jwt: options.jwt,
-            url: options.url,
-            queryParams: {
-                channel: options.channelID,
-            },
+            url: `${options.url}/participant`,
+            queryParams: Object.assign(
+                {
+                    channel: options.channelID,
+                    'x-protocol-version': '2.0',
+                },
+                options.extraParams,
+            ),
         });
         return this;
     }
