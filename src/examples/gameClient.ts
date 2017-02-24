@@ -32,12 +32,37 @@ client.open({
 
 function makeControls(amount: number): IControlData[] {
     const controls: IButtonData[] = [];
+    const size = 10;
     for (let i = 0; i < amount; i++) {
         controls.push({
             controlID: `${i}`,
             kind: 'button',
             text: `Button ${i}`,
-        });
+            position: [
+                   {
+                       size: 'large',
+                       width: size,
+                       height: size,
+                       x: i * size,
+                       y: 1,
+                   },
+                   {
+                       size: 'small',
+                       width: size,
+                       height: size,
+                       x: i * size,
+                       y: 1,
+                   },
+                   {
+                       size: 'medium',
+                       width: size,
+                       height: size,
+                       x: i * size,
+                       y: 1,
+                   },
+               ],
+            },
+        );
     }
     return controls;
 }
@@ -47,8 +72,8 @@ client.createControls({
     controls: makeControls(5),
 }).then(controls => {
     controls.forEach(control => {
-        control.on('mousedown', (_: IInputEvent, participant: IParticipant) => {
-            console.log(`${participant.username} pushed me!`);
+        control.on('mousedown', (inputEvent: IInputEvent, participant: IParticipant) => {
+            console.log(`${participant.username} pushed, ${inputEvent.input.controlID}`);
         });
     });
     client.ready(true);
