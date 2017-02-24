@@ -17,10 +17,13 @@ export class ParticipantClient extends Client {
     public open(options: IParticipantOptions): this {
         super.open({
             jwt: options.jwt,
-            url: options.url,
+            url: `${options.url}/participant`,
             queryParams: Object.assign(
                 {},
-                { channel: options.channelID },
+                {
+                    channel: options.channelID,
+                    'x-protocol-version': '2.0',
+                },
                 options.extraParams,
             ),
         });
