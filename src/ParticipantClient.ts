@@ -19,7 +19,6 @@ export class ParticipantClient extends Client {
             jwt: options.jwt,
             url: `${options.url}/participant`,
             queryParams: Object.assign(
-                {},
                 {
                     channel: options.channelID,
                     'x-protocol-version': '2.0',
