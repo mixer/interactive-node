@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import { ClientType } from './Client';
 import { IInput } from './state/interfaces/controls';
 import { ISceneDataArray } from './state/interfaces/IScene';
-import { State } from './wire/socket';
+import { State } from './state/State';
 
 export interface IClient extends EventEmitter {
     clientType: ClientType;
