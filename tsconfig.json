@@ -38,12 +38,14 @@
             "*": [
                 "./types/*"
             ]
-        }
+        },
+        "skipLibCheck": true
     },
     "exclude": [
         "node_modules",
         "test",
         "dist",
-        "lib"
+        "lib",
+        "**/*.spec.ts"
     ]
 }
