@@ -36,6 +36,7 @@ jspm_packages
 # Optional npm cache directory
 .npm
 .vscode
+.npmrc
 yarn.lock
 
 # Optional eslint cache
