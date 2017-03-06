@@ -172,14 +172,14 @@ export module InteractiveError {
 
     errors[4012] = SceneAlreadyExists;
 
-    export class UnkownControlId extends Base {
+    export class UnknownControlId extends Base {
         constructor(message: string) {
             super(message, 4013);
-            UnkownControlId.setProto(this);
+            UnknownControlId.setProto(this);
         }
     }
 
-    errors[4013] = UnkownControlId;
+    errors[4013] = UnknownControlId;
 
     export class ControlAlreadyExists extends Base {
         constructor(message: string) {
