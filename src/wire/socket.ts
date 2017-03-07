@@ -174,7 +174,7 @@ export class InteractiveSocket extends EventEmitter {
             extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
         }
         if (this.options.jwt) {
-            this.options.queryParams['authorization'] = `JWT ${this.options.jwt}`;
+            this.options.queryParams['Authorization'] = `JWT ${this.options.jwt}`;
         }
         url.query = Object.assign({}, url.query, this.options.queryParams);
 
