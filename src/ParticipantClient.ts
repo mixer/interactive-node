@@ -5,7 +5,6 @@ import { IInput } from './state/interfaces/controls';
 export interface IParticipantOptions {
     jwt: string;
     url: string;
-    channelID: number;
     extraParams?: IJSON;
 }
 
@@ -17,10 +16,9 @@ export class ParticipantClient extends Client {
     public open(options: IParticipantOptions): this {
         super.open({
             jwt: options.jwt,
-            url: `${options.url}/participant`,
+            url: options.url,
             queryParams: Object.assign(
                 {
-                    channel: options.channelID,
                     'x-protocol-version': '2.0',
                 },
                 options.extraParams,

@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { stringify as stringifyQueryString } from 'querystring';
+import * as Url from 'url';
 
 import { CancelledError, MessageParseError } from '../errors';
 import { IRawValues } from '../interfaces';
@@ -11,7 +11,7 @@ import { ExponentialReconnectionPolicy, IReconnectionPolicy } from './reconnecti
 export type CompressionScheme = 'none' | 'gzip';
 
 /**
- * SocketOptions are passed to the Interactive Socket and control behaviour.
+ * SocketOptions are passed to the Interactive Socket and control behavior.
  */
 export interface ISocketOptions {
     // Settings to use for reconnecting automatically to Constellation.
@@ -165,22 +165,20 @@ export class InteractiveSocket extends EventEmitter {
             headers,
         };
 
-        let url = this.options.url;
+        const url = Url.parse(this.options.url, true);
+        // Clear out search so it populates query using the query
+        // https://nodejs.org/api/url.html#url_url_format_urlobject
+        url.search = null;
+
         if (this.options.authToken) {
             extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
         }
-        const queryParams = this.options.queryParams;
-
         if (this.options.jwt) {
-            queryParams['Authorization'] = `JWT ${this.options.jwt}`;
+            this.options.queryParams['authorization'] = `JWT ${this.options.jwt}`;
         }
-        const queryString = stringifyQueryString(queryParams);
+        url.query = Object.assign({}, url.query, this.options.queryParams);
 
-        if (queryString.length > 0) {
-            url += '?' + queryString;
-        }
-
-        this.socket = new InteractiveSocket.WebSocket(url, [], extras);
+        this.socket = new InteractiveSocket.WebSocket(Url.format(url), [], extras);
 
         this.state = State.Connecting;
 

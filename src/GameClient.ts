@@ -16,7 +16,7 @@ export class GameClient extends Client {
     public open(options: IGameClientOptions): this {
         super.open({
             authToken: options.authToken,
-            url: `${options.url}/gameClient`,
+            url: options.url,
             extraHeaders: {
                 'X-Interactive-Version': options.experienceId,
             },
