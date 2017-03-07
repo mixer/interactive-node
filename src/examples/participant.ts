@@ -27,8 +27,7 @@ request('POST', 'users/login', auth)
     // client.on('error', (err: any) => console.log(err));
     client.open({
         jwt: res.headers.get('x-jwt'),
-        url: process.argv[4] || 'wss://interactive1-dal.beam.pro/participant',
-        channelID: parseInt(process.argv[5], 10) || 36241,
+        url: process.argv[4] || 'wss://interactive1-dal.beam.pro/participant?channelId=0',
     });
 
     client.state.on('sceneCreated', (scene: IScene ) => {
