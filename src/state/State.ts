@@ -130,9 +130,6 @@ export class State extends EventEmitter {
         }
     }
 
-    public initialize(scenes: ISceneData[]) {
-        scenes.forEach(scene => this.addScene(scene));
-    }
     public reset() {
         this.scenes.forEach(scene => scene.destroy());
         this.scenes.clear();
