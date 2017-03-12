@@ -22,7 +22,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     public meta: IMeta;
 
     protected scene: Scene;
-    protected client: IClient;
+    public client: IClient;
 
     public setScene(scene: Scene) {
         this.scene = scene;
@@ -85,7 +85,6 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     }
 
     public destroy(): void {
-        //TODO: Should we do some cleanup here?
         this.emit('deleted', this);
     }
 }

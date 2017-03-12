@@ -64,15 +64,12 @@ export class State extends EventEmitter {
         });
 
         this.methodHandler.addHandler('onControlUpdate', res => {
-            res.params.scenes.forEach(sceneData => {
-                const scene = this.scenes.get(sceneData.sceneID);
-                if (scene) {
-                    scene.updateControls(sceneData.controls);
-                }
-            });
+            const scene = this.scenes.get(res.params.sceneID);
+            if (scene) {
+                scene.updateControls(res.params.controls);
+            }
         });
         this.clockSyncer.on('delta', (delta: number) => {
-            // TODO pass delta into state, that involve times. Just buttons right now?
             this.clockDelta = delta;
         });
 
@@ -128,6 +125,26 @@ export class State extends EventEmitter {
             }
             throw e;
         }
+    }
+
+    /**
+     * Returns the local time matched to the sync of the Beam server clock.
+     */
+    public synchronizeLocalTime(time: Date | number = Date.now()): Date {
+        if (time instanceof Date) {
+            time = time.getTime();
+        }
+        return new Date(time - this.clockDelta);
+    }
+
+    /**
+     * Returns the remote time matched to the local clock.
+     */
+    public synchronizeRemoteTime(time: Date | number): Date {
+        if (time instanceof Date) {
+            time = time.getTime();
+        }
+        return new Date(time + this.clockDelta);
     }
 
     public reset() {
