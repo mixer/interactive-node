@@ -17,7 +17,7 @@ describe('state', () => {
     function initializeState(fixture: string) {
         state = new State(ClientType.GameClient);
         const data = loadFixture(path.join(__dirname, '../../test/fixtures', fixture));
-        state.initialize(data.scenes);
+        state.processMethod(new Method('onSceneCreate', data, false, 0));
     }
     describe('initialization', () => {
         it('initializes state from an initial scene list', () => {
@@ -157,15 +157,11 @@ describe('state', () => {
             state.processMethod(new Method(
                 'onControlUpdate',
                 {
-                    scenes: [
+                    sceneID: 'my awesome scene',
+                    controls: [
                         {
-                            sceneID: 'my awesome scene',
-                            controls: [
-                                {
-                                    controlID: 'win_the_game_btn',
-                                    disabled: true,
-                                },
-                            ],
+                            controlID: 'win_the_game_btn',
+                            disabled: true,
                         },
                     ],
                 },
