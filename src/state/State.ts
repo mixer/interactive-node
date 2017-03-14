@@ -233,7 +233,7 @@ export class State extends EventEmitter {
     }
 
     /**
-     * Removes a group and reassigns the groups that were on it.
+     * Removes a group and reassigns the participants that were in it.
      */
     public deleteGroup(groupID: string, reassignGroupID: string) {
         const targetGroup = this.getGroup(groupID);
@@ -245,7 +245,7 @@ export class State extends EventEmitter {
     }
 
     /**
-     * Inserts a new scene into the game session.
+     * Inserts a new group into the game session.
      */
     public addGroup(data: IGroup): Group {
         let group = this.groups.get(data.groupID);
