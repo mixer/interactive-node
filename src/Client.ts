@@ -52,12 +52,8 @@ export class Client extends EventEmitter implements IClient {
             this.reply(reply);
         });
 
-        this.socket.on('open', () => {
-            this.emit('open');
-            // Hydrate the state store with the current state on a connection.
-            this.getScenes()
-                 .then(res => this.state.initialize(res.scenes));
-        });
+        this.socket.on('open', () => this.emit('open'));
+        this.socket.on('error', (err: Error) => this.emit('error', err));
 
         // Re-emit these for debugging reasons
         this.socket.on('message', (data: any) => this.emit('message', data));

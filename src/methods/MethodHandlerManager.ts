@@ -23,7 +23,7 @@ export class MethodHandlerManager {
 
     public addHandler(method: 'onControlCreate', handler: IMethodHandler<ISceneData>): void;
     public addHandler(method: 'onControlDelete', handler: IMethodHandler<ISceneData>): void;
-    public addHandler(method: 'onControlUpdate', handler: IMethodHandler<ISceneDataArray>): void;
+    public addHandler(method: 'onControlUpdate', handler: IMethodHandler<ISceneData>): void;
 
     public addHandler(method: 'onReady', handler: IMethodHandler<onReadyParams>): void;
 

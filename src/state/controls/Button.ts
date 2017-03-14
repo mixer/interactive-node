@@ -18,8 +18,8 @@ export class Button extends Control<IButtonData> implements IButton {
     }
 
     public setCooldown(duration: number): Promise<void> {
-        // TODO Clock sync
-        return this.updateAttribute('cooldown', Date.now() + duration);
+        const target = this.client.state.synchronizeLocalTime().getTime() + duration;
+        return this.updateAttribute('cooldown', target);
     }
 
     public giveInput(input: IButonInput): Promise<void> {

@@ -64,27 +64,30 @@ export class State extends EventEmitter {
         });
 
         this.methodHandler.addHandler('onControlUpdate', res => {
-            res.params.scenes.forEach(sceneData => {
-                const scene = this.scenes.get(sceneData.sceneID);
-                if (scene) {
-                    scene.updateControls(sceneData.controls);
-                }
-            });
+            const scene = this.scenes.get(res.params.sceneID);
+            if (scene) {
+                scene.updateControls(res.params.controls);
+            }
         });
         this.clockSyncer.on('delta', (delta: number) => {
-            // TODO pass delta into state, that involve times. Just buttons right now?
             this.clockDelta = delta;
         });
 
-        // Here we're deciding to discard all participant messages, if this is a participant client
-        // I wasn't sure if participants got these events at the time. Checking with Connor.
-        // Either way we don't need to store potentially thousands of these records in memory on
-        // the Participant side.
-        //
-        // Only remaining query is how a Participant knows who they are in the loop.
-        if (this.clientType !== ClientType.GameClient) {
-            return;
+        if (this.clientType === ClientType.GameClient) {
+            this.addGameClientHandlers();
+        } else {
+            this.addParticipantHandlers();
         }
+    }
+
+    private addParticipantHandlers() {
+        // A participant only gets onParticipantUpdate events for themselves.
+        this.methodHandler.addHandler('onParticipantUpdate', res => {
+            this.emit('onSelfUpdate', res.params.participants[0]);
+        });
+    }
+
+    private addGameClientHandlers() {
         this.methodHandler.addHandler('onParticipantJoin', res => {
             res.params.participants.forEach(participant => {
                 this.participants.set(participant.sessionID, participant);
@@ -113,12 +116,14 @@ export class State extends EventEmitter {
             }
         });
     }
+
     public setClient(client: IClient) {
         this.client = client;
         this.client.on('open', () => this.clockSyncer.start());
         this.client.on('close', () => this.clockSyncer.stop());
         this.stateFactory.setClient(client);
     }
+
     public processMethod(method: Method<any>): void | Reply {
         try {
             return this.methodHandler.handle(method);
@@ -130,9 +135,26 @@ export class State extends EventEmitter {
         }
     }
 
-    public initialize(scenes: ISceneData[]) {
-        scenes.forEach(scene => this.addScene(scene));
+    /**
+     * Returns the local time matched to the sync of the Beam server clock.
+     */
+    public synchronizeLocalTime(time: Date | number = Date.now()): Date {
+        if (time instanceof Date) {
+            time = time.getTime();
+        }
+        return new Date(time - this.clockDelta);
     }
+
+    /**
+     * Returns the remote time matched to the local clock.
+     */
+    public synchronizeRemoteTime(time: Date | number): Date {
+        if (time instanceof Date) {
+            time = time.getTime();
+        }
+        return new Date(time + this.clockDelta);
+    }
+
     public reset() {
         this.scenes.forEach(scene => scene.destroy());
         this.scenes.clear();

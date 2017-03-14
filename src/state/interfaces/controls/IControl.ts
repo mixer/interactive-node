@@ -1,3 +1,4 @@
+import { IClient } from '../../../IClient';
 import { EventEmitter } from 'events';
 
 import { IParticipant } from '../';
@@ -20,6 +21,8 @@ export interface IControlData {
  * IControl is the base interface for any V2 Control
  */
 export interface IControl extends IControlData, EventEmitter {
+    client: IClient;
+
     // Frontend
     /**
      * Give input causes the control to give input to the mediator status in response to a
