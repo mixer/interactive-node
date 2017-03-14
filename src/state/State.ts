@@ -7,14 +7,16 @@ import { InteractiveError } from '../errors';
 import { IClient } from '../IClient';
 import { MethodHandlerManager } from '../methods/MethodHandlerManager';
 import { Method, Reply } from '../wire/packets';
+import { Group } from './Group';
 import { IParticipant, IScene } from './interfaces';
 import { IControl } from './interfaces/controls/IControl';
+import { IGroup } from './interfaces/IGroup';
 import { ISceneData } from './interfaces/IScene';
 import { Scene } from './Scene';
 import { StateFactory } from './StateFactory';
 
 export class State extends EventEmitter {
-    public groups: any;
+    public groups = new Map<string, Group>();;
     public isReady: boolean;
     private methodHandler = new MethodHandlerManager();
     private stateFactory = new StateFactory();
@@ -49,6 +51,17 @@ export class State extends EventEmitter {
             res.params.scenes.forEach(scene => this.updateScene(scene));
         });
 
+        // Group Events
+        this.methodHandler.addHandler('onGroupCreate', res => {
+            res.params.groups.forEach(group => this.addGroup(group));
+        });
+        this.methodHandler.addHandler('onGroupDelete', res => {
+            this.deleteGroup(res.params.groupID, res.params.reassignGroupID);
+        });
+        this.methodHandler.addHandler('onGroupUpdate', res => {
+            res.params.groups.forEach(group => this.updateGroup(group));
+        });
+
         this.methodHandler.addHandler('onControlCreate', res => {
             const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
@@ -81,9 +94,12 @@ export class State extends EventEmitter {
     }
 
     private addParticipantHandlers() {
-        // A participant only gets onParticipantUpdate events for themselves.
+        // A participant only gets onParticipantUpdate/Join events for themselves.
         this.methodHandler.addHandler('onParticipantUpdate', res => {
-            this.emit('onSelfUpdate', res.params.participants[0]);
+            this.emit('selfUpdate', res.params.participants[0]);
+        });
+        this.methodHandler.addHandler('onParticipantJoin', res => {
+            this.emit('selfUpdate', res.params.participants[0]);
         });
     }
 
@@ -163,6 +179,9 @@ export class State extends EventEmitter {
         this.participants.clear();
     }
 
+    /**
+     * Updates an existing scene in the game session.
+     */
     public updateScene(scene: ISceneData) {
         const targetScene = this.getScene(scene.sceneID);
         if (targetScene) {
@@ -170,6 +189,9 @@ export class State extends EventEmitter {
         }
     }
 
+    /**
+     * Removes a scene and reassigns the groups that were on it.
+     */
     public deleteScene(sceneID: string, reassignSceneID: string) {
         const targetScene = this.getScene(sceneID);
         if (targetScene) {
@@ -179,6 +201,9 @@ export class State extends EventEmitter {
         }
     }
 
+    /**
+     * Inserts a new scene into the game session.
+     */
     public addScene(data: ISceneData): Scene {
         let scene = this.scenes.get(data.sceneID);
         if (scene) {
@@ -195,6 +220,50 @@ export class State extends EventEmitter {
         this.scenes.set(data.sceneID, scene);
         this.emit('sceneCreated', scene);
         return scene;
+    }
+
+    /**
+     * Updates an existing scene in the game session.
+     */
+    public updateGroup(group: IGroup) {
+        const targetGroup = this.getGroup(group.groupID);
+        if (targetGroup) {
+            targetGroup.update(group);
+        }
+    }
+
+    /**
+     * Removes a group and reassigns the groups that were on it.
+     */
+    public deleteGroup(groupID: string, reassignGroupID: string) {
+        const targetGroup = this.getGroup(groupID);
+        if (targetGroup) {
+            targetGroup.destroy();
+            this.groups.delete(groupID);
+            this.emit('groupDeleted', groupID, reassignGroupID);
+        }
+    }
+
+    /**
+     * Inserts a new scene into the game session.
+     */
+    public addGroup(data: IGroup): Group {
+        let group = this.groups.get(data.groupID);
+        if (group) {
+            if (group.etag === data.etag) {
+                return this.groups.get(data.groupID);
+            }
+            this.updateGroup(data);
+            return group;
+        }
+        group = new Group(data);
+        this.groups.set(data.groupID, group);
+        this.emit('groupCreated', group);
+        return group;
+    }
+
+    public getGroup(id: string): Group {
+        return this.groups.get(id);
     }
 
     public getScene(id: string): IScene {

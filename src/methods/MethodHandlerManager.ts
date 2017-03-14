@@ -4,6 +4,7 @@ import { IParticipantArray } from '../state/interfaces/IParticipant';
 import { Method, Reply } from '../wire/packets';
 import { onReadyParams } from './methodTypes';
 
+import { IGroupDataArray, IGroupDeletionParams } from '../state/interfaces/IGroup';
 import { ISceneData, ISceneDataArray, ISceneDeletionParams } from '../state/interfaces/IScene';
 
 export interface IMethodHandler<T> {
@@ -20,6 +21,10 @@ export class MethodHandlerManager {
     public addHandler(method: 'onSceneCreate', handler: IMethodHandler<ISceneDataArray>): void;
     public addHandler(method: 'onSceneDelete', handler: IMethodHandler<ISceneDeletionParams>): void;
     public addHandler(method: 'onSceneUpdate', handler: IMethodHandler<ISceneDataArray>): void;
+
+    public addHandler(method: 'onGroupCreate', handler: IMethodHandler<IGroupDataArray>): void;
+    public addHandler(method: 'onGroupDelete', handler: IMethodHandler<IGroupDeletionParams>): void;
+    public addHandler(method: 'onGroupUpdate', handler: IMethodHandler<IGroupDataArray>): void;
 
     public addHandler(method: 'onControlCreate', handler: IMethodHandler<ISceneData>): void;
     public addHandler(method: 'onControlDelete', handler: IMethodHandler<ISceneData>): void;
