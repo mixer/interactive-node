@@ -209,7 +209,7 @@ export class State extends EventEmitter {
         return result;
     }
 
-    private getParticipantBy< K extends keyof IParticipant>(field: K, value: IParticipant[K]): IParticipant {
+    private getParticipantBy<K extends keyof IParticipant>(field: K, value: IParticipant[K]): IParticipant {
         let result;
         this.participants.forEach(participant => {
             if (participant[field] === value) {
