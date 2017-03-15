@@ -42,14 +42,14 @@ function makeControls(amount: number): IControlData[] {
                    {
                        size: 'large',
                        width: size,
-                       height: size,
+                       height: size / 2,
                        x: i * size,
                        y: 1,
                    },
                    {
                        size: 'small',
                        width: size,
-                       height: size,
+                       height: size / 2,
                        x: i * size,
                        y: 1,
                    },
