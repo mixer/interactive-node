@@ -9,7 +9,6 @@ export interface IGroupDeletionParams {
     reassignGroupID: string;
 }
 
-
 export interface IGroup {
     /**
      * The ID of the group.

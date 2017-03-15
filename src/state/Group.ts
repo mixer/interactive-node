@@ -5,7 +5,6 @@ import { IMeta } from './interfaces/controls';
 import { IGroup } from './interfaces/IGroup';
 
 export class Group extends EventEmitter implements IGroup {
-
     public groupID: string;
     public sceneID: string;
     public etag: string;

@@ -16,7 +16,7 @@ import { Scene } from './Scene';
 import { StateFactory } from './StateFactory';
 
 export class State extends EventEmitter {
-    public groups = new Map<string, Group>();;
+    public groups = new Map<string, Group>();
     public isReady: boolean;
     private methodHandler = new MethodHandlerManager();
     private stateFactory = new StateFactory();
