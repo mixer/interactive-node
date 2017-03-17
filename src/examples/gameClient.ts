@@ -78,4 +78,11 @@ client.createControls({
     });
     client.ready(true);
 });
+
+client.state.on('participantJoin', (participant: IParticipant ) => {
+    console.log(`${participant.username}(${participant.sessionID}) Joined`);
+});
+client.state.on('participantLeave', (participant: string ) => {
+    console.log(`${participant} Left`);
+});
 /* tslint:enable:no-console */
