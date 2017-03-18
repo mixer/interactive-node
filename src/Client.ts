@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import { PermissionDeniedError } from './errors';
 import { IClient } from './IClient';
 import { onReadyParams } from './methods/methodTypes';
-import { IInput } from './state/interfaces/controls/IInput';
+import { IInput, ITransactionCapture } from './state/interfaces/controls/IInput';
 import { ISceneData, ISceneDataArray } from './state/interfaces/IScene';
 import { State } from './state/State';
 import { Method, Reply } from './wire/packets';
@@ -119,6 +119,7 @@ export class Client extends EventEmitter implements IClient {
 
     public execute(method: 'createControls', params: ISceneData, discard: false ): Promise<ISceneData>;
     public execute(method: 'ready', params: onReadyParams, discard: false ): Promise<void>;
+    public execute(method: 'capture', params: ITransactionCapture, discard: false ): Promise<void>;
     public execute(method: 'getTime', params: null, discard: false ): Promise<{time: number}>;
     public execute(method: 'getScenes', params: null, discard: false ): Promise<ISceneDataArray>;
     public execute<K extends IInput>(method: 'giveInput', params: K, discard: false): Promise<void>;

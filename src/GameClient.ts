@@ -42,4 +42,8 @@ export class GameClient extends Client {
     public updateScenes(scenes: ISceneDataArray): Promise<void> {
         return this.execute('updateScenes', scenes, false);
     }
+
+    public captureTransaction(transactionID: string): Promise<void> {
+        return this.execute('capture', { transactionID }, false);
+    }
 }
