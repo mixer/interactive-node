@@ -3,11 +3,11 @@ import { EventEmitter } from 'events';
 import { IParticipant } from '../';
 import { IClient } from '../../../IClient';
 import { ISceneDataArray } from '../IScene';
-import { IGridSize } from './IGridConfig';
 import { IInput, IInputEvent } from './IInput';
 import { IMeta } from './IMeta';
 
 export type ControlKind = 'button' | 'joystick';
+export type GridSize = 'large' | 'medium' | 'small';
 
 export interface IControlData {
     controlID?: string;
@@ -52,7 +52,7 @@ export interface IControl extends IControlData, EventEmitter {
 }
 
 export interface IGridPlacement {
-    size: IGridSize;
+    size: GridSize;
     width: number;
     height: number;
     x: number;
