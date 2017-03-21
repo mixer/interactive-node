@@ -82,7 +82,9 @@ export class Client extends EventEmitter implements IClient {
      * Closes and frees the resources ascociated with the interactive connection.
      */
     public close() {
-        this.socket.close();
+        if (this.socket) {
+            this.socket.close();
+        }
     }
 
     //TODO: Actually implement compression
