@@ -1,4 +1,5 @@
 'use strict';
+const path = require('path');
 module.exports = {
     entry: './src/index.ts',
     devtool: 'source-map',
@@ -6,7 +7,7 @@ module.exports = {
 
     ],
     output: {
-        path: './dist',
+        path: path.resolve(__dirname, 'dist'),
         filename: 'interactive.js',
         library: 'interactive',
         libraryTarget: 'umd',
