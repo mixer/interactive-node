@@ -3,6 +3,6 @@ import deepmerge = require('deepmerge'); //tslint:disable-line no-require-import
  * Emulates lodash merge using deepmerge which doesnt mutate the source.
  * So we...uh, make it mutate the source \o/
  */
-export function merge<T>(x: T, y: T, options?: deepmerge.Options<T>): T {
-    return Object.assign(x, deepmerge(x, y), options);
+export function merge<T>(x: T, y: T): T {
+    return Object.assign(x, deepmerge(x, y));
 }
