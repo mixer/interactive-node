@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
-import { merge } from 'lodash';
 
 import { IClient } from '../../IClient';
+import { merge } from '../../util';
 import { IParticipant } from '../interfaces';
 import {
     ControlKind,
@@ -16,10 +16,10 @@ import { Scene } from '../Scene';
 export abstract class Control<T extends IControlData> extends EventEmitter implements IControl {
     public controlID: string;
     public kind: ControlKind;
-    public disabled: boolean;
-    public position: IGridPlacement[];
-    public etag: string;
-    public meta: IMeta;
+    public disabled: boolean = false;
+    public position: IGridPlacement[] = [];
+    public etag: string = '';
+    public meta: IMeta = {};
 
     protected scene: Scene;
     public client: IClient;

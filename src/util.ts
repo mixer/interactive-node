@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { IRawValues } from '../lib/interfaces';
 import { TimeoutError } from './errors';
 
 /**
@@ -86,4 +87,15 @@ export function only<T extends Error, U>(
 
         return handler(err);
     };
+}
+
+export function merge(target: IRawValues, source: IRawValues): IRawValues {
+  Object.keys(source).forEach(key => {
+    if (source[key] instanceof Object && target[key] instanceof Object) {
+        Object.assign(source[key], merge(target[key], source[key]));
+    }
+  });
+
+  Object.assign(target || {}, source);
+  return target;
 }

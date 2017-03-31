@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
-import { merge } from 'lodash';
 
+import { merge } from '../util';
 import { IMeta } from './interfaces/controls';
 import { IGroup } from './interfaces/IGroup';
 
