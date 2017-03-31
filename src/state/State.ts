@@ -1,11 +1,11 @@
 import { EventEmitter } from 'events';
+import merge from 'lodash.merge'; //tslint:disable-line import-name
 
 import { ClientType } from '../Client';
 import { ClockSync } from '../ClockSync';
 import { InteractiveError } from '../errors';
 import { IClient } from '../IClient';
 import { MethodHandlerManager } from '../methods/MethodHandlerManager';
-import { merge } from '../util';
 import { Method, Reply } from '../wire/packets';
 import { Group } from './Group';
 import { IParticipant, IScene } from './interfaces';

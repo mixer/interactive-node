@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
+import merge from 'lodash.merge'; //tslint:disable-line import-name
 
 import { IClient } from '../IClient';
-import { merge } from '../util';
 import { IControl, IControlData } from './interfaces/controls/IControl';
 import { IMeta } from './interfaces/controls/IMeta';
 import { IScene, ISceneData } from './interfaces/IScene';

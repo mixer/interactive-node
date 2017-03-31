@@ -31,7 +31,7 @@
         ],
          "typeRoots": [
             "node_modules/@types",
-            "./types"
+            "./types/**"
         ],
         "baseUrl": ".",
         "paths": {
