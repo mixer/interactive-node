@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
-import { merge } from 'lodash';
 
 import { IClient } from '../../IClient';
+import { merge } from '../../merge';
 import { IParticipant } from '../interfaces';
 import {
     ControlKind,
@@ -34,7 +34,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
 
     constructor(control: T) {
         super();
-        merge(this, control);
+        merge<IControlData>(this, control);
     }
 
     // A base control class cannot give input

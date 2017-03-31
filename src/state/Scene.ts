@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
-import { merge } from 'lodash';
 
 import { IClient } from '../IClient';
+import { merge } from '../merge';
 import { IControl, IControlData } from './interfaces/controls/IControl';
 import { IMeta } from './interfaces/controls/IMeta';
 import { IScene, ISceneData } from './interfaces/IScene';

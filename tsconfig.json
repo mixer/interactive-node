@@ -30,8 +30,7 @@
             "sinon-chai"
         ],
          "typeRoots": [
-            "node_modules/@types",
-            "./types"
+            "node_modules/@types"
         ],
         "baseUrl": ".",
         "paths": {
