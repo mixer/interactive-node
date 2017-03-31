@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
-import { IRawValues } from '../lib/interfaces';
 import { TimeoutError } from './errors';
+import { IRawValues } from './interfaces';
 
 /**
  * Returns a promise that's resolved when an event is emitted on the
