@@ -30,5 +30,5 @@ declare module 'lodash.merge' {
         ...otherArgs: any[]
     ): TResult;
 
-    export default merge;
+    export = merge;
 }
