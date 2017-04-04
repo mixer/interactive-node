@@ -39,3 +39,8 @@ export interface IScene extends EventEmitter {
     // GameClient
 
 }
+
+export interface ISceneControlDeletion {
+    sceneID: string;
+    controlIDs: string[];
+}

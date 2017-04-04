@@ -4,7 +4,7 @@ import { PermissionDeniedError } from './errors';
 import { IClient } from './IClient';
 import { onReadyParams } from './methods/methodTypes';
 import { IInput, ITransactionCapture } from './state/interfaces/controls/IInput';
-import { ISceneData, ISceneDataArray } from './state/interfaces/IScene';
+import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/interfaces/IScene';
 import { State } from './state/State';
 import { Method, Reply } from './wire/packets';
 import {
@@ -126,6 +126,7 @@ export class Client extends EventEmitter implements IClient {
     public execute(method: 'getScenes', params: null, discard: false ): Promise<ISceneDataArray>;
     public execute<K extends IInput>(method: 'giveInput', params: K, discard: false): Promise<void>;
     public execute(method: 'updateControls', params: ISceneDataArray, discard: false): Promise<void>;
+    public execute(method: 'deleteControls', params: ISceneControlDeletion, discard: false): Promise<void>;
     public execute<T>(method: string, params: T, discard: boolean): Promise<any>
     public execute(method: string, params: any, discard: boolean): Promise<any> {
         return this.socket.execute(method, params, discard);
