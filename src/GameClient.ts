@@ -1,5 +1,5 @@
 import { Client, ClientType } from './Client';
-import { ISceneData, ISceneDataArray } from './state/interfaces';
+import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/interfaces';
 import { IControl } from './state/interfaces/controls/IControl';
 
 export interface IGameClientOptions {
@@ -45,5 +45,9 @@ export class GameClient extends Client {
 
     public captureTransaction(transactionID: string): Promise<void> {
         return this.execute('capture', { transactionID }, false);
+    }
+
+    public deleteControls(data: ISceneControlDeletion): Promise<void> {
+        return this.execute('deleteControls', data, false);
     }
 }

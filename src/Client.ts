@@ -143,4 +143,8 @@ export class Client extends EventEmitter implements IClient {
     public giveInput<T extends IInput>(_: T): Promise<void> {
         throw new PermissionDeniedError('giveInput', 'GameClient');
     }
+
+    public deleteControls(_: ISceneControlDeletion): Promise<void> {
+        throw new PermissionDeniedError('deleteControls', 'Participant');
+    }
 }
