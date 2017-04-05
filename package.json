@@ -1,6 +1,6 @@
 {
   "name": "@mcph/beam-interactive-node2",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "A NodeJS and Browser compatible client for Beam.pro's interactive 2 Protocol",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
