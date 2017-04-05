@@ -1,7 +1,7 @@
 /* tslint:disable:no-console */
 import * as WebSocket from 'ws';
 
-import { IButton, IInputEvent, IParticipant } from '../state/interfaces';
+import { IButton, IInputEvent, IParticipant } from '../';
 
 import {
     GameClient,

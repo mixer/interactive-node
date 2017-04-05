@@ -3,7 +3,7 @@ import * as readline from 'readline';
 import * as WebSocket from 'ws';
 
 import * as Interactive from '../';
-import { IScene } from '../state/interfaces';
+import { IScene } from '../';
 import { request } from './client';
 
 if (process.argv.length < 6) {
