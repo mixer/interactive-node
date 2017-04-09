@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 
 import { ClientType } from './Client';
-import { ISceneControlDeletion } from './state/interfaces';
+import { ISceneControlDeletion, IControlData } from './state/interfaces';
 import { IInput } from './state/interfaces/controls';
 import { ISceneDataArray } from './state/interfaces/IScene';
 import { State } from './state/State';
@@ -11,6 +11,7 @@ export interface IClient extends EventEmitter {
     state: State;
     execute<T>(method: string, params: T, discard: boolean): Promise<any>;
 
+    createControls(controls: IControlData[]): Promise<void>;
     updateControls(controls: ISceneDataArray): Promise<void>;
     deleteControls(controls: ISceneControlDeletion): Promise<void>;
     updateScenes(scenes: ISceneDataArray): Promise<void>;
