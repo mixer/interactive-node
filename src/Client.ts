@@ -3,8 +3,15 @@ import { EventEmitter } from 'events';
 import { PermissionDeniedError } from './errors';
 import { IClient } from './IClient';
 import { onReadyParams } from './methods/methodTypes';
-import { IInput, ITransactionCapture } from './state/interfaces/controls/IInput';
-import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/interfaces/IScene';
+import {
+    IControl,
+    IInput,
+    IScene,
+    ISceneControlDeletion,
+    ISceneData,
+    ISceneDataArray,
+    ITransactionCapture,
+} from './state/interfaces';
 import { State } from './state/State';
 import { Method, Reply } from './wire/packets';
 import {
@@ -79,7 +86,7 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
-     * Closes and frees the resources ascociated with the interactive connection.
+     * Closes and frees the resources associated with the interactive connection.
      */
     public close() {
         if (this.socket) {
@@ -108,6 +115,11 @@ export class Client extends EventEmitter implements IClient {
         return this.execute('getScenes', null, false);
     }
 
+    public initialize(): Promise<IScene[]> {
+        return this.getScenes()
+            .then(res => this.state.addScenes(res.scenes));
+    }
+
     public ready(isReady: boolean = true): Promise<any> {
         return this.execute('ready', { isReady }, false);
     }
@@ -130,6 +142,10 @@ export class Client extends EventEmitter implements IClient {
     public execute<T>(method: string, params: T, discard: boolean): Promise<any>
     public execute(method: string, params: any, discard: boolean): Promise<any> {
         return this.socket.execute(method, params, discard);
+    }
+
+    public createControls(_: ISceneData): Promise<IControl[]> {
+        throw new PermissionDeniedError('createControls', 'Participant');
     }
 
     public updateControls(_: ISceneDataArray): Promise<void> {
