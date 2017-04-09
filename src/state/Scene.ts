@@ -57,14 +57,32 @@ export class Scene extends EventEmitter implements IScene {
         return Array.from(this.controls.values());
     }
 
-    public deleteControls(controls: IControlData[]) {
-        controls.forEach(control => this.deleteControl(control));
+    /**
+     * Deletes controls in this scene from the server
+     */
+    public deleteControls(controls: string[]): Promise<void> {
+        return this.client.deleteControls({sceneID: this.sceneID, controlIDs: controls});
     }
 
-    public deleteControl(controlData: IControlData) {
-        this.controls.delete(controlData.controlID);
-        this.emit('controlDeleted', controlData.controlID);
+    public deleteControl(controlId: string) {
+        return this.deleteControls([controlId]);
     }
+
+    /**
+     * Called in response to controls being deleted on the server side
+     */
+    public onControlsDeleted(controls: IControlData[]) {
+        controls.forEach(control => this.onControlDeleted(control));
+    }
+
+    /**
+     * Called during control deletion from the server
+     */
+    private onControlDeleted(control: IControlData) {
+        this.controls.delete(control.controlID);
+        this.emit('controlDeleted', control.controlID);
+    }
+
     public updateControl(controlData: IControlData) {
         const control = this.getControl(controlData.controlID);
         if (control) {
