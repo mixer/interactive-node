@@ -82,7 +82,8 @@ function makeControls(amount: number): IControlData[] {
 
 function loop() {
     const scene = client.state.getScene('default');
-    scene.createControls(makeControls(5)).then(() => delay(2000))
+    scene.createControls(makeControls(5))
+        .then(() => delay(2000))
         .then(() => scene.deleteControls(['0', '1', '2', '3', '4']))
         .then(() => delay(2000))
         .then(() => loop());
