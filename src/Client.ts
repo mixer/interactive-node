@@ -122,13 +122,15 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
-     * Sets the ready state of this client
-     *
+     * Sets the ready state of this client, When a client is not ready. Participants cannot interact.
      */
     public ready(isReady: boolean = true): Promise<any> {
         return this.execute('ready', { isReady }, false);
     }
 
+    /**
+     * Gets the time from the server as a Unix Timestamp in UTC.
+     */
     public getTime(): Promise<number> {
         return this.execute('getTime', null, false)
             .then(res => {
