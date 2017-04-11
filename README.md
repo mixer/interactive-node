@@ -36,25 +36,29 @@ npm i --save beam-interactive-node2
 
 #### app.js
 ```js
-var ca = new carina.Carina().open();
-ca.subscribe('channel:1:update', function (data) {
-    console.log('Channel update', data);
+const client = new interactive.GameClient();
+
+client.open({
+    authToken: '<OAuth Token>',
+    url: '<Server Url>',
+    versionId: 1234,
 });
 ```
 ### Node
 
 #### JavaScript
 ```js
-const Carina = require('carina').Carina;
+const interactive = require('beam-interactive-node2');
 const ws = require('ws');
 
-Carina.WebSocket = ws;
+interactive.setWebSocket(ws);
 
-// Note: You MUST set isBot if the client is
-// an automated bot and you are NOT authing.
-const ca = new Carina({ isBot: true }).open();
-ca.subscribe('channel:1:update', data => {
-    console.log('Channel update', data);
+const client = new interactive.GameClient();
+
+client.open({
+    authToken: '<OAuth Token>',
+    url: '<Server Url>',
+    versionId: 1234,
 });
 ```
 
@@ -64,6 +68,8 @@ import { GameClient, setWebSocket } from 'beam-interactive-node2';
 import * as ws from 'ws';
 
 setWebSocket(ws);
+
+const client = new GameClient();
 
 client.open({
     authToken: '<OAuth Token>',
