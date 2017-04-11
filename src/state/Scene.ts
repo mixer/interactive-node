@@ -122,4 +122,12 @@ export class Scene extends EventEmitter implements IScene {
             this.emit('update', this);
         }
     }
+
+    public deleteAllControls() {
+        const ids: string[] = [];
+        this.controls.forEach((_, key) => {
+            ids.push(key);
+        });
+        return this.deleteControls(ids);
+    }
 }
