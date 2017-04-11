@@ -3,7 +3,7 @@ import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/inte
 import { IControl } from './state/interfaces/controls/IControl';
 
 export interface IGameClientOptions {
-    experienceId: number;
+    versionId: number;
     authToken: string;
     url: string;
 }
@@ -18,7 +18,7 @@ export class GameClient extends Client {
             authToken: options.authToken,
             url: options.url,
             extraHeaders: {
-                'X-Interactive-Version': options.experienceId,
+                'X-Interactive-Version': options.versionId,
             },
         });
         return this;

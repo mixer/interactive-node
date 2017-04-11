@@ -32,7 +32,7 @@ client.on('send', (err: any) => console.log('>>>', err));
 client.open({
     authToken: process.argv[2],
     url: process.argv[3] || 'wss://interactive1-dal.beam.pro',
-    experienceId: parseInt(process.argv[4], 10) || 3419,
+    versionId: parseInt(process.argv[4], 10) || 3419,
 });
 
 /**
