@@ -8,7 +8,7 @@ You can use npm(recommended) or download a zip from the [releases page](https://
 ### Browser
 
 ```html
-<script src="dist/carina.js"></script>
+<script src="dist/interactive.js"></script>
 ```
 
 
@@ -28,7 +28,7 @@ npm i --save beam-interactive-node2
         <title>Interactive 2</title>
     </head>
     <body>
-        <script src="js/carina.js"></script>
+        <script src="js/interactive.js"></script>
         <script src="js/app.js"></script>
     </body>
 </html>
@@ -60,20 +60,16 @@ ca.subscribe('channel:1:update', data => {
 
 #### TypeScript
 ```ts
-import { Carina } from 'carina';
+import { GameClient, setWebSocket } from 'beam-interactive-node2';
 import * as ws from 'ws';
 
-Carina.WebSocket = ws;
+setWebSocket(ws);
 
-const ca = new Carina({ isBot: true }).open();
-ca.subscribe<ChannelUpdate>('channel:1:update', data => {
-    console.log('Channel update', data);
+client.open({
+    authToken: '<OAuth Token>',
+    url: '<Server Url>',
+    versionId: 1234,
 });
-
-// Example interface, does not contain all possible values.
-interface ChannelUpdate {
-    online?: boolean;
-}
 ```
 
 
