@@ -29,7 +29,7 @@ export class GameClient extends Client {
             .then(res => {
                 const scene = this.state.getScene(res.sceneID);
                 if (!scene) {
-                    return this.state.addScene(res).getControls();
+                    return this.state.onSceneCreate(res).getControls();
                 }
                 return scene.onControlsCreated(res.controls);
             });
