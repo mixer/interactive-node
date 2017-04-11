@@ -35,6 +35,10 @@ export class GameClient extends Client {
             });
     }
 
+    public ready(isReady: boolean = true): Promise<void> {
+        return this.execute('ready', { isReady }, false);
+    }
+
     public updateControls(params: ISceneDataArray): Promise<void> {
         return this.execute('updateControls', params, false);
     }
