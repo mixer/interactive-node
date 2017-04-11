@@ -15,12 +15,22 @@ import {
 } from './wire/Socket';
 
 export enum ClientType {
+    /**
+     * A Participant type is used when the Client is participating in the session and not running it.
+     */
     Participant,
+    /**
+     * A GameClient type is used when the Client is running the interactive session.
+     */
     GameClient,
 }
 
 export class Client extends EventEmitter implements IClient {
+
     public clientType: ClientType;
+    /**
+     * Indicates if this client is ready to receive input from Participants
+     */
     public isReady: boolean;
 
     public state: State;
@@ -104,10 +114,17 @@ export class Client extends EventEmitter implements IClient {
         return this.socket.reply(reply);
     }
 
+    /**
+     * Retrieves the Scenes stored on the Interactive Server
+     */
     public getScenes(): Promise<ISceneDataArray> {
         return this.execute('getScenes', null, false);
     }
 
+    /**
+     * Sets the ready state of this client
+     *
+     */
     public ready(isReady: boolean = true): Promise<any> {
         return this.execute('ready', { isReady }, false);
     }

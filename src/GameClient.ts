@@ -3,8 +3,18 @@ import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/inte
 import { IControl } from './state/interfaces/controls/IControl';
 
 export interface IGameClientOptions {
+    /**
+     * Your experience id is a unique id to your Interactive Project Version. You can retrieve one
+     * from the Interactive Studio on Beam.pro.
+     */
     experienceId: number;
+    /**
+     * An OAuth Bearer token as defined in {@link https://art.tools.ietf.org/html/rfc6750| OAuth 2.0 Bearer Token Usage}
+     */
     authToken: string;
+    /**
+     * An interactive server url, these can be retrieved from https://beam.pro/api/v1/interactive/hosts
+     */
     url: string;
 }
 
