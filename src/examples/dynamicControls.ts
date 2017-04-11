@@ -79,13 +79,13 @@ function makeControls(amount: number): IControlData[] {
     }
     return controls;
 }
-
+const delayTime = 2000;
 function loop() {
     const scene = client.state.getScene('default');
     scene.createControls(makeControls(5))
-        .then(() => delay(2000))
+        .then(() => delay(delayTime))
         .then(() => scene.deleteControls(['0', '1', '2', '3', '4']))
-        .then(() => delay(2000))
+        .then(() => delay(delayTime))
         .then(() => loop());
 }
 
