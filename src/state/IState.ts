@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events';
 
-import { ClientType } from '../Client';
 import { IClient } from '../IClient';
 import { Method, Reply } from '../wire/packets';
 import { Group } from './Group';
@@ -10,7 +9,6 @@ import { IGroup } from './interfaces/IGroup';
 import { IParticipant } from './interfaces/IParticipant';
 
 export interface IState extends EventEmitter {
-    constructor(clientType: ClientType): this;
 
     setClient(client: IClient): void;
     processMethod(method: Method<any>): void | Reply;
@@ -26,9 +24,9 @@ export interface IState extends EventEmitter {
     deleteGroup(groupID: string, reassignGroupID: string): void;
 
     addGroup(data: IGroup): Group;
-
     getGroup(id: string): Group;
     getScene(id: string): IScene;
+
     getControl(id: string): IControl;
 
     getParticipantByUserID(id: string): IParticipant;
