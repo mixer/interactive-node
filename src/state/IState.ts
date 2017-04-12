@@ -12,14 +12,14 @@ export interface IState extends EventEmitter {
 
     setClient(client: IClient): void;
     processMethod(method: Method<any>): void | Reply;
-    synchronizeLocalTime(time: Date | number): Date;
-    synchronizeRemoteTime(time: Date | number): Date;
+    synchronizeLocalTime(time?: Date | number): Date;
+    synchronizeRemoteTime(time?: Date | number): Date;
 
     reset(): void;
     updateScene(scene: ISceneData): void;
     deleteScene(sceneID: string, reassignSceneID: string): void;
 
-    addScene(data: ISceneData): void;
+    addScene(data: ISceneData): IScene;
     updateGroup(group: IGroup): void;
     deleteGroup(groupID: string, reassignGroupID: string): void;
 
@@ -32,5 +32,19 @@ export interface IState extends EventEmitter {
     getParticipantByUserID(id: number): IParticipant;
     getParticipantByUsername(name: string): IParticipant;
     getParticipantBySessionID(id: string): IParticipant;
+
+    on(event: 'ready', listener: (ready: boolean) => void): this;
+
+    on(event: 'selfUpdate', listener: (self: IParticipant) => void): this;
+
+    on(event: 'participantJoin', listener: (participant: IParticipant) => void): this;
+    on(event: 'participantLeave', listener: (participantSessionID: string) => void): this;
+
+    on(event: 'sceneDeleted', listener: (sceneID: string, reassignSceneID: string) => void): this;
+    on(event: 'sceneCreated', listener: (scene: IScene) => void): this;
+
+    on(event: 'groupDeleted', listener: (groupID: string, reassignGroupID: string) => void): this;
+    on(event: 'groupCreated', listener: (group: Group) => void): this;
+    on(event: string, listener: Function): this;
 
 }
