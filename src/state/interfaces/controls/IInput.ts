@@ -3,7 +3,7 @@ export interface IInput {
     event: string;
 }
 
-export interface IButonInput extends IInput {
+export interface IButtonInput extends IInput {
     event: 'mousedown' | 'mouseup';
     button: number;
 }
@@ -14,9 +14,9 @@ export interface IJoystickInput extends IInput {
     y: number;
 }
 
-export interface IInputEvent {
+export interface IInputEvent<T> {
     participantID: string;
-    input: IInput;
+    input: T;
     transactionID?: string;
 }
 

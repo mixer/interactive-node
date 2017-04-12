@@ -1,7 +1,7 @@
 /* tslint:disable:no-console */
 import * as WebSocket from 'ws';
 
-import { IButton, IInputEvent, IParticipant } from '../state/interfaces';
+import { IButton, IParticipant } from '../state/interfaces';
 
 import {
     GameClient,
@@ -83,12 +83,11 @@ client.createControls({
     sceneID: 'default',
     controls: makeControls(5),
 }).then(controls => {
-
     // Now that the controls are created we can add some event listeners to them!
     controls.forEach((control: IButton) => {
 
         // mousedown here means that someone has clicked the button.
-        control.on('mousedown', (inputEvent: IInputEvent, participant: IParticipant) => {
+        control.on('mousedown', (inputEvent, participant) => {
 
             // Let's tell the user who they are, and what they pushed.
             console.log(`${participant.username} pushed, ${inputEvent.input.controlID}`);
