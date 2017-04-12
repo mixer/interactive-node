@@ -1,7 +1,7 @@
 /* tslint:disable:no-console */
 import * as WebSocket from 'ws';
 
-import { IButton, IParticipant } from '../state/interfaces';
+import { IButton } from '../state/interfaces';
 
 import {
     GameClient,
@@ -107,10 +107,10 @@ client.createControls({
     client.ready(true);
 });
 
-client.state.on('participantJoin', (participant: IParticipant ) => {
+client.state.on('participantJoin', participant => {
     console.log(`${participant.username}(${participant.sessionID}) Joined`);
 });
-client.state.on('participantLeave', (participant: string ) => {
+client.state.on('participantLeave', participant => {
     console.log(`${participant} Left`);
 });
 /* tslint:enable:no-console */
