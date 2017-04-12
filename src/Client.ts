@@ -21,7 +21,6 @@ export enum ClientType {
 
 export class Client extends EventEmitter implements IClient {
     public clientType: ClientType;
-    public isReady: boolean;
 
     public state: State;
 
@@ -108,10 +107,6 @@ export class Client extends EventEmitter implements IClient {
         return this.execute('getScenes', null, false);
     }
 
-    public ready(isReady: boolean = true): Promise<any> {
-        return this.execute('ready', { isReady }, false);
-    }
-
     public getTime(): Promise<number> {
         return this.execute('getTime', null, false)
             .then(res => {
@@ -146,5 +141,9 @@ export class Client extends EventEmitter implements IClient {
 
     public deleteControls(_: ISceneControlDeletion): Promise<void> {
         throw new PermissionDeniedError('deleteControls', 'Participant');
+    }
+
+    public ready(_: boolean): Promise<void> {
+        throw new PermissionDeniedError('ready', 'Participant');
     }
 }

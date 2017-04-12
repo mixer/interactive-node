@@ -9,6 +9,7 @@ export interface IClient extends EventEmitter {
     clientType: ClientType;
     state: State;
     execute<T>(method: string, params: T, discard: boolean): Promise<any>;
+    ready(isReady: boolean): Promise<void>;
 
     updateControls(controls: ISceneDataArray): Promise<void>;
     updateScenes(scenes: ISceneDataArray): Promise<void>;
