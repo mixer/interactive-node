@@ -65,21 +65,21 @@ export class State extends EventEmitter {
         this.methodHandler.addHandler('onControlCreate', res => {
             const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
-                scene.addControls(res.params.controls);
+                scene.onControlsCreated(res.params.controls);
             }
         });
 
         this.methodHandler.addHandler('onControlDelete', res => {
             const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
-                scene.deleteControls(res.params.controls);
+                scene.onControlsDeleted(res.params.controls);
             }
         });
 
         this.methodHandler.addHandler('onControlUpdate', res => {
             const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
-                scene.updateControls(res.params.controls);
+                scene.onControlsUpdated(res.params.controls);
             }
         });
         this.clockSyncer.on('delta', (delta: number) => {
@@ -215,11 +215,15 @@ export class State extends EventEmitter {
         }
         scene = this.stateFactory.createScene(data);
         if (data.controls) {
-            scene.addControls(data.controls);
+            scene.onControlsCreated(data.controls);
         }
         this.scenes.set(data.sceneID, scene);
         this.emit('sceneCreated', scene);
         return scene;
+    }
+
+    public addScenes(scenes: ISceneData[]): Scene[] {
+        return scenes.map(scene => this.addScene(scene));
     }
 
     /**
