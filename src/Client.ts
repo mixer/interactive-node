@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { IState } from './state/IState';
 
 import { PermissionDeniedError } from './errors';
 import { IClient } from './IClient';
@@ -23,7 +24,7 @@ export class Client extends EventEmitter implements IClient {
     public clientType: ClientType;
     public isReady: boolean;
 
-    public state: State;
+    public state: IState;
 
     protected socket: InteractiveSocket;
 

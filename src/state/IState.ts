@@ -29,7 +29,7 @@ export interface IState extends EventEmitter {
 
     getControl(id: string): IControl;
 
-    getParticipantByUserID(id: string): IParticipant;
+    getParticipantByUserID(id: number): IParticipant;
     getParticipantByUsername(name: string): IParticipant;
     getParticipantBySessionID(id: string): IParticipant;
 

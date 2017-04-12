@@ -2,11 +2,11 @@ import { EventEmitter } from 'events';
 import { ClientType } from './Client';
 import { IInput } from './state/interfaces/controls';
 import { ISceneDataArray } from './state/interfaces/IScene';
-import { State } from './state/State';
+import { IState } from './state/IState';
 
 export interface IClient extends EventEmitter {
     clientType: ClientType;
-    state: State;
+    state: IState;
     execute<T>(method: string, params: T, discard: boolean): Promise<any>;
 
     updateControls(controls: ISceneDataArray): Promise<void>;
