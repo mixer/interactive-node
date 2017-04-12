@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { IState } from './IState';
 
 import { ClientType } from '../Client';
 import { ClockSync } from '../ClockSync';
@@ -15,7 +16,7 @@ import { ISceneData } from './interfaces/IScene';
 import { Scene } from './Scene';
 import { StateFactory } from './StateFactory';
 
-export class State extends EventEmitter {
+export class State extends EventEmitter implements IState {
     public groups = new Map<string, Group>();
     public isReady: boolean;
     private methodHandler = new MethodHandlerManager();

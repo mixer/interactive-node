@@ -112,7 +112,7 @@ export class Scene extends EventEmitter implements IScene {
     public destroy() {
         //TODO find the group they should now be on
         this.controls.forEach(control => {
-            this.emit('controlDeleted', control);
+            this.emit('controlDeleted', control.controlID);
         });
     }
 

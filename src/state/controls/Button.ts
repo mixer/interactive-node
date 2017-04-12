@@ -1,5 +1,5 @@
 import { IButton, IButtonData } from '../interfaces/controls/IButton';
-import { IButonInput } from '../interfaces/controls/IInput';
+import { IButtonInput } from '../interfaces/controls/IInput';
 import { Control } from './Control';
 
 export class Button extends Control<IButtonData> implements IButton {
@@ -22,7 +22,7 @@ export class Button extends Control<IButtonData> implements IButton {
         return this.updateAttribute('cooldown', target);
     }
 
-    public giveInput(input: IButonInput): Promise<void> {
+    public giveInput(input: IButtonInput): Promise<void> {
         return this.sendInput(input);
     }
 }

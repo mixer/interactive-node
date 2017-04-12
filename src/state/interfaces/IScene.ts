@@ -47,6 +47,12 @@ export interface IScene extends EventEmitter {
 
     // GameClient
 
+    // Events
+    on(event: 'controlAdded', listener: (control: IControl) => void): this;
+    on(event: 'controlDeleted', listener: (controlId: string) => void): this;
+    on(event: 'update', listener: (controlId: this) => void): this;
+    on(event: string, listener: Function): this;
+
 }
 
 export interface ISceneControlDeletion {

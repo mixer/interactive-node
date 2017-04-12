@@ -40,7 +40,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     // A base control class cannot give input
     public abstract giveInput<T extends IInput>(input: T): Promise<void>;
 
-    public receiveInput(input: IInputEvent, participant: IParticipant) {
+    public receiveInput<T extends IInput>(input: IInputEvent<T>, participant: IParticipant) {
         this.emit(input.input.event, input, participant);
     }
 

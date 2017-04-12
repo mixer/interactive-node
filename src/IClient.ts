@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
-
 import { ClientType } from './Client';
+
+import { IState } from './state/IState';
 import {
     IControl,
     IInput,
@@ -8,11 +9,10 @@ import {
     ISceneData,
     ISceneDataArray,
 } from './state/interfaces';
-import { State } from './state/State';
 
 export interface IClient extends EventEmitter {
     clientType: ClientType;
-    state: State;
+    state: IState;
     execute<T>(method: string, params: T, discard: boolean): Promise<any>;
     ready(isReady: boolean): Promise<void>;
 
@@ -23,4 +23,8 @@ export interface IClient extends EventEmitter {
     giveInput<T extends IInput>(_: T): Promise<void>;
 
     getTime(): Promise<number>;
+
+    on(event: 'open', listener: () => void): this;
+    on(event: 'error', listener: (err: Error) => void): this;
+    on(event: string, listener: Function): this;
 }
