@@ -115,7 +115,7 @@ export class Client extends EventEmitter implements IClient {
         return this.execute('getScenes', null, false);
     }
 
-    public initialize(): Promise<IScene[]> {
+    public synchronizeScenes(): Promise<IScene[]> {
         return this.getScenes()
             .then(res => this.state.addScenes(res.scenes));
     }

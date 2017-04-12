@@ -89,7 +89,7 @@ function loop() {
         .then(() => loop());
 }
 
-client.initialize()
+client.synchronizeScenes()
     .then(() => client.ready(true))
     .then(() => loop());
 
