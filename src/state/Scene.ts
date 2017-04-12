@@ -30,17 +30,23 @@ export class Scene extends EventEmitter implements IScene {
         this.meta = data.meta || {};
     }
 
-    public addControls(controls: IControlData[]) {
-        controls.forEach(control => this.addControl(control));
+    /**
+     * Called when controls are added to this scene.
+     */
+    public onControlsCreated(controls: IControlData[]): IControl[] {
+        return controls.map(control => this.onControlCreated(control));
     }
 
-    public addControl(controlData: IControlData): IControl {
+    /**
+     * Called when a control is added to this scene.
+     */
+    private onControlCreated(controlData: IControlData): IControl {
         let control = this.controls.get(controlData.controlID);
         if (control) {
             if (control.etag === controlData.etag) {
                 return control;
             }
-            this.updateControl(controlData);
+            this.onControlUpdated(controlData);
             return control;
         }
         control = this.stateFactory.createControl(controlData.kind, controlData, this);
@@ -49,7 +55,33 @@ export class Scene extends EventEmitter implements IScene {
         return control;
     }
 
-    public getControl(id: string): IControl {
+    /**
+     * Called when controls are deleted from this scene.
+     */
+    public onControlsDeleted(controls: IControlData[]) {
+        controls.forEach(control => this.onControlDeleted(control));
+    }
+
+    /**
+     * Called when a control is deleted from this scene.
+     */
+    private onControlDeleted(control: IControlData) {
+        this.controls.delete(control.controlID);
+        this.emit('controlDeleted', control.controlID);
+    }
+
+    private onControlUpdated(controlData: IControlData) {
+        const control = this.getControl(controlData.controlID);
+        if (control) {
+            control.update(controlData);
+        }
+    }
+
+    public onControlsUpdated(controls: IControlData[]) {
+        controls.forEach(control => this.onControlUpdated(control));
+    }
+
+     public getControl(id: string): IControl {
         return this.controls.get(id);
     }
 
@@ -57,22 +89,24 @@ export class Scene extends EventEmitter implements IScene {
         return Array.from(this.controls.values());
     }
 
-    public deleteControls(controls: IControlData[]) {
-        controls.forEach(control => this.deleteControl(control));
+    public createControl(control: IControlData): Promise<IControl> {
+        return this.createControls([control])
+            .then(res => res[0]);
     }
 
-    public deleteControl(controlData: IControlData) {
-        this.controls.delete(controlData.controlID);
-        this.emit('controlDeleted', controlData.controlID);
+    public createControls(controls: IControlData[]): Promise<IControl[]> {
+        return this.client.createControls({sceneID: this.sceneID, controls});
     }
-    public updateControl(controlData: IControlData) {
-        const control = this.getControl(controlData.controlID);
-        if (control) {
-            control.update(controlData);
-        }
+
+    /**
+     * Deletes controls in this scene from the server
+     */
+    public deleteControls(controlIDs: string[]): Promise<void> {
+        return this.client.deleteControls({sceneID: this.sceneID, controlIDs: controlIDs});
     }
-    public updateControls(controls: IControlData[]) {
-        controls.forEach(control => this.updateControl(control));
+
+    public deleteControl(controlId: string) {
+        return this.deleteControls([controlId]);
     }
 
     public destroy() {
@@ -87,5 +121,13 @@ export class Scene extends EventEmitter implements IScene {
             merge(this.meta, scene.meta);
             this.emit('update', this);
         }
+    }
+
+    public deleteAllControls(): Promise<void> {
+        const ids: string[] = [];
+        this.controls.forEach((_, key) => {
+            ids.push(key);
+        });
+        return this.deleteControls(ids);
     }
 }
