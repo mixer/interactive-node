@@ -84,7 +84,7 @@ function loop() {
     const scene = client.state.getScene('default');
     scene.createControls(makeControls(5))
         .then(() => delay(delayTime))
-        .then(() => scene.deleteControls(['0', '1', '2', '3', '4']))
+        .then(() => scene.deleteAllControls())
         .then(() => delay(delayTime))
         .then(() => loop());
 }
