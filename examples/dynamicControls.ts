@@ -26,8 +26,8 @@ const client = new GameClient();
 client.on('open', () => console.log('Connected to interactive'));
 
 // These can be un-commented to see the raw JSON messages under the hood
-client.on('message', (err: any) => console.log('<<<', err));
-client.on('send', (err: any) => console.log('>>>', err));
+// client.on('message', (err: any) => console.log('<<<', err));
+// client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
 
 // Now we open the connection passing in our authentication details and an experienceId.
@@ -79,6 +79,11 @@ function makeControls(amount: number): IControlData[] {
     return controls;
 }
 const delayTime = 2000;
+
+/* Loop creates 5 controls and adds them to the default scene.
+ * It then waits delayTime milliseconds and then deletes them,
+ * before calling itself again.
+*/
 function loop() {
     const scene = client.state.getScene('default');
     scene.createControls(makeControls(5))
@@ -88,6 +93,10 @@ function loop() {
         .then(() => loop());
 }
 
+/* Pull in the scenes stored on the server
+ * then call ready so our controls show up.
+ * then call loop() to begin our loop.
+*/
 client.synchronizeScenes()
     .then(() => client.ready(true))
     .then(() => loop());
