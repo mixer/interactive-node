@@ -31,7 +31,7 @@ export interface IControl extends IControlData, EventEmitter {
      */
     giveInput<T extends IInput>(input: T): Promise<void>;
 
-    receiveInput(input: IInputEvent, participant: IParticipant): void;
+    receiveInput<T extends IInput>(input: IInputEvent<T>, participant: IParticipant): void;
 
     // GameClient
     /**
@@ -47,6 +47,10 @@ export interface IControl extends IControlData, EventEmitter {
      * Merges in updated control data from the mediator
      */
     update(controlData: IControlData): void;
+
+    on(event: 'deleted', listener: (control: IControl) => void): this;
+    on(event: 'updated', listener: (control: IControl) => void): this;
+    on(event: string, listener: Function): this;
 
     destroy(): void;
 }

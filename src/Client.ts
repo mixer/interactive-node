@@ -1,10 +1,18 @@
 import { EventEmitter } from 'events';
+import { IState } from './state/IState';
 
 import { PermissionDeniedError } from './errors';
 import { IClient } from './IClient';
 import { onReadyParams } from './methods/methodTypes';
-import { IInput, ITransactionCapture } from './state/interfaces/controls/IInput';
-import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/interfaces/IScene';
+import {
+    IControl,
+    IInput,
+    IScene,
+    ISceneControlDeletion,
+    ISceneData,
+    ISceneDataArray,
+    ITransactionCapture,
+} from './state/interfaces';
 import { State } from './state/State';
 import { Method, Reply } from './wire/packets';
 import {
@@ -21,9 +29,8 @@ export enum ClientType {
 
 export class Client extends EventEmitter implements IClient {
     public clientType: ClientType;
-    public isReady: boolean;
 
-    public state: State;
+    public state: IState;
 
     protected socket: InteractiveSocket;
 
@@ -79,7 +86,7 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
-     * Closes and frees the resources ascociated with the interactive connection.
+     * Closes and frees the resources associated with the interactive connection.
      */
     public close() {
         if (this.socket) {
@@ -108,8 +115,9 @@ export class Client extends EventEmitter implements IClient {
         return this.execute('getScenes', null, false);
     }
 
-    public ready(isReady: boolean = true): Promise<any> {
-        return this.execute('ready', { isReady }, false);
+    public synchronizeScenes(): Promise<IScene[]> {
+        return this.getScenes()
+            .then(res => this.state.synchronizeScenes(res));
     }
 
     public getTime(): Promise<number> {
@@ -132,6 +140,10 @@ export class Client extends EventEmitter implements IClient {
         return this.socket.execute(method, params, discard);
     }
 
+    public createControls(_: ISceneData): Promise<IControl[]> {
+        throw new PermissionDeniedError('createControls', 'Participant');
+    }
+
     public updateControls(_: ISceneDataArray): Promise<void> {
         throw new PermissionDeniedError('updateControls', 'Participant');
     }
@@ -146,5 +158,9 @@ export class Client extends EventEmitter implements IClient {
 
     public deleteControls(_: ISceneControlDeletion): Promise<void> {
         throw new PermissionDeniedError('deleteControls', 'Participant');
+    }
+
+    public ready(_: boolean): Promise<void> {
+        throw new PermissionDeniedError('ready', 'Participant');
     }
 }

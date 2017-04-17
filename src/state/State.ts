@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { IState } from './IState';
 
 import { ClientType } from '../Client';
 import { ClockSync } from '../ClockSync';
@@ -8,14 +9,14 @@ import { merge } from '../merge';
 import { MethodHandlerManager } from '../methods/MethodHandlerManager';
 import { Method, Reply } from '../wire/packets';
 import { Group } from './Group';
-import { IParticipant, IScene } from './interfaces';
+import { IParticipant, IScene, ISceneDataArray } from './interfaces';
 import { IControl } from './interfaces/controls/IControl';
 import { IGroup } from './interfaces/IGroup';
 import { ISceneData } from './interfaces/IScene';
 import { Scene } from './Scene';
 import { StateFactory } from './StateFactory';
 
-export class State extends EventEmitter {
+export class State extends EventEmitter implements IState {
     public groups = new Map<string, Group>();
     public isReady: boolean;
     private methodHandler = new MethodHandlerManager();
@@ -42,46 +43,47 @@ export class State extends EventEmitter {
 
         // Scene Events
         this.methodHandler.addHandler('onSceneCreate', res => {
-            res.params.scenes.forEach(scene => this.addScene(scene));
+            res.params.scenes.forEach(scene => this.onSceneCreate(scene));
         });
         this.methodHandler.addHandler('onSceneDelete', res => {
-            this.deleteScene(res.params.sceneID, res.params.reassignSceneID);
+            this.onSceneDelete(res.params.sceneID, res.params.reassignSceneID);
         });
         this.methodHandler.addHandler('onSceneUpdate', res => {
-            res.params.scenes.forEach(scene => this.updateScene(scene));
+            res.params.scenes.forEach(scene => this.onSceneUpdate(scene));
         });
 
         // Group Events
         this.methodHandler.addHandler('onGroupCreate', res => {
-            res.params.groups.forEach(group => this.addGroup(group));
+            res.params.groups.forEach(group => this.onGroupCreate(group));
         });
         this.methodHandler.addHandler('onGroupDelete', res => {
-            this.deleteGroup(res.params.groupID, res.params.reassignGroupID);
+            this.onGroupDelete(res.params.groupID, res.params.reassignGroupID);
         });
         this.methodHandler.addHandler('onGroupUpdate', res => {
-            res.params.groups.forEach(group => this.updateGroup(group));
+            res.params.groups.forEach(group => this.onGroupUpdate(group));
         });
 
+        // Control Events
         this.methodHandler.addHandler('onControlCreate', res => {
             const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
-                scene.addControls(res.params.controls);
+                scene.onControlsCreated(res.params.controls);
             }
         });
 
         this.methodHandler.addHandler('onControlDelete', res => {
             const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
-                scene.deleteControls(res.params.controls);
+                scene.onControlsDeleted(res.params.controls);
             }
         });
-
         this.methodHandler.addHandler('onControlUpdate', res => {
             const scene = this.scenes.get(res.params.sceneID);
             if (scene) {
-                scene.updateControls(res.params.controls);
+                scene.onControlsUpdated(res.params.controls);
             }
         });
+
         this.clockSyncer.on('delta', (delta: number) => {
             this.clockDelta = delta;
         });
@@ -91,6 +93,10 @@ export class State extends EventEmitter {
         } else {
             this.addParticipantHandlers();
         }
+    }
+
+    public synchronizeScenes(data: ISceneDataArray): IScene[] {
+        return data.scenes.map(scene => this.onSceneCreate(scene));
     }
 
     private addParticipantHandlers() {
@@ -182,7 +188,7 @@ export class State extends EventEmitter {
     /**
      * Updates an existing scene in the game session.
      */
-    public updateScene(scene: ISceneData) {
+    public onSceneUpdate(scene: ISceneData) {
         const targetScene = this.getScene(scene.sceneID);
         if (targetScene) {
             targetScene.update(scene);
@@ -192,7 +198,7 @@ export class State extends EventEmitter {
     /**
      * Removes a scene and reassigns the groups that were on it.
      */
-    public deleteScene(sceneID: string, reassignSceneID: string) {
+    public onSceneDelete(sceneID: string, reassignSceneID: string) {
         const targetScene = this.getScene(sceneID);
         if (targetScene) {
             targetScene.destroy();
@@ -204,28 +210,32 @@ export class State extends EventEmitter {
     /**
      * Inserts a new scene into the game session.
      */
-    public addScene(data: ISceneData): Scene {
+    public onSceneCreate(data: ISceneData): IScene {
         let scene = this.scenes.get(data.sceneID);
         if (scene) {
             if (scene.etag === data.etag) {
                 return this.scenes.get(data.sceneID);
             }
-            this.updateScene(data);
+            this.onSceneUpdate(data);
             return scene;
         }
         scene = this.stateFactory.createScene(data);
         if (data.controls) {
-            scene.addControls(data.controls);
+            scene.onControlsCreated(data.controls);
         }
         this.scenes.set(data.sceneID, scene);
         this.emit('sceneCreated', scene);
         return scene;
     }
 
+    public addScenes(scenes: ISceneData[]): IScene[] {
+        return scenes.map(scene => this.onSceneCreate(scene));
+    }
+
     /**
      * Updates an existing scene in the game session.
      */
-    public updateGroup(group: IGroup) {
+    public onGroupUpdate(group: IGroup) {
         const targetGroup = this.getGroup(group.groupID);
         if (targetGroup) {
             targetGroup.update(group);
@@ -235,7 +245,7 @@ export class State extends EventEmitter {
     /**
      * Removes a group and reassigns the participants that were in it.
      */
-    public deleteGroup(groupID: string, reassignGroupID: string) {
+    public onGroupDelete(groupID: string, reassignGroupID: string) {
         const targetGroup = this.getGroup(groupID);
         if (targetGroup) {
             targetGroup.destroy();
@@ -247,13 +257,13 @@ export class State extends EventEmitter {
     /**
      * Inserts a new group into the game session.
      */
-    public addGroup(data: IGroup): Group {
+    public onGroupCreate(data: IGroup): Group {
         let group = this.groups.get(data.groupID);
         if (group) {
             if (group.etag === data.etag) {
                 return this.groups.get(data.groupID);
             }
-            this.updateGroup(data);
+            this.onGroupUpdate(data);
             return group;
         }
         group = new Group(data);
