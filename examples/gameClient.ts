@@ -8,7 +8,7 @@ import {
     IButtonData,
     IControlData,
     setWebSocket,
-} from '../';
+} from '../src';
 
 if (process.argv.length < 5) {
     console.log('Usage gameClient.exe <token> <url> <experienceId>');
@@ -23,16 +23,16 @@ const client = new GameClient();
 // Log when we're connected to interactive
 client.on('open', () => console.log('Connected to interactive'));
 
-// These can be uncommented to see the raw JSON messages under the hood
+// These can be un-commented to see the raw JSON messages under the hood
 client.on('message', (err: any) => console.log('<<<', err));
 client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
 
-// Now we open the conection passing in our authentication details and an experienceId.
+// Now we open the connection passing in our authentication details and an experienceId.
 client.open({
     authToken: process.argv[2],
-    url: process.argv[3] || 'wss://interactive1-dal.beam.pro',
-    versionId: parseInt(process.argv[4], 10) || 3419,
+    url: process.argv[3],
+    versionId: parseInt(process.argv[4], 10),
 });
 
 /**
