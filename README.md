@@ -11,12 +11,10 @@ You can use npm(recommended) or download a zip from the [releases page](https://
 <script src="dist/interactive.js"></script>
 ```
 
-
 ### Node
 ```
 npm i --save beam-interactive-node2
 ```
-
 ## Usage
 ### Browser
 
