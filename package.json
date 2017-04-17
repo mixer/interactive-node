@@ -2,6 +2,16 @@
   "name": "@mcph/beam-interactive-node2",
   "version": "0.8.3",
   "description": "A NodeJS and Browser compatible client for Beam.pro's interactive 2 Protocol",
+  "contributors": [
+      {
+          "name": "Richard Fox",
+          "email": "fox@xbox.com"
+      },
+      {
+          "name": "Connor Peet",
+          "email": "connor@xbox.com"
+      }
+  ],
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {

@@ -1,5 +1,5 @@
 /*
 !/lib
 !/dist
-lib/examples/*
+examples
 *.spec.d.ts
