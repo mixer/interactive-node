@@ -117,7 +117,7 @@ export class Client extends EventEmitter implements IClient {
 
     public synchronizeScenes(): Promise<IScene[]> {
         return this.getScenes()
-            .then(res => this.state.addScenes(res.scenes));
+            .then(res => this.state.synchronizeScenes(res));
     }
 
     public getTime(): Promise<number> {

@@ -9,7 +9,7 @@ import { merge } from '../merge';
 import { MethodHandlerManager } from '../methods/MethodHandlerManager';
 import { Method, Reply } from '../wire/packets';
 import { Group } from './Group';
-import { IParticipant, IScene } from './interfaces';
+import { IParticipant, IScene, ISceneDataArray } from './interfaces';
 import { IControl } from './interfaces/controls/IControl';
 import { IGroup } from './interfaces/IGroup';
 import { ISceneData } from './interfaces/IScene';
@@ -93,6 +93,10 @@ export class State extends EventEmitter implements IState {
         } else {
             this.addParticipantHandlers();
         }
+    }
+
+    public synchronizeScenes(data: ISceneDataArray): IScene[] {
+        return data.scenes.map(scene => this.onSceneCreate(scene));
     }
 
     private addParticipantHandlers() {
@@ -206,7 +210,7 @@ export class State extends EventEmitter implements IState {
     /**
      * Inserts a new scene into the game session.
      */
-    public onSceneCreate(data: ISceneData): Scene {
+    public onSceneCreate(data: ISceneData): IScene {
         let scene = this.scenes.get(data.sceneID);
         if (scene) {
             if (scene.etag === data.etag) {
@@ -224,7 +228,7 @@ export class State extends EventEmitter implements IState {
         return scene;
     }
 
-    public addScenes(scenes: ISceneData[]): Scene[] {
+    public addScenes(scenes: ISceneData[]): IScene[] {
         return scenes.map(scene => this.onSceneCreate(scene));
     }
 

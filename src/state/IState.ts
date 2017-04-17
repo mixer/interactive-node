@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import { IClient } from '../IClient';
 import { Method, Reply } from '../wire/packets';
 import { Group } from './Group';
-import { IScene, ISceneData } from './interfaces';
+import { IScene, ISceneData, ISceneDataArray } from './interfaces';
 import { IControl } from './interfaces/controls/IControl';
 import { IGroup } from './interfaces/IGroup';
 import { IParticipant } from './interfaces/IParticipant';
@@ -16,16 +16,11 @@ export interface IState extends EventEmitter {
     synchronizeRemoteTime(time?: Date | number): Date;
 
     reset(): void;
-    updateScene(scene: ISceneData): void;
-    deleteScene(sceneID: string, reassignSceneID: string): void;
 
-    addScene(data: ISceneData): IScene;
-    updateGroup(group: IGroup): void;
-    deleteGroup(groupID: string, reassignGroupID: string): void;
-
-    addGroup(data: IGroup): Group;
-    getGroup(id: string): Group;
+    getGroup(id: string): IGroup;
     getScene(id: string): IScene;
+    onSceneCreate(data: ISceneData): IScene;
+    synchronizeScenes(data: ISceneDataArray): IScene[];
 
     getControl(id: string): IControl;
 
