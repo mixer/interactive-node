@@ -9,7 +9,6 @@ import { IGroup } from './interfaces/IGroup';
 import { IParticipant } from './interfaces/IParticipant';
 
 export interface IState extends EventEmitter {
-
     setClient(client: IClient): void;
     processMethod(method: Method<any>): void | Reply;
     synchronizeLocalTime(time?: Date | number): Date;

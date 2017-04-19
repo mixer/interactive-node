@@ -26,4 +26,3 @@ describe('exponential reconnection', () => {
         expect(policy.next()).to.equal(baseDelay);
     });
 });
-
