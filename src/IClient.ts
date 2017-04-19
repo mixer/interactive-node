@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { ClientType } from './Client';
 
-import { IState } from './state/IState';
+import { InteractiveError } from './errors';
 import {
     IControl,
     IInput,
@@ -9,6 +9,7 @@ import {
     ISceneData,
     ISceneDataArray,
 } from './state/interfaces';
+import { IState } from './state/IState';
 
 export interface IClient extends EventEmitter {
     clientType: ClientType;
@@ -25,6 +26,6 @@ export interface IClient extends EventEmitter {
     getTime(): Promise<number>;
 
     on(event: 'open', listener: () => void): this;
-    on(event: 'error', listener: (err: Error) => void): this;
+    on(event: 'error', listener: (err: InteractiveError.Base) => void): this;
     on(event: string, listener: Function): this;
 }
