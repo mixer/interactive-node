@@ -73,7 +73,7 @@ export enum State {
 
 function getDefaults(): ISocketOptions {
     return {
-        url: 'wss://constellation.beam.pro',
+        url: '',
         replyTimeout: 10000,
         compressionScheme: 'none',
         autoReconnect: true,
