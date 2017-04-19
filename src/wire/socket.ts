@@ -118,6 +118,15 @@ export class InteractiveSocket extends EventEmitter {
         });
 
         this.on('close', (evt: ICloseEvent) => {
+            // If this close event indicates that we're within the interactive error range
+            if (evt.code >= InteractiveError.startOfRange) {
+                const err = InteractiveError.fromSocketMessage({code: evt.code, message: evt.reason});
+                this.state = State.Closing;
+                this.emit('error', err);
+                // Refuse to continue, these errors usually mean something is very wrong with our connection.
+                return;
+            }
+
             if (this.state === State.Refreshing) {
                 this.state = State.Idle;
                 this.connect();
@@ -126,14 +135,6 @@ export class InteractiveSocket extends EventEmitter {
 
             if (this.state === State.Closing || !this.options.autoReconnect) {
                 this.state = State.Idle;
-                return;
-            }
-
-            // If this close event indicates that we're within the interactive error range
-            if (evt.code >= InteractiveError.startOfRange) {
-                const err = InteractiveError.fromSocketMessage({code: evt.code, message: evt.reason});
-                this.emit('error', err);
-                // Refuse to continue, these errors usually mean something is very wrong with our connection.
                 return;
             }
 
