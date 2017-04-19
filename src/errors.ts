@@ -57,10 +57,11 @@ export module InteractiveError {
     export class Base extends BaseError {
         constructor(message: string, public code: number) {
             super(message);
+            Base.setProto(this);
         }
     }
 
-    const errors: { [code: number]: typeof Base } = {};
+    export const errors: { [code: number]: typeof Base } = {};
 
     export function fromSocketMessage(error: IInteractiveError): Base {
         if (errors[error.code]) {
@@ -198,6 +199,70 @@ export module InteractiveError {
     }
 
     errors[4015] = UnknownControlType;
+
+    export class UnkownParticipant extends Base {
+        constructor(message: string) {
+            super(message, 4016);
+            UnkownParticipant.setProto(this);
+        }
+    }
+    errors[4016] = UnkownParticipant;
+
+    export class SessionClosing extends Base {
+        constructor(message: string) {
+            super(message, 4017);
+            SessionClosing.setProto(this);
+        }
+    }
+    errors[4017] = SessionClosing;
+
+    export class OutOfMemory extends Base {
+        constructor(message: string) {
+            super(message, 4018);
+            OutOfMemory.setProto(this);
+        }
+    }
+    errors[4018] = OutOfMemory;
+
+    export class CannotDeleteDefault extends Base {
+        constructor(message: string) {
+            super(message, 4019);
+            CannotDeleteDefault.setProto(this);
+        }
+    }
+    errors[4019] = CannotDeleteDefault;
+
+    export class CannotAuthenticate extends Base {
+        constructor(message: string) {
+            super(message, 4020);
+            CannotAuthenticate.setProto(this);
+        }
+    }
+    errors[4020] = CannotAuthenticate;
+
+    export class NoInteractiveVersion extends Base {
+        constructor(message: string) {
+            super(message, 4021);
+            NoInteractiveVersion.setProto(this);
+        }
+    }
+    errors[4021] = NoInteractiveVersion;
+
+    export class SessionConflict extends Base {
+        constructor(message: string) {
+            super(message, 4022);
+            SessionConflict.setProto(this);
+        }
+    }
+    errors[4022] = SessionConflict;
+
+    export class ChannelNotInteractive extends Base {
+        constructor(message: string) {
+            super(message, 4023);
+            ChannelNotInteractive.setProto(this);
+        }
+    }
+    errors[4023] = ChannelNotInteractive;
 
     export class BadUserInput extends Base {
         constructor(message: string) {
