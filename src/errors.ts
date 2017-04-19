@@ -234,6 +234,10 @@ export module InteractiveError {
     }
     errors[4019] = CannotDeleteDefault;
 
+    /**
+     * CannotAuthenticate occurs when the server fails to autenticate the client.
+     * This is usually caused by the provided Authentication details be invalid or missing.
+     */
     export class CannotAuthenticate extends Base {
         constructor(message: string) {
             super(message, 4020);
@@ -242,6 +246,11 @@ export module InteractiveError {
     }
     errors[4020] = CannotAuthenticate;
 
+    /**
+     * NoInteractiveVersion occurs when the server is unable to validate your Interactive
+     * Project Version ID. This can occur if your project version id is invalid or missing,
+     * or if you do not have access to this version.
+     */
     export class NoInteractiveVersion extends Base {
         constructor(message: string) {
             super(message, 4021);
@@ -250,6 +259,11 @@ export module InteractiveError {
     }
     errors[4021] = NoInteractiveVersion;
 
+    /**
+     * SessionConflict occurs when the server detects a conflicting connection from the client.
+     * This can occur if the requested channel is already interactive or as a participant if
+     * you're already connected to a channel.
+     */
     export class SessionConflict extends Base {
         constructor(message: string) {
             super(message, 4022);
@@ -258,6 +272,9 @@ export module InteractiveError {
     }
     errors[4022] = SessionConflict;
 
+    /**
+     * ChannelNotInteractive occurs when you try to connect to a channel that is not interactive.
+     */
     export class ChannelNotInteractive extends Base {
         constructor(message: string) {
             super(message, 4023);
