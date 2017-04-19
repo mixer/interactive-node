@@ -63,6 +63,8 @@ export module InteractiveError {
 
     export const errors: { [code: number]: typeof Base } = {};
 
+    export const startOfRange = 4000;
+
     export function fromSocketMessage(error: IInteractiveError): Base {
         if (errors[error.code]) {
             return new errors[error.code](error.message, error.code);

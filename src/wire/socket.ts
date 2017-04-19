@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import * as Url from 'url';
 
-import { CancelledError, MessageParseError } from '../errors';
+import { CancelledError, InteractiveError, MessageParseError } from '../errors';
 import { IRawValues } from '../interfaces';
 import { resolveOn } from '../util';
 import { Method, Packet, PacketState, Reply } from './packets';
@@ -126,6 +126,14 @@ export class InteractiveSocket extends EventEmitter {
 
             if (this.state === State.Closing || !this.options.autoReconnect) {
                 this.state = State.Idle;
+                return;
+            }
+
+            // If this close event indicates that we're within the interactive error range
+            if (evt.code >= InteractiveError.startOfRange) {
+                const err = InteractiveError.fromSocketMessage({code: evt.code, message: evt.reason});
+                this.emit('error', err);
+                // Refuse to continue, these errors usually mean something is very wrong with our connection.
                 return;
             }
 
