@@ -47,6 +47,12 @@ export interface IWebSocketOptions {
     headers: IRawValues;
 }
 
+export interface ICloseEvent {
+    code: number;
+    reason: string;
+    wasClean: boolean;
+}
+
 /**
  * State is used to record the status of the websocket connection.
  */
@@ -111,7 +117,7 @@ export class InteractiveSocket extends EventEmitter {
             this.queue.forEach(data => this.send(data));
         });
 
-        this.on('close', () => {
+        this.on('close', (evt: ICloseEvent) => {
             if (this.state === State.Refreshing) {
                 this.state = State.Idle;
                 this.connect();
@@ -182,7 +188,7 @@ export class InteractiveSocket extends EventEmitter {
 
         this.state = State.Connecting;
 
-        this.socket.addEventListener('close', (evt: any) => this.emit('close', evt));
+        this.socket.addEventListener('close', (evt: ICloseEvent) => this.emit('close', evt));
         this.socket.addEventListener('open', () => this.emit('open'));
         this.socket.addEventListener('message', (evt: any) => this.emit('message', evt.data));
 
