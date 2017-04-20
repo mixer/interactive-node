@@ -73,6 +73,22 @@ export module InteractiveError {
         return new Base(error.message, error.code);
     }
 
+    export class CloseUnknown extends Base {
+        constructor(message: string) {
+            super(message, 1011);
+            CloseUnknown.setProto(this);
+        }
+    }
+    errors[1011] = CloseUnknown;
+
+    export class CloseRestarting extends Base {
+        constructor(message: string) {
+            super(message, 1012);
+            CloseRestarting.setProto(this);
+        }
+    }
+    errors[1012] = CloseRestarting;
+
     export class InvalidPayload extends Base {
         constructor(message: string) {
             super(message, 4000);

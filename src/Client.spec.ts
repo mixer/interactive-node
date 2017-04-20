@@ -41,7 +41,10 @@ describe('client', () => {
 
             server = new WebSocket.Server({ port });
             client.open(socketOptions);
-            awaitConnect(() => done());
+            awaitConnect(() => {
+                ws.close(1000, 'Normal');
+                done();
+            });
         });
     });
 

@@ -3,6 +3,7 @@ import * as sinon from 'sinon';
 import * as WebSocketModule from 'ws';
 
 import { CancelledError, TimeoutError } from '../errors';
+import { delay, resolveOn } from '../util';
 import { Method } from './packets';
 import { ExponentialReconnectionPolicy } from './reconnection';
 import { InteractiveSocket, ISocketOptions } from './Socket';
@@ -12,6 +13,10 @@ use(require('sinon-chai'));
 
 const port = process.env.SERVER_PORT || 1339;
 const METHOD = { id: 1, type: 'method', method: 'hello', params: { foo: 'bar' }, discard: false};
+
+function closeNormal(ws: WebSocketModule) {
+    ws.close(1000, 'Normal');
+}
 
 describe('socket', () => {
     let server: WebSocketModule.Server;
@@ -24,6 +29,8 @@ describe('socket', () => {
     });
 
     afterEach(done => {
+        server.on('error', (err: any) => console.log(err));
+        server.clients.forEach(client => closeNormal(client));
         if (socket) {
             socket.close();
             socket = null;
@@ -40,6 +47,7 @@ describe('socket', () => {
                     undefined,
                     'authorization header should be undefined when no auth is used',
                 );
+                closeNormal(ws);
                 done();
             });
         });
@@ -52,6 +60,7 @@ describe('socket', () => {
                     undefined,
                     'authorization header should be undefined when jwt auth is used',
                 );
+                closeNormal(ws);
                 done();
             });
         });
@@ -61,6 +70,7 @@ describe('socket', () => {
             server.on('connection', (ws: WebSocketModule) => {
                 expect(ws.upgradeReq.url).to.equal('/');
                 expect(ws.upgradeReq.headers.authorization).to.equal('Bearer asdf!');
+                closeNormal(ws);
                 done();
             });
         });
@@ -83,6 +93,11 @@ describe('socket', () => {
         function awaitConnect(callback: Function) {
             server.once('connection', (_ws: WebSocketModule) => {
                 ws = _ws;
+                // Log these details before re-throwing
+                ws.on('error', (err: any) => {
+                    console.log(err.code, err.message);
+                    throw err;
+                });
                 callback(ws);
             });
         }
@@ -120,7 +135,7 @@ describe('socket', () => {
             socket.setOptions(options);
         });
 
-        it('reconnects if a connection is lost using the backoff interval', done => {
+        it('reconnects if a connection is lost using the back off interval', done => {
             expect(reset).to.not.have.been.called;
             expect(next).to.not.have.been.called;
             greet();
@@ -128,16 +143,16 @@ describe('socket', () => {
             // Initially greets and calls reset
             socket.once('open', () => {
                 expect(reset).to.have.been.calledOnce;
-                ws.close();
+                closeNormal(ws);
 
                 // Backs off when a healthy connection is lost
                 awaitConnect((newWs: WebSocketModule) => {
                     expect(next).to.have.been.calledOnce;
                     expect(reset).to.have.been.calledOnce;
-                    newWs.close();
+                    closeNormal(newWs);
 
                     // Backs off again if establishing fails
-                    awaitConnect(() => {
+                    awaitConnect((ws3: WebSocketModule) => {
                         expect(next).to.have.been.calledTwice;
                         expect(reset).to.have.been.calledTwice;
                         greet();
@@ -145,8 +160,13 @@ describe('socket', () => {
                         // Resets after connection is healthy again.
                         socket.once('open', () => {
                             expect(reset).to.have.been.calledThrice;
-                            socket.close();
-                            done();
+                            closeNormal(ws3);
+                            setTimeout(
+                                () => {
+                                    done();
+                                },
+                                500,
+                            );
                         });
                     });
                 });
@@ -155,18 +175,22 @@ describe('socket', () => {
 
         it('respects closing the socket during a reconnection', done => {
             greet();
-            socket.once('method', () => ws.close());
-            setTimeout(() => socket.close(), 1);
+            resolveOn(socket, 'method')
+            .then(() => {
+                closeNormal(ws);
+            })
+            .then(() => delay(1))
+            .then(() => {
+                socket.close();
+            })
+            .then(() => {
+                closeNormal(ws);
+                done();
+            });
 
             awaitConnect(() => {
                 assert.fail('Expected not to have reconnected with a closed socket');
             });
-            setTimeout(
-                () => {
-                    done();
-                },
-                20,
-            );
         });
 
         it('times out message calls if no reply is received', () => {
@@ -177,7 +201,7 @@ describe('socket', () => {
 
         it('retries messages if the socket is closed before replying', () => {
             ws.on('message', () => {
-                 ws.close();
+                 closeNormal(ws);
             });
             awaitConnect((newWs: WebSocketModule) => {
                 newWs.on('message', (payload: any) => {
@@ -214,7 +238,10 @@ describe('socket', () => {
         it('cancels packets if the socket is closed mid-call', () => {
             ws.on('message', () => socket.close());
             return socket.execute('hello', { foo: 'bar'})
-            .catch(err => expect(err).be.an.instanceof(CancelledError));
+            .catch(err => expect(err).be.an.instanceof(CancelledError))
+            .then(() => {
+                closeNormal(ws);
+            }).then(() => delay(5));
         });
     });
 });

@@ -7,6 +7,11 @@ import { resolveOn } from '../util';
 import { Method, Packet, PacketState, Reply } from './packets';
 import { ExponentialReconnectionPolicy, IReconnectionPolicy } from './reconnection';
 
+/**
+ * Close codes that are deemed to be recoverable by the reconnection policy
+ */
+export const recoverableCloseCodes = [1000, 1011];
+
 //We don't support lz4 due to time constraints right now
 export type CompressionScheme = 'none' | 'gzip';
 
@@ -118,8 +123,10 @@ export class InteractiveSocket extends EventEmitter {
         });
 
         this.on('close', (evt: ICloseEvent) => {
-            // If this close event indicates that we're within the interactive error range
-            if (evt.code >= InteractiveError.startOfRange) {
+            // If this close event's code is not within our recoverable code array
+            // We raise it as an error and refuse to connect.
+            if (recoverableCloseCodes.indexOf(evt.code) === -1) {
+                console.log('throwing', evt.code);
                 const err = InteractiveError.fromSocketMessage({code: evt.code, message: evt.reason});
                 this.state = State.Closing;
                 this.emit('error', err);
@@ -232,7 +239,7 @@ export class InteractiveSocket extends EventEmitter {
         }
 
         this.state = State.Closing;
-        this.socket.close();
+        this.socket.close(1000, 'Closed normally.');
         this.queue.forEach(packet => packet.cancel());
         this.queue.clear();
     }
@@ -248,7 +255,7 @@ export class InteractiveSocket extends EventEmitter {
 
     /**
      * Send emits a Method over the websocket, wrapped in a Packet to provide queueing and
-     * cancelation. It returns a promise which resolves with the reply payload from the Server.
+     * cancellation. It returns a promise which resolves with the reply payload from the Server.
      */
     public send(packet: Packet): Promise<any> {
         if (packet.getState() === PacketState.Cancelled) {
