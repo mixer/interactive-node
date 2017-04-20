@@ -29,7 +29,6 @@ describe('socket', () => {
     });
 
     afterEach(done => {
-        server.on('error', (err: any) => console.log(err));
         server.clients.forEach(client => closeNormal(client));
         if (socket) {
             socket.close();
@@ -95,7 +94,7 @@ describe('socket', () => {
                 ws = _ws;
                 // Log these details before re-throwing
                 ws.on('error', (err: any) => {
-                    console.log(err.code, err.message);
+                    console.log(err.code, err.message); //tslint:disable-line
                     throw err;
                 });
                 callback(ws);

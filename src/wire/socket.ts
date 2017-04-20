@@ -126,7 +126,6 @@ export class InteractiveSocket extends EventEmitter {
             // If this close event's code is not within our recoverable code array
             // We raise it as an error and refuse to connect.
             if (recoverableCloseCodes.indexOf(evt.code) === -1) {
-                console.log('throwing', evt.code);
                 const err = InteractiveError.fromSocketMessage({code: evt.code, message: evt.reason});
                 this.state = State.Closing;
                 this.emit('error', err);
