@@ -276,28 +276,28 @@ export module InteractiveError {
     errors[4020] = NoInteractiveVersion;
 
     /**
-     * ChannelNotInteractive occurs when you try to connect to a channel that is not interactive.
-     */
-    export class ChannelNotInteractive extends Base {
-        constructor(message: string) {
-            super(message, 4021);
-            ChannelNotInteractive.setProto(this);
-        }
-    }
-    errors[4021] = ChannelNotInteractive;
-
-    /**
      * SessionConflict occurs when the server detects a conflicting connection from the client.
      * This can occur if the requested channel is already interactive or as a participant if
      * you're already connected to a channel.
      */
     export class SessionConflict extends Base {
         constructor(message: string) {
-            super(message, 4022);
+            super(message, 4021);
             SessionConflict.setProto(this);
         }
     }
-    errors[4022] = SessionConflict;
+    errors[4021] = SessionConflict;
+
+    /**
+     * ChannelNotInteractive occurs when you try to connect to a channel that is not interactive.
+     */
+    export class ChannelNotInteractive extends Base {
+        constructor(message: string) {
+            super(message, 4022);
+            ChannelNotInteractive.setProto(this);
+        }
+    }
+    errors[4022] = ChannelNotInteractive;
 
     export class BadUserInput extends Base {
         constructor(message: string) {
