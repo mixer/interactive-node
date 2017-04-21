@@ -26,6 +26,9 @@ export interface IClient extends EventEmitter {
     getTime(): Promise<number>;
 
     on(event: 'open', listener: () => void): this;
+    on(event: 'send', listener: (payload: string) => void): this;
+    on(event: 'message', listener: (payload: string) => void): this;
     on(event: 'error', listener: (err: InteractiveError.Base) => void): this;
+    on(event: 'hello', listener: () => void): this;
     on(event: string, listener: Function): this;
 }
