@@ -1,3 +1,4 @@
+import { Method } from './wire/packets';
 import * as WebSocket from 'ws';
 import { setWebSocket } from './';
 
@@ -33,6 +34,8 @@ describe('client', () => {
         if (server) {
             server.close(done);
             server = null;
+        } else {
+            done();
         }
     }
     describe('connecting', () => {
@@ -45,6 +48,16 @@ describe('client', () => {
                 ws.close(1000, 'Normal');
                 done();
             });
+        });
+    });
+
+    describe('method handling', () => {
+        it('handles hello', done => {
+            client = createClient();
+            client.on('hello', () => {
+                done();
+            });
+            client.processMethod(new Method('hello', {}, true, 0));
         });
     });
 

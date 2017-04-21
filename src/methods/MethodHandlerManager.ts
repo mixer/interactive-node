@@ -31,6 +31,7 @@ export class MethodHandlerManager {
     public addHandler(method: 'onControlUpdate', handler: IMethodHandler<ISceneData>): void;
 
     public addHandler(method: 'onReady', handler: IMethodHandler<onReadyParams>): void;
+    public addHandler(method: 'hello', handler: IMethodHandler<void>): void;
 
     public addHandler<T extends IInput>(method: 'giveInput', handler: IMethodHandler<IInputEvent<T>>): void;
 
