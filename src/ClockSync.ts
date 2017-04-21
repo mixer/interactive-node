@@ -5,9 +5,9 @@ import { delay } from './util';
 export enum ClockSyncerState {
     // Indicates that the clock syncer has JUST started up.
     Started,
-    // Indicates that the clock syncer is actively syncronizing its time with the server.
+    // Indicates that the clock syncer is actively synchronizing its time with the server.
     Synchronizing,
-    // Indicates that the clock syncer is not actively syncronzing.
+    // Indicates that the clock syncer is not actively synchronizing.
     Idle,
     // Indicates that the clock syncer has been stopped.
     Stopped,
