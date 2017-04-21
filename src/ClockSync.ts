@@ -140,8 +140,8 @@ export class ClockSync extends EventEmitter {
     }
 
     private processResponse(transmitTime: number, serverTime: number): number {
-        const recieveTime = Date.now();
-        const rtt = recieveTime - transmitTime;
+        const receiveTime = Date.now();
+        const rtt = receiveTime - transmitTime;
         const delta = serverTime - (rtt / 2) - transmitTime;
         return this.addDelta(delta);
     }
