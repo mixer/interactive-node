@@ -3,3 +3,4 @@
 !/dist
 lib/examples/*
 *.spec.d.ts
+wallaby.js
