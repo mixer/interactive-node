@@ -6,7 +6,7 @@ export enum ClockSyncerState {
     // Indicates that the clock syncer has JUST started up.
     Started,
     // Indicates that the clock syncer is actively syncronizing its time with the server.
-    Syncronizing,
+    Synchronizing,
     // Indicates that the clock syncer is not actively syncronzing.
     Idle,
     // Indicates that the clock syncer has been stopped.
@@ -75,7 +75,7 @@ export class ClockSync extends EventEmitter {
     }
 
     public sync(): Promise<void> {
-        this.state = ClockSyncerState.Syncronizing;
+        this.state = ClockSyncerState.Synchronizing;
         const samplePromises: Promise<number>[] = [];
 
         for (let i = 0; i < this.options.sampleSize; i++) {

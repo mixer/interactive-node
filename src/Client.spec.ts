@@ -1,6 +1,6 @@
-import { Method } from './wire/packets';
 import * as WebSocket from 'ws';
 import { setWebSocket } from './';
+import { Method } from './wire/packets';
 
 import { Client, ClientType } from './Client';
 
