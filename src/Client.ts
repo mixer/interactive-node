@@ -51,7 +51,14 @@ export class Client extends EventEmitter implements IClient {
         }
         this.socket = new InteractiveSocket(options);
         this.socket.on('method', (method: Method<any>) => {
-            // As process method can return a reply or nothing
+            // For some special methods we only need to know that they exist and
+            // can just emit an event
+            if (method.method === 'hello') {
+                this.emit('hello');
+                return;
+            }
+            // Replying to a method is somtimes optional, here we let the state system
+            // process a message and if it wants replys
             const reply = this.state.processMethod(method);
             if (!reply) {
                 return;
