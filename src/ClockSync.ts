@@ -83,6 +83,9 @@ export class ClockSync extends EventEmitter {
         }
         this.syncing = Promise.all(samplePromises)
             .then(() => {
+                if (this.state !== ClockSyncerState.Synchronizing) {
+                    return;
+                }
                 this.state = ClockSyncerState.Idle;
                 this.emit('delta', this.getDelta());
                 return undefined;
