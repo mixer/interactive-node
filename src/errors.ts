@@ -57,10 +57,13 @@ export module InteractiveError {
     export class Base extends BaseError {
         constructor(message: string, public code: number) {
             super(message);
+            Base.setProto(this);
         }
     }
 
-    const errors: { [code: number]: typeof Base } = {};
+    export const errors: { [code: number]: typeof Base } = {};
+
+    export const startOfRange = 4000;
 
     export function fromSocketMessage(error: IInteractiveError): Base {
         if (errors[error.code]) {
@@ -69,6 +72,22 @@ export module InteractiveError {
 
         return new Base(error.message, error.code);
     }
+
+    export class CloseUnknown extends Base {
+        constructor(message: string) {
+            super(message, 1011);
+            CloseUnknown.setProto(this);
+        }
+    }
+    errors[1011] = CloseUnknown;
+
+    export class CloseRestarting extends Base {
+        constructor(message: string) {
+            super(message, 1012);
+            CloseRestarting.setProto(this);
+        }
+    }
+    errors[1012] = CloseRestarting;
 
     export class InvalidPayload extends Base {
         constructor(message: string) {
@@ -120,84 +139,165 @@ export module InteractiveError {
 
     export class InvalidTransactionId extends Base {
         constructor(message: string) {
-            super(message, 4007);
+            super(message, 4006);
             InvalidTransactionId.setProto(this);
         }
     }
 
-    errors[4007] = InvalidTransactionId;
+    errors[4006] = InvalidTransactionId;
 
     export class NotEnoughSparks extends Base {
         constructor(message: string) {
-            super(message, 4008);
+            super(message, 4007);
             NotEnoughSparks.setProto(this);
         }
     }
 
-    errors[4008] = NotEnoughSparks;
+    errors[4007] = NotEnoughSparks;
 
     export class UnknownGroup extends Base {
         constructor(message: string) {
-            super(message, 4009);
+            super(message, 4008);
             UnknownGroup.setProto(this);
         }
     }
 
-    errors[4009] = UnknownGroup;
+    errors[4008] = UnknownGroup;
 
     export class GroupAlreadyExists extends Base {
         constructor(message: string) {
-            super(message, 4010);
+            super(message, 4009);
             GroupAlreadyExists.setProto(this);
         }
     }
 
-    errors[4010] = GroupAlreadyExists;
+    errors[4009] = GroupAlreadyExists;
 
     export class UnknownSceneId extends Base {
         constructor(message: string) {
-            super(message, 4011);
+            super(message, 4010);
             UnknownSceneId.setProto(this);
         }
     }
 
-    errors[4011] = UnknownSceneId;
+    errors[4010] = UnknownSceneId;
 
     export class SceneAlreadyExists extends Base {
         constructor(message: string) {
-            super(message, 4012);
+            super(message, 4011);
             SceneAlreadyExists.setProto(this);
         }
     }
 
-    errors[4012] = SceneAlreadyExists;
+    errors[4011] = SceneAlreadyExists;
 
     export class UnknownControlId extends Base {
         constructor(message: string) {
-            super(message, 4013);
+            super(message, 4012);
             UnknownControlId.setProto(this);
         }
     }
 
-    errors[4013] = UnknownControlId;
+    errors[4012] = UnknownControlId;
 
     export class ControlAlreadyExists extends Base {
         constructor(message: string) {
-            super(message, 4014);
+            super(message, 4013);
             ControlAlreadyExists.setProto(this);
         }
     }
 
-    errors[4014] = ControlAlreadyExists;
+    errors[4013] = ControlAlreadyExists;
 
     export class UnknownControlType extends Base {
         constructor(message: string) {
-            super(message, 4015);
+            super(message, 4014);
             UnknownControlType.setProto(this);
         }
     }
 
-    errors[4015] = UnknownControlType;
+    errors[4014] = UnknownControlType;
+
+    export class UnknownParticipant extends Base {
+        constructor(message: string) {
+            super(message, 4015);
+            UnknownParticipant.setProto(this);
+        }
+    }
+    errors[4015] = UnknownParticipant;
+
+    export class SessionClosing extends Base {
+        constructor(message: string) {
+            super(message, 4016);
+            SessionClosing.setProto(this);
+        }
+    }
+    errors[4016] = SessionClosing;
+
+    export class OutOfMemory extends Base {
+        constructor(message: string) {
+            super(message, 4017);
+            OutOfMemory.setProto(this);
+        }
+    }
+    errors[4017] = OutOfMemory;
+
+    export class CannotDeleteDefault extends Base {
+        constructor(message: string) {
+            super(message, 4018);
+            CannotDeleteDefault.setProto(this);
+        }
+    }
+    errors[4018] = CannotDeleteDefault;
+
+    /**
+     * CannotAuthenticate occurs when the server fails to autenticate the client.
+     * This is usually caused by the provided Authentication details be invalid or missing.
+     */
+    export class CannotAuthenticate extends Base {
+        constructor(message: string) {
+            super(message, 4019);
+            CannotAuthenticate.setProto(this);
+        }
+    }
+    errors[4019] = CannotAuthenticate;
+
+    /**
+     * NoInteractiveVersion occurs when the server is unable to validate your Interactive
+     * Project Version ID. This can occur if your project version id is invalid or missing,
+     * or if you do not have access to this version.
+     */
+    export class NoInteractiveVersion extends Base {
+        constructor(message: string) {
+            super(message, 4020);
+            NoInteractiveVersion.setProto(this);
+        }
+    }
+    errors[4020] = NoInteractiveVersion;
+
+    /**
+     * SessionConflict occurs when the server detects a conflicting connection from the client.
+     * This can occur if the requested channel is already interactive or as a participant if
+     * you're already connected to a channel.
+     */
+    export class SessionConflict extends Base {
+        constructor(message: string) {
+            super(message, 4021);
+            SessionConflict.setProto(this);
+        }
+    }
+    errors[4021] = SessionConflict;
+
+    /**
+     * ChannelNotInteractive occurs when you try to connect to a channel that is not interactive.
+     */
+    export class ChannelNotInteractive extends Base {
+        constructor(message: string) {
+            super(message, 4022);
+            ChannelNotInteractive.setProto(this);
+        }
+    }
+    errors[4022] = ChannelNotInteractive;
 
     export class BadUserInput extends Base {
         constructor(message: string) {

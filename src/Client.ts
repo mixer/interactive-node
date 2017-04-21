@@ -1,3 +1,4 @@
+import { MethodHandlerManager } from './methods/MethodHandlerManager';
 import { EventEmitter } from 'events';
 import { IState } from './state/IState';
 
@@ -34,11 +35,20 @@ export class Client extends EventEmitter implements IClient {
 
     protected socket: InteractiveSocket;
 
+    private methodHandler = new MethodHandlerManager();
+
     constructor(clientType: ClientType) {
         super();
         this.clientType = clientType;
         this.state = new State(clientType);
         this.state.setClient(this);
+        this.methodHandler.addHandler('hello', () => {
+            this.emit('hello');
+        });
+    }
+
+    public processMethod(method: Method<any>) {
+        return this.methodHandler.handle(method);
     }
 
     private createSocket(options: ISocketOptions): void {
@@ -51,12 +61,22 @@ export class Client extends EventEmitter implements IClient {
         }
         this.socket = new InteractiveSocket(options);
         this.socket.on('method', (method: Method<any>) => {
-            // As process method can return a reply or nothing
-            const reply = this.state.processMethod(method);
-            if (!reply) {
+            // Sometimes the client may also want to handle methods,
+            // in these cases, if it replies we value it at a higher
+            // priority than anything the state handler has. So we
+            // only send that one.
+            const clientReply = this.processMethod(method);
+            if (clientReply) {
+                this.reply(clientReply);
                 return;
             }
-            this.reply(reply);
+
+            // Replying to a method is sometimes optional, here we let the state system
+            // process a message and if it wants replies.
+            const reply = this.state.processMethod(method);
+            if (reply) {
+                this.reply(reply);
+            }
         });
 
         this.socket.on('open', () => this.emit('open'));

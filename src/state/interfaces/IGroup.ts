@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events';
 import { IMeta } from './controls/IMeta';
 
 export interface IGroupDataArray {
@@ -9,7 +10,7 @@ export interface IGroupDeletionParams {
     reassignGroupID: string;
 }
 
-export interface IGroup {
+export interface IGroup extends EventEmitter {
     /**
      * The ID of the group.
      */
@@ -29,4 +30,8 @@ export interface IGroup {
      * The group's resource tag.
      */
     etag?: string;
+
+    on(event: 'updated', listener: (group: IGroup) => void): this;
+    on(event: 'deleted', listener: (group: IGroup) => void): this;
+    on(event: string, listener: Function): this;
 }
