@@ -4,6 +4,7 @@ export * from './IClient';
 export * from './GameClient';
 export * from './ParticipantClient';
 export * from './util';
+export * from './errors';
 
 /**
  * You will likely not need to set this in a browser environment.
