@@ -1,7 +1,10 @@
 /* tslint:disable:no-console */
 import * as WebSocket from 'ws';
 
-import { IButton } from '../state/interfaces';
+import * as faker from 'faker';
+
+import { IParticipant } from '../state/interfaces';
+import { delay } from '../util';
 
 import {
     GameClient,
@@ -46,7 +49,7 @@ function makeControls(amount: number): IControlData[] {
         controls.push({
             controlID: `${i}`,
             kind: 'button',
-            text: `Button ${i}`,
+            text: faker.name.firstName(),
             cost: 1,
             position: [
                    {
@@ -76,41 +79,24 @@ function makeControls(amount: number): IControlData[] {
     }
     return controls;
 }
+const delayTime = 2000;
+function loop() {
+    const scene = client.state.getScene('default');
+    scene.createControls(makeControls(5))
+        .then(() => delay(delayTime))
+        .then(() => scene.deleteAllControls())
+        .then(() => delay(delayTime))
+        .then(() => loop());
+}
 
-// Now we can create the controls, We need to add them to a scene though.
-// Every Interactive Experience has a "default" scene so we'll add them there there.
-client.createControls({
-    sceneID: 'default',
-    controls: makeControls(5),
-}).then(controls => {
-    // Now that the controls are created we can add some event listeners to them!
-    controls.forEach((control: IButton) => {
+client.synchronizeScenes()
+    .then(() => client.ready(true))
+    .then(() => loop());
 
-        // mousedown here means that someone has clicked the button.
-        control.on('mousedown', (inputEvent, participant) => {
-
-            // Let's tell the user who they are, and what they pushed.
-            console.log(`${participant.username} pushed, ${inputEvent.input.controlID}`);
-
-            // Did this push involve a spark cost?
-            if (inputEvent.transactionID) {
-
-                // Unless you capture the transaction the sparks are not deducted.
-                client.captureTransaction(inputEvent.transactionID)
-                .then(() => {
-                    console.log(`Charged ${participant.username} ${control.cost} sparks!`);
-                });
-            }
-        });
-    });
-    // Controls don't appear unless we tell Interactive that we are ready!
-    client.ready(true);
-});
-
-client.state.on('participantJoin', participant => {
+client.state.on('participantJoin', (participant: IParticipant ) => {
     console.log(`${participant.username}(${participant.sessionID}) Joined`);
 });
-client.state.on('participantLeave', participant => {
+client.state.on('participantLeave', (participant: string ) => {
     console.log(`${participant} Left`);
 });
 /* tslint:enable:no-console */

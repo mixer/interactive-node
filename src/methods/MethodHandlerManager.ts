@@ -1,5 +1,5 @@
 import { InteractiveError } from '../errors';
-import { IInputEvent } from '../state/interfaces/controls/IInput';
+import { IInput, IInputEvent } from '../state/interfaces/controls/IInput';
 import { IParticipantArray } from '../state/interfaces/IParticipant';
 import { Method, Reply } from '../wire/packets';
 import { onReadyParams } from './methodTypes';
@@ -31,8 +31,9 @@ export class MethodHandlerManager {
     public addHandler(method: 'onControlUpdate', handler: IMethodHandler<ISceneData>): void;
 
     public addHandler(method: 'onReady', handler: IMethodHandler<onReadyParams>): void;
+    public addHandler(method: 'hello', handler: IMethodHandler<void>): void;
 
-    public addHandler(method: 'giveInput', handler: IMethodHandler<IInputEvent>): void;
+    public addHandler<T extends IInput>(method: 'giveInput', handler: IMethodHandler<IInputEvent<T>>): void;
 
     public addHandler<T>(method: string, handler: IMethodHandler<T>): void;
     public addHandler(method: string, handler: IMethodHandler<any>): void {

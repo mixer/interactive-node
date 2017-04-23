@@ -37,12 +37,16 @@ export class GameClient extends Client {
     public createControls(data: ISceneData): Promise<IControl[]> {
         return this.execute('createControls', data, false)
             .then(res => {
-                const scene = this.state.getScene(data.sceneID);
+                const scene = this.state.getScene(res.sceneID);
                 if (!scene) {
-                    return this.state.addScene(data).getControls();
+                    return this.state.onSceneCreate(res).getControls();
                 }
-                return res.controls.map(control => scene.addControl(control));
+                return scene.onControlsCreated(res.controls);
             });
+    }
+
+    public ready(isReady: boolean = true): Promise<void> {
+        return this.execute('ready', { isReady }, false);
     }
 
     public updateControls(params: ISceneDataArray): Promise<void> {

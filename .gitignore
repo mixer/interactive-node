@@ -38,6 +38,7 @@ jspm_packages
 .vscode
 .npmrc
 yarn.lock
+wallaby.js
 
 # Optional eslint cache
 .eslintcache

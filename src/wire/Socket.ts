@@ -1,11 +1,16 @@
 import { EventEmitter } from 'events';
 import * as Url from 'url';
 
-import { CancelledError, MessageParseError } from '../errors';
+import { CancelledError, InteractiveError, MessageParseError } from '../errors';
 import { IRawValues } from '../interfaces';
 import { resolveOn } from '../util';
 import { Method, Packet, PacketState, Reply } from './packets';
 import { ExponentialReconnectionPolicy, IReconnectionPolicy } from './reconnection';
+
+/**
+ * Close codes that are deemed to be recoverable by the reconnection policy
+ */
+export const recoverableCloseCodes = [1000, 1011];
 
 //We don't support lz4 due to time constraints right now
 export type CompressionScheme = 'none' | 'gzip';
@@ -47,6 +52,12 @@ export interface IWebSocketOptions {
     headers: IRawValues;
 }
 
+export interface ICloseEvent {
+    code: number;
+    reason: string;
+    wasClean: boolean;
+}
+
 /**
  * State is used to record the status of the websocket connection.
  */
@@ -67,7 +78,7 @@ export enum State {
 
 function getDefaults(): ISocketOptions {
     return {
-        url: 'wss://constellation.beam.pro',
+        url: '',
         replyTimeout: 10000,
         compressionScheme: 'none',
         autoReconnect: true,
@@ -111,7 +122,17 @@ export class InteractiveSocket extends EventEmitter {
             this.queue.forEach(data => this.send(data));
         });
 
-        this.on('close', () => {
+        this.on('close', (evt: ICloseEvent) => {
+            // If this close event's code is not within our recoverable code array
+            // We raise it as an error and refuse to connect.
+            if (recoverableCloseCodes.indexOf(evt.code) === -1) {
+                const err = InteractiveError.fromSocketMessage({code: evt.code, message: evt.reason});
+                this.state = State.Closing;
+                this.emit('error', err);
+                // Refuse to continue, these errors usually mean something is very wrong with our connection.
+                return;
+            }
+
             if (this.state === State.Refreshing) {
                 this.state = State.Idle;
                 this.connect();
@@ -182,7 +203,7 @@ export class InteractiveSocket extends EventEmitter {
 
         this.state = State.Connecting;
 
-        this.socket.addEventListener('close', (evt: any) => this.emit('close', evt));
+        this.socket.addEventListener('close', (evt: ICloseEvent) => this.emit('close', evt));
         this.socket.addEventListener('open', () => this.emit('open'));
         this.socket.addEventListener('message', (evt: any) => this.emit('message', evt.data));
 
@@ -217,7 +238,7 @@ export class InteractiveSocket extends EventEmitter {
         }
 
         this.state = State.Closing;
-        this.socket.close();
+        this.socket.close(1000, 'Closed normally.');
         this.queue.forEach(packet => packet.cancel());
         this.queue.clear();
     }
@@ -233,7 +254,7 @@ export class InteractiveSocket extends EventEmitter {
 
     /**
      * Send emits a Method over the websocket, wrapped in a Packet to provide queueing and
-     * cancelation. It returns a promise which resolves with the reply payload from the Server.
+     * cancellation. It returns a promise which resolves with the reply payload from the Server.
      */
     public send(packet: Packet): Promise<any> {
         if (packet.getState() === PacketState.Cancelled) {

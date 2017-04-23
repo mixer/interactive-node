@@ -1,5 +1,6 @@
 import * as WebSocket from 'ws';
 import { setWebSocket } from './';
+import { Method } from './wire/packets';
 
 import { Client, ClientType } from './Client';
 
@@ -33,6 +34,8 @@ describe('client', () => {
         if (server) {
             server.close(done);
             server = null;
+        } else {
+            done();
         }
     }
     describe('connecting', () => {
@@ -41,7 +44,20 @@ describe('client', () => {
 
             server = new WebSocket.Server({ port });
             client.open(socketOptions);
-            awaitConnect(() => done());
+            awaitConnect(() => {
+                ws.close(1000, 'Normal');
+                done();
+            });
+        });
+    });
+
+    describe('method handling', () => {
+        it('handles hello', done => {
+            client = createClient();
+            client.on('hello', () => {
+                done();
+            });
+            client.processMethod(new Method('hello', {}, true, 0));
         });
     });
 

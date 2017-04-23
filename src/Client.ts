@@ -1,10 +1,19 @@
+import { MethodHandlerManager } from './methods/MethodHandlerManager';
 import { EventEmitter } from 'events';
+import { IState } from './state/IState';
 
 import { PermissionDeniedError } from './errors';
 import { IClient } from './IClient';
 import { onReadyParams } from './methods/methodTypes';
-import { IInput, ITransactionCapture } from './state/interfaces/controls/IInput';
-import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/interfaces/IScene';
+import {
+    IControl,
+    IInput,
+    IScene,
+    ISceneControlDeletion,
+    ISceneData,
+    ISceneDataArray,
+    ITransactionCapture,
+} from './state/interfaces';
 import { State } from './state/State';
 import { Method, Reply } from './wire/packets';
 import {
@@ -28,20 +37,25 @@ export enum ClientType {
 export class Client extends EventEmitter implements IClient {
 
     public clientType: ClientType;
-    /**
-     * Indicates if this client is ready to receive input from Participants
-     */
-    public isReady: boolean;
 
-    public state: State;
+    public state: IState;
 
     protected socket: InteractiveSocket;
+
+    private methodHandler = new MethodHandlerManager();
 
     constructor(clientType: ClientType) {
         super();
         this.clientType = clientType;
         this.state = new State(clientType);
         this.state.setClient(this);
+        this.methodHandler.addHandler('hello', () => {
+            this.emit('hello');
+        });
+    }
+
+    public processMethod(method: Method<any>) {
+        return this.methodHandler.handle(method);
     }
 
     private createSocket(options: ISocketOptions): void {
@@ -54,12 +68,22 @@ export class Client extends EventEmitter implements IClient {
         }
         this.socket = new InteractiveSocket(options);
         this.socket.on('method', (method: Method<any>) => {
-            // As process method can return a reply or nothing
-            const reply = this.state.processMethod(method);
-            if (!reply) {
+            // Sometimes the client may also want to handle methods,
+            // in these cases, if it replies we value it at a higher
+            // priority than anything the state handler has. So we
+            // only send that one.
+            const clientReply = this.processMethod(method);
+            if (clientReply) {
+                this.reply(clientReply);
                 return;
             }
-            this.reply(reply);
+
+            // Replying to a method is sometimes optional, here we let the state system
+            // process a message and if it wants replies.
+            const reply = this.state.processMethod(method);
+            if (reply) {
+                this.reply(reply);
+            }
         });
 
         this.socket.on('open', () => this.emit('open'));
@@ -89,7 +113,7 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
-     * Closes and frees the resources ascociated with the interactive connection.
+     * Closes and frees the resources associated with the interactive connection.
      */
     public close() {
         if (this.socket) {
@@ -121,11 +145,9 @@ export class Client extends EventEmitter implements IClient {
         return this.execute('getScenes', null, false);
     }
 
-    /**
-     * Sets the ready state of this client, When a client is not ready. Participants cannot interact.
-     */
-    public ready(isReady: boolean = true): Promise<any> {
-        return this.execute('ready', { isReady }, false);
+    public synchronizeScenes(): Promise<IScene[]> {
+        return this.getScenes()
+            .then(res => this.state.synchronizeScenes(res));
     }
 
     /**
@@ -151,6 +173,10 @@ export class Client extends EventEmitter implements IClient {
         return this.socket.execute(method, params, discard);
     }
 
+    public createControls(_: ISceneData): Promise<IControl[]> {
+        throw new PermissionDeniedError('createControls', 'Participant');
+    }
+
     public updateControls(_: ISceneDataArray): Promise<void> {
         throw new PermissionDeniedError('updateControls', 'Participant');
     }
@@ -165,5 +191,9 @@ export class Client extends EventEmitter implements IClient {
 
     public deleteControls(_: ISceneControlDeletion): Promise<void> {
         throw new PermissionDeniedError('deleteControls', 'Participant');
+    }
+
+    public ready(_: boolean): Promise<void> {
+        throw new PermissionDeniedError('ready', 'Participant');
     }
 }
