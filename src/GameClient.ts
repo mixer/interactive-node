@@ -1,5 +1,4 @@
 import { Client, ClientType } from './Client';
-import { IClient } from './IClient';
 import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/interfaces';
 import { IControl } from './state/interfaces/controls/IControl';
 

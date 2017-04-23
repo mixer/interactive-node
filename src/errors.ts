@@ -183,7 +183,6 @@ export module InteractiveError {
 
     errors[4006] = InvalidTransactionId;
 
-
     /**
      * Indicates that a transaction failed to capture because the participant does not have enough sparks.
      */
@@ -315,7 +314,6 @@ export module InteractiveError {
         }
     }
     errors[4017] = OutOfMemory;
-
 
     /**
      * Thrown when an attempt is made to delete a default resource such as a Scene or Group.

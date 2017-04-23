@@ -1,5 +1,5 @@
-import { MethodHandlerManager } from './methods/MethodHandlerManager';
 import { EventEmitter } from 'events';
+import { MethodHandlerManager } from './methods/MethodHandlerManager';
 import { IState } from './state/IState';
 
 import { PermissionDeniedError } from './errors';
@@ -35,7 +35,6 @@ export enum ClientType {
 }
 
 export class Client extends EventEmitter implements IClient {
-
     /**
      * The type this Client instance is running as.
      */
