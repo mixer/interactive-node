@@ -13,19 +13,19 @@ export class Button extends Control<IButtonData> implements IButton {
     public text: string;
     /**
      * The spark cost of this button in sparks.
-     * Set this value using [setText]{@link Button.setCost}
+     * Set this value using [setCost]{@link Button.setCost}
      */
     public cost: number;
     /**
      * A decimalized percentage (0.0 - 1.0) which controls how wide
      * this button's progress bar is.
      *
-     * Set this value using [setText]{@link Button.setProgress}
+     * Set this value using [setProgress]{@link Button.setProgress}
      */
     public progress: number;
     /**
      * If set this value is the Unix Timestamp at which this button's cooldown will expire.
-     * Set this value using [setText]{@link Button.setCooldown}
+     * Set this value using [setCooldown]{@link Button.setCooldown}
      */
     public cooldown: number;
     /**
