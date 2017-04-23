@@ -1,6 +1,5 @@
 /*
 !/lib
 !/dist
-examples
 *.spec.d.ts
 wallaby.js
