@@ -51,3 +51,6 @@ wallaby.js
 /dist
 
 docs/
+
+# Prefer to compile these
+examples/*.js

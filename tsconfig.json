@@ -45,6 +45,7 @@
         "test",
         "dist",
         "lib",
+        "examples",
         "**/*.spec.ts"
     ]
 }
