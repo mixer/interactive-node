@@ -1,14 +1,13 @@
 /* tslint:disable:no-console */
 import * as WebSocket from 'ws';
 
-import { IButton, IInputEvent, IParticipant } from '../';
-
 import {
     GameClient,
+    IButton,
     IButtonData,
     IControlData,
     setWebSocket,
-} from '../src';
+} from '../lib';
 
 if (process.argv.length < 5) {
     console.log('Usage gameClient.exe <token> <url> <experienceId>');
@@ -88,7 +87,7 @@ client.createControls({
     controls.forEach((control: IButton) => {
 
         // mousedown here means that someone has clicked the button.
-        control.on('mousedown', (inputEvent: IInputEvent, participant: IParticipant) => {
+        control.on('mousedown', (inputEvent, participant) => {
 
             // Let's tell the user who they are, and what they pushed.
             console.log(`${participant.username} pushed, ${inputEvent.input.controlID}`);
@@ -108,7 +107,7 @@ client.createControls({
     client.ready(true);
 });
 
-client.state.on('participantJoin', (participant: IParticipant ) => {
+client.state.on('participantJoin', participant => {
     console.log(`${participant.username}(${participant.sessionID}) Joined`);
 });
 client.state.on('participantLeave', (participant: string ) => {

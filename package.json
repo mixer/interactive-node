@@ -17,8 +17,8 @@
   "scripts": {
     "build:ts": "rimraf lib dist && tsc",
     "build:webpack": "rimraf dist && webpack && webpack --config webpack.config.min.js",
-    "build:examples": "cp dist/* examples/browser",
-    "build": "npm run build:ts && npm run build:webpack",
+    "build:examples": "rimraf examples/*.js && cd examples && tsc",
+    "build": "npm run build:ts && npm run build:webpack && npm run build:examples",
     "test": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
     "prepublish": "npm run build",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",

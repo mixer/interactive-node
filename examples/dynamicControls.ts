@@ -10,7 +10,7 @@ import {
     IControlData,
     IParticipant,
     setWebSocket,
-} from '../src';
+} from '../lib';
 
 if (process.argv.length < 5) {
     console.log('Usage gameClient.exe <token> <url> <experienceId>');
