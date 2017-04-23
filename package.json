@@ -12,7 +12,7 @@
     "test": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
     "prepublish": "npm run build",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
-    "docs": "typedoc --out docs/ --mode file --excludeNotExported -tsconfig tsconfig.json --target ES6"
+    "docs": "typedoc --out docs/ --mode file --excludeNotExported --excludePrivate --excludeExternals -tsconfig tsconfig.json --target ES6"
   },
   "repository": {
     "type": "git",

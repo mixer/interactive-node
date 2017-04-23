@@ -51,6 +51,10 @@ export class ClockSync extends EventEmitter {
         this.options = Object.assign({}, defaultOptions, options);
     }
 
+    /**
+     * Starts the clock synchronizer. It will emit `delta` events,
+     * when it is able to calculate the delta between the client and the server.
+     */
     public start(): void {
         this.state = ClockSyncerState.Started;
         this.deltas = [];
@@ -109,6 +113,9 @@ export class ClockSync extends EventEmitter {
             });
     }
 
+    /**
+     * Halts the clock synchronizer.
+     */
     public stop() {
         this.state = ClockSyncerState.Stopped;
         if (this.checkTimer) {
@@ -116,6 +123,9 @@ export class ClockSync extends EventEmitter {
         }
     }
 
+    /**
+     * Gets the current delta value from the synchronizer.
+     */
     public getDelta(forceCalculation?: boolean): number {
         if (this.cachedDelta === null || forceCalculation) {
             this.cachedDelta = this.calculateDelta();
