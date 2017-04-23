@@ -78,18 +78,14 @@ client.open({
 
 ## Development
 
-Thanks for being interested in contributing, checkout [TODO.md](TODO.md) for a list of tasks!
-
 To get a development environment setup:
 1. Clone this repository
 1. `npm install`
 1. `npm run build`
 
-### Testing
-
-Test files sit next to their respected source file and have the .spec.ts extension.
-
 ### Contributing
+
+Thanks for your interested in contributing, checkout [TODO.md](TODO.md) for a list of tasks!
 
 Open a [Pull Request](https://github.com/WatchBeam/beam-interactive-node2/pulls) we'd love to see your contributions.
 
