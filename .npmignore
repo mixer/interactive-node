@@ -2,4 +2,3 @@
 !/lib
 !/dist
 *.spec.d.ts
-wallaby.js
