@@ -59,7 +59,7 @@ export interface ICloseEvent {
 }
 
 /**
- * State is used to record the status of the websocket connection.
+ * SocketState is used to record the status of the websocket connection.
  */
 export enum SocketState {
     // a connection attempt has not been made yet
