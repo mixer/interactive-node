@@ -16,9 +16,23 @@ import { ISceneData } from './interfaces/IScene';
 import { Scene } from './Scene';
 import { StateFactory } from './StateFactory';
 
+/**
+ * State is a store of all of the components of an interactive session.
+ *
+ * It contains Scenes, Groups and Participants and keeps them up to date by listening to
+ * interactive events which update and change them. You can query State to
+ * examine and alter components of the interactive session.
+ */
 export class State extends EventEmitter implements IState {
+    /**
+     * A Map of group ids to their corresponding Group Object.
+     */
     public groups = new Map<string, Group>();
+    /**
+     * the ready state of this session, is the GameClient in this session ready to recieve input?
+     */
     public isReady: boolean;
+
     private methodHandler = new MethodHandlerManager();
     private stateFactory = new StateFactory();
     private scenes = new Map<string, Scene>();
@@ -33,6 +47,10 @@ export class State extends EventEmitter implements IState {
         sampleFunc: () => this.client.getTime(),
     });
 
+    /**
+     * Constructs a new State instance. Based on the passed client type it will
+     * hook into the apropriate methods for that type to keep itself up to date.
+     */
     constructor(private clientType: ClientType) {
         super();
 
@@ -95,6 +113,10 @@ export class State extends EventEmitter implements IState {
         }
     }
 
+    /**
+     * Syncronize scenes takes a collection of scenes from the server
+     * and hydrates the Scene store with them.
+     */
     public synchronizeScenes(data: ISceneDataArray): IScene[] {
         return data.scenes.map(scene => this.onSceneCreate(scene));
     }
@@ -146,6 +168,9 @@ export class State extends EventEmitter implements IState {
         this.stateFactory.setClient(client);
     }
 
+    /**
+     * Processes a server side method using State's method handler.
+     */
     public processMethod(method: Method<any>): void | Reply {
         try {
             return this.methodHandler.handle(method);
@@ -177,12 +202,16 @@ export class State extends EventEmitter implements IState {
         return new Date(time + this.clockDelta);
     }
 
+    /**
+     * Completely clears this state instance emptying all Scene, Group and Participant records
+     */
     public reset() {
         this.scenes.forEach(scene => scene.destroy());
         this.scenes.clear();
         this.clockDelta = 0;
         this.isReady = false;
         this.participants.clear();
+        this.groups.clear();
     }
 
     /**
@@ -228,6 +257,9 @@ export class State extends EventEmitter implements IState {
         return scene;
     }
 
+    /**
+     * Adds an array of Scenes to its state store.
+     */
     public addScenes(scenes: ISceneData[]): IScene[] {
         return scenes.map(scene => this.onSceneCreate(scene));
     }
@@ -272,14 +304,23 @@ export class State extends EventEmitter implements IState {
         return group;
     }
 
+    /**
+     * Retrieve a group with the matching ID from the group store.
+     */
     public getGroup(id: string): Group {
         return this.groups.get(id);
     }
 
+    /**
+     * Retrieve a scene with the matching ID from the scene store.
+     */
     public getScene(id: string): IScene {
         return this.scenes.get(id);
     }
 
+    /**
+     * Searches through all stored Scenes to find a Control with the matching ID
+     */
     public getControl(id: string): IControl {
         let result: IControl;
         this.scenes.forEach(scene => {
@@ -311,7 +352,7 @@ export class State extends EventEmitter implements IState {
         return this.getParticipantBy('username', name);
     }
     /**
-     * Retrieve a participant by their sessionID
+     * Retrieve a participant by their sessionID with the current Interactive session.
      */
     public getParticipantBySessionID(id: string): IParticipant {
         return this.participants.get(id);
