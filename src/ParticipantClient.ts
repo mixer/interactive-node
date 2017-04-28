@@ -9,6 +9,7 @@ export interface IParticipantOptions {
     jwt: string;
     /**
      * A url for the Interactive session you'd like to join.
+     * This should be retrieved from https://beam.pro/api/v1/interactive/{channelId}
      * @example wss://interactive1-dal.beam.pro/participant?channel=<channelid>
      */
     url: string;
@@ -37,7 +38,8 @@ export class ParticipantClient extends Client {
         return this;
     }
     /**
-     * Sends an input event to the Interactive Server, Called by Controls.
+     * Sends an input event to the Interactive Server. This should only be called
+     * by controls.
      */
     public giveInput<T extends IInput>(input: T): Promise<void> {
         return this.execute('giveInput', input, false);

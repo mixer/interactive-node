@@ -9,11 +9,11 @@ export interface IGameClientOptions {
      */
     versionId: number;
     /**
-     * An OAuth Bearer token as defined in {@link https://art.tools.ietf.org/html/rfc6750| OAuth 2.0 Bearer Token Usage}
+     * An OAuth Bearer token as defined in {@link https://art.tools.ietf.org/html/rfc6750| OAuth 2.0 Bearer Token Usage}.
      */
     authToken: string;
     /**
-     * An interactive server url, these can be retrieved from https://beam.pro/api/v1/interactive/hosts
+     * An interactive server url, these should be retrieved from https://beam.pro/api/v1/interactive/hosts.
      */
     url: string;
 }
@@ -37,7 +37,7 @@ export class GameClient extends Client {
     }
 
     /**
-     * Creates instructs the server to create new controls on a scene within your Project.
+     * Creates instructs the server to create new controls on a scene within your project.
      * Participants will see the new controls automatically if they are on the scene the
      * new controls are added to.
      */
@@ -80,13 +80,16 @@ export class GameClient extends Client {
      * who created the transaction.
      *
      * A transaction can fail to capture if:
-     *  * The Participant does not have enough sparks.
+     *  * The participant does not have enough sparks.
      *  * The transaction is expired.
      */
     public captureTransaction(transactionID: string): Promise<void> {
         return this.execute('capture', { transactionID }, false);
     }
 
+    /**
+     * Instructs the server to delete the provided controls.
+     */
     public deleteControls(data: ISceneControlDeletion): Promise<void> {
         return this.execute('deleteControls', data, false);
     }
