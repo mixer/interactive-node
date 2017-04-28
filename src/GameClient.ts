@@ -22,7 +22,9 @@ export class GameClient extends Client {
     constructor() {
         super(ClientType.GameClient);
     }
-
+    /**
+     * Opens a connection to the interactive service using the provided options.
+     */
     public open(options: IGameClientOptions): this {
         super.open({
             authToken: options.authToken,
@@ -34,6 +36,11 @@ export class GameClient extends Client {
         return this;
     }
 
+    /**
+     * Creates instructs the server to create new controls on a scene within your Project.
+     * Participants will see the new controls automatically if they are on the scene the
+     * new controls are added to.
+     */
     public createControls(data: ISceneData): Promise<IControl[]> {
         return this.execute('createControls', data, false)
             .then(res => {
@@ -45,18 +52,37 @@ export class GameClient extends Client {
             });
     }
 
+    /**
+     * Updates a sessions' ready state, when a client is not ready participants cannot
+     * interact with the controls.
+     */
     public ready(isReady: boolean = true): Promise<void> {
         return this.execute('ready', { isReady }, false);
     }
 
+    /**
+     * Instructs the server to update controls within a scene with your specified parameters.
+     * Participants on the scene will see the controls update automatically.
+     */
     public updateControls(params: ISceneDataArray): Promise<void> {
         return this.execute('updateControls', params, false);
     }
 
+    /**
+     * Instructs the server to update a scene within the session with your specified parameters.
+     */
     public updateScenes(scenes: ISceneDataArray): Promise<void> {
         return this.execute('updateScenes', scenes, false);
     }
 
+    /**
+     * Makes an attempt to capture a spark transaction and deduct the sparks from the participant
+     * who created the transaction.
+     *
+     * A transaction can fail to capture if:
+     *  * The Participant does not have enough sparks.
+     *  * The transaction is expired.
+     */
     public captureTransaction(transactionID: string): Promise<void> {
         return this.execute('capture', { transactionID }, false);
     }
