@@ -27,7 +27,7 @@ export class State extends EventEmitter implements IState {
     /**
      * A Map of group ids to their corresponding Group Object.
      */
-    public groups = new Map<string, Group>();
+    private groups = new Map<string, Group>();
     /**
      * the ready state of this session, is the GameClient in this session ready to recieve input?
      */
