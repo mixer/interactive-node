@@ -20,7 +20,7 @@ import {
     CompressionScheme,
     InteractiveSocket,
     ISocketOptions,
-    State as InteractiveSocketState,
+    SocketState as InteractiveSocketState,
 } from './wire/Socket';
 
 export enum ClientType {
