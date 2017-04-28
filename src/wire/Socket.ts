@@ -62,17 +62,29 @@ export interface ICloseEvent {
  * SocketState is used to record the status of the websocket connection.
  */
 export enum SocketState {
-    // a connection attempt has not been made yet
+    /**
+     * A connection attempt has not been made yet.
+     */
     Idle = 1,
-    // a connection attempt is currently being made
+    /**
+     * A connection attempt is currently being made.
+     */
     Connecting,
-    // the socket is connection and data may be sent
+    /**
+     * The socket is connection and data may be sent.
+     */
     Connected,
-    // the socket is gracefully closing; after this it will become Idle
+    /**
+     * The socket is gracefully closing; after this it will become Idle.
+     */
     Closing,
-    // the socket is reconnecting after closing unexpectedly
+    /**
+     * The socket is reconnecting after closing unexpectedly.
+     */
     Reconnecting,
-    // connect was called whilst the old socket was still open
+    /**
+     * Connect was called whilst the old socket was still open.
+     */
     Refreshing,
 }
 
