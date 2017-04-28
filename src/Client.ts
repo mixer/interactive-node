@@ -25,18 +25,18 @@ import {
 
 export enum ClientType {
     /**
-     * A Participant type is used when the Client is participating in the session and not running it.
+     * A Participant type is used when the client is participating in the session.
      */
     Participant,
     /**
-     * A GameClient type is used when the Client is running the interactive session.
+     * A GameClient type is used when the client is running the interactive session.
      */
     GameClient,
 }
 
 export class Client extends EventEmitter implements IClient {
     /**
-     * The type this Client instance is running as.
+     * The type this client instance is running as.
      */
     public clientType: ClientType;
 
@@ -45,10 +45,16 @@ export class Client extends EventEmitter implements IClient {
      */
     public state: IState;
 
+    /**
+     * The client's socket.
+     */
     protected socket: InteractiveSocket;
 
     private methodHandler = new MethodHandlerManager();
 
+    /**
+     * Constructs and sets up a client of the given type.
+     */
     constructor(clientType: ClientType) {
         super();
         this.clientType = clientType;
@@ -60,7 +66,7 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
-     * Processes a Method through the client's method handler.
+     * Processes a method through the client's method handler.
      */
     public processMethod(method: Method<any>) {
         return this.methodHandler.handle(method);
@@ -115,7 +121,7 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
-     * Boots the connection to interactive
+     * Opens the connection to interactive.
      */
     public open(options: ISocketOptions): this {
         this.state.reset();
@@ -135,8 +141,9 @@ export class Client extends EventEmitter implements IClient {
 
     //TODO: Actually implement compression
     /**
-     * setCompression is a negotiation process between the server and our client,
-     * We send the compression we support, and it sends back the agreed compression scheme
+     * Begins a negotiation process between the server and this client,
+     * the compression preferences of the client are sent to the server and then
+     * the server responds with the chosen compression scheme.
      */
     public setCompression(preferences: CompressionScheme[]): Promise<void> {
         return this.socket.execute('setCompression', {
@@ -154,7 +161,7 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
-     * Retrieves the Scenes stored on the Interactive Server
+     * Retrieves the scenes stored on the interactive server.
      */
     public getScenes(): Promise<ISceneDataArray> {
         return this.execute('getScenes', null, false);
@@ -169,7 +176,7 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
-     * Gets the time from the server as a Unix Timestamp in UTC.
+     * Gets the time from the server as a unix timestamp in UTC.
      */
     public getTime(): Promise<number> {
         return this.execute('getTime', null, false)
@@ -190,7 +197,6 @@ export class Client extends EventEmitter implements IClient {
     public execute(method: 'ready', params: onReadyParams, discard: false ): Promise<void>;
     /**
      * `capture` is used to capture a spark transaction that you have received from the server.
-     * These expire after 5 minutes.
      */
     public execute(method: 'capture', params: ITransactionCapture, discard: false ): Promise<void>;
     /**
@@ -201,7 +207,6 @@ export class Client extends EventEmitter implements IClient {
     /**
      * `getScenes` retrieves scenes stored ont he server. If you've used the studio to create your project,
      * then you can use this to retrieve the scenes and controls created there.
-     * @memberOf Client
      */
     public execute(method: 'getScenes', params: null, discard: false ): Promise<ISceneDataArray>;
     /**
@@ -211,7 +216,6 @@ export class Client extends EventEmitter implements IClient {
     public execute<K extends IInput>(method: 'giveInput', params: K, discard: false): Promise<void>;
     /**
      * `updateControls` is used to update control properties within a scene, such as disabling a control.
-     * @memberOf Client
      */
     public execute(method: 'updateControls', params: ISceneDataArray, discard: false): Promise<void>;
     /**
@@ -222,9 +226,8 @@ export class Client extends EventEmitter implements IClient {
     public execute<T>(method: string, params: T, discard: boolean): Promise<any>;
     /**
      * Execute will construct and send a method to the server for execution.
-     * It will resolve with the server's reply.
-     *
-     * It is recommended that you use an existing Client method if available instead of manually calling `execute`.
+     * It will resolve with the server's reply. It is recommended that you use an
+     * existing Client method if available instead of manually calling `execute`.
      */
     public execute(method: string, params: any, discard: boolean): Promise<any> {
         return this.socket.execute(method, params, discard);
