@@ -3,6 +3,7 @@ export * from './state/interfaces';
 export * from './IClient';
 export * from './GameClient';
 export * from './ParticipantClient';
+export * from './util';
 export * from './errors';
 
 /**

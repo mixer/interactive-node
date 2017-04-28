@@ -22,7 +22,7 @@
 - [ ] deleteControls
 - [ ] updateControls
 
-- [ ] capture
+- [X] capture
 
 ### Shared Methods
 - [X] getTime - on another branch
@@ -30,7 +30,7 @@
 - [X] setCompression
 
 ### Paticipant Methods
-- [X] giveInput - check we meet the spec of the protocol here
+- [X] giveInput
 - [X] onReady
 
 ### Events

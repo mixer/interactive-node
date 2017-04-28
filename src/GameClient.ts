@@ -4,10 +4,10 @@ import { IControl } from './state/interfaces/controls/IControl';
 
 export interface IGameClientOptions {
     /**
-     * Your experience id is a unique id to your Interactive Project Version. You can retrieve one
-     * from the Interactive Studio on Beam.pro.
+     * Your project version id is a unique id to your Interactive Project Version. You can retrieve one
+     * from the Interactive Studio on Beam.pro in the Code step.
      */
-    experienceId: number;
+    versionId: number;
     /**
      * An OAuth Bearer token as defined in {@link https://art.tools.ietf.org/html/rfc6750| OAuth 2.0 Bearer Token Usage}
      */
@@ -28,7 +28,7 @@ export class GameClient extends Client {
             authToken: options.authToken,
             url: options.url,
             extraHeaders: {
-                'X-Interactive-Version': options.experienceId,
+                'X-Interactive-Version': options.versionId,
             },
         });
         return this;

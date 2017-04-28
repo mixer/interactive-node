@@ -2,13 +2,23 @@
   "name": "@mcph/beam-interactive-node2",
   "version": "0.9.0",
   "description": "A NodeJS and Browser compatible client for Beam.pro's interactive 2 Protocol",
+  "contributors": [
+      {
+          "name": "Richard Fox",
+          "email": "fox@xbox.com"
+      },
+      {
+          "name": "Connor Peet",
+          "email": "connor@xbox.com"
+      }
+  ],
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "build:ts": "rimraf lib dist && tsc",
     "build:webpack": "rimraf dist && webpack && webpack --config webpack.config.min.js",
-    "build:examples": "cp dist/* examples/browser",
-    "build": "npm run build:ts && npm run build:webpack",
+    "build:examples": "rimraf examples/*.js && cd examples && tsc",
+    "build": "npm run build:ts && npm run build:webpack && npm run build:examples",
     "test": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
     "prepublish": "npm run build",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
