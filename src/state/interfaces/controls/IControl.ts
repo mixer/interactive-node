@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 
-import { IParticipant } from '../';
+import { ETag, IParticipant } from '../';
 import { IClient } from '../../../IClient';
 import { ISceneDataArray } from '../IScene';
 import { IInput, IInputEvent } from './IInput';
@@ -12,7 +12,7 @@ export type GridSize = 'large' | 'medium' | 'small';
 
 /**
  * Represents the raw data a control has when transmitted
- * and recieved over a socket connection.
+ * and received over a socket connection.
  */
 export interface IControlData {
     /**
@@ -24,7 +24,7 @@ export interface IControlData {
      */
     kind?: ControlKind;
     /**
-     * Wether or not this control is disabled
+     * Wether or not this control is disabled.
      */
     disabled?: boolean;
     /**
@@ -36,7 +36,10 @@ export interface IControlData {
      * is positioned on screen.
      */
     position?: IGridPlacement[];
-    etag?: string;
+    /**
+     * The control's ETag.
+     */
+    etag?: ETag;
 }
 /**
  * Control is used a base class for all other controls within an interactive session.
@@ -69,18 +72,47 @@ export interface IControl extends IControlData, EventEmitter {
      */
     update(controlData: IControlData): void;
 
+
+    /**
+     * Fired when the control is deleted.
+     */
     on(event: 'deleted', listener: (control: IControl) => void): this;
+    /**
+     * Fired when the control is updated with new data.
+     */
     on(event: 'updated', listener: (control: IControl) => void): this;
     on(event: string, listener: Function): this;
 
     destroy(): void;
 }
 
+/**
+ * A grid placement represents a placement of a control within a scene.
+ * It controls how the control is rendered.
+ *
+ * A control can have many grid placements where each placement is used within
+ * a different interactive grid.
+ */
 export interface IGridPlacement {
+    /**
+     * The Size of the grid this placement is for.
+     */
     size: GridSize;
+    /**
+     * The width of this control within the grid.
+     */
     width: number;
+    /**
+     * The height of this control within the grid.
+     */
     height: number;
+    /**
+     * The X position of this control within the grid.
+     */
     x: number;
+    /**
+     * The Y position of this control within the grid.
+     */
     y: number;
 }
 
