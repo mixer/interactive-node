@@ -3,21 +3,29 @@ import { IInteractiveError, InteractiveError } from '../errors';
 import { IRawValues } from '../interfaces';
 
 export enum PacketState {
-    // The packet has not been sent yet, it may be queued for later sending
+    /**
+     *  The packet has not been sent yet, it may be queued for later sending.
+     */
     Pending = 1,
-    // The packet has been sent over the websocket successfully and we are
-    // waiting for a reply.
+    /**
+     * The packet has been sent over the websocket successfully and we are
+     * waiting for a reply.
+     */
     Sending,
-    // The packet was replied to, and has now been complete.
+    /**
+     * The packet was replied to, and has now been complete.
+     */
     Replied,
-    // The caller has indicated they no longer wish to be notified about this event.
+    /**
+     *  The caller has indicated they no longer wish to be notified about this event.
+     */
     Cancelled,
 }
 
 const maxInt32 = 0xFFFFFFFF;
 
 /**
- * A Packet is a wrapped Method that can be timedout or canceled whilst it travels over the wire
+ * A Packet is a wrapped Method that can be timed-out or canceled whilst it travels over the wire
  */
 export class Packet extends EventEmitter {
     private state: PacketState = PacketState.Pending;
