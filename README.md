@@ -76,6 +76,14 @@ client.open({
 });
 ```
 
+## Examples
+
+Checkout our [examples](examples/) to get up to speed quickly!
+
+* [basic](examples/basic.ts) - Connects and sets up 5 buttons, when they are clicked the participant is charged 1 spark.
+* [dynamicControls](examples/dynamicControls.ts) - Connects and then creates and destroys 5 buttons with random text.
+* [joystick](examples/joystick.ts) - Connects and creates a joystick, logs participant coordinate values.
+
 ## Development
 
 To get a development environment setup:
