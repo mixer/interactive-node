@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { ETag } from './controls';
 
 import { IControl, IControlData } from './controls/IControl';
 import { IMeta } from './controls/IMeta';
@@ -7,16 +8,41 @@ export interface ISceneDataArray {
     scenes: ISceneData[];
 }
 
+/**
+ * Included in messages when a scene is deleted.
+ * Provides information on where participants on
+ * the deleted scene should be redirected to.
+ */
 export interface ISceneDeletionParams {
+    /**
+     * The deleted scene ID.
+     */
     sceneID: string;
+    /**
+     * The scene which
+     */
     reassignSceneID: string;
 }
-
+/**
+ * Represents the raw data of a scene as it is represented on the wire.
+ */
 export interface ISceneData {
+    /**
+     * A unique ID for this scene.
+     */
     sceneID: string;
+    /**
+     * A collection of controls which are on this scene.
+     */
     controls: IControlData[];
+    /**
+     * A collection of meta properties which this scene has.
+     */
     meta?: IMeta;
-    etag?: string;
+    /**
+     * The scene's ETag.
+     */
+    etag?: ETag;
 }
 
 export interface IScene extends EventEmitter {
@@ -43,13 +69,18 @@ export interface IScene extends EventEmitter {
     update(scene: ISceneData): void;
 
     destroy(): void;
-    // Frontend
 
-    // GameClient
-
-    // Events
+    /**
+     * Fired when a control is added to the scene.
+     */
     on(event: 'controlAdded', listener: (control: IControl) => void): this;
+    /**
+     * Fired when a control is removed from the scene.
+     */
     on(event: 'controlDeleted', listener: (controlId: string) => void): this;
+    /**
+     * Fired when the scene is updated with new data from the server.
+     */
     on(event: 'update', listener: (controlId: this) => void): this;
     on(event: string, listener: Function): this;
 
