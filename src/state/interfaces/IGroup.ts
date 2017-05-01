@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { ETag } from './';
 import { IMeta } from './controls/IMeta';
 
 export interface IGroupDataArray {
@@ -27,11 +28,18 @@ export interface IGroup extends EventEmitter {
     meta?: IMeta;
 
     /**
-     * The group's resource tag.
+     * The group's ETag.
      */
-    etag?: string;
+    etag?: ETag;
 
+    /**
+     * Fired when the group is updated with new data from the server.
+     */
     on(event: 'updated', listener: (group: IGroup) => void): this;
+
+    /**
+     * Fired when this group is deleted.
+     */
     on(event: 'deleted', listener: (group: IGroup) => void): this;
     on(event: string, listener: Function): this;
 }

@@ -9,7 +9,7 @@ export interface IReconnectionPolicy {
   next(): number;
 
   /**
-   * Resets an internal counter of reconnection's, should be called on a successful connection.
+   * Resets an internal counter of reconnection attempts, should be called on a successful connection.
    */
   reset(): void;
 }
