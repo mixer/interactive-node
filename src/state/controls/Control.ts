@@ -13,6 +13,10 @@ import { IInput, IInputEvent } from '../interfaces/controls/IInput';
 import { IMeta } from '../interfaces/controls/IMeta';
 import { Scene } from '../Scene';
 
+/**
+ * Control is used a base class for all other controls within an interactive session.
+ * It contains shared logic which all types of controls can utilize.
+ */
 export abstract class Control<T extends IControlData> extends EventEmitter implements IControl {
     public controlID: string;
     public kind: ControlKind;
@@ -24,10 +28,15 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     protected scene: Scene;
     public client: IClient;
 
+    /**
+     * Sets the scene this control belongs to.
+     */
     public setScene(scene: Scene) {
         this.scene = scene;
     }
-
+    /**
+     * Sets the client instance this control can use to execute methods.
+     */
     public setClient(client: IClient) {
         this.client = client;
     }
@@ -40,8 +49,11 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     // A base control class cannot give input
     public abstract giveInput<T extends IInput>(input: T): Promise<void>;
 
-    public receiveInput<T extends IInput>(input: IInputEvent<T>, participant: IParticipant) {
-        this.emit(input.input.event, input, participant);
+    /**
+     * Called by client when it recieves an input event for this control from the server.
+     */
+    public receiveInput<T extends IInput>(inputEvent: IInputEvent<T>, participant: IParticipant) {
+        this.emit(inputEvent.input.event, inputEvent, participant);
     }
 
     protected sendInput<K extends IInput>(input: K): Promise<void> {
@@ -51,10 +63,15 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
         return this.client.giveInput(input);
     }
 
+    /**
+     * Disables this control, preventing participant interaction.
+     */
     public disable(): Promise<void> {
         return this.updateAttribute('disabled', true);
     }
-
+    /**
+     * Enables this control, allowing participant interaction.
+     */
     public enable(): Promise<void> {
         return this.updateAttribute('disabled', false);
     }
@@ -79,6 +96,9 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
         });
     }
 
+    /**
+     * Merges in values from the server in response to an update operation.
+     */
     public update(controlData: IControlData) {
         merge(this, controlData);
         this.emit('updated', this);

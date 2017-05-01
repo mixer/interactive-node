@@ -3,14 +3,14 @@
   "version": "0.9.0",
   "description": "A NodeJS and Browser compatible client for Beam.pro's interactive 2 Protocol",
   "contributors": [
-      {
-          "name": "Richard Fox",
-          "email": "fox@xbox.com"
-      },
-      {
-          "name": "Connor Peet",
-          "email": "connor@xbox.com"
-      }
+    {
+      "name": "Richard Fox",
+      "email": "fox@xbox.com"
+    },
+    {
+      "name": "Connor Peet",
+      "email": "connor@xbox.com"
+    }
   ],
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -22,7 +22,7 @@
     "test": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
     "prepublish": "npm run build",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
-    "docs": "typedoc --out docs/ --mode file --excludeNotExported -tsconfig tsconfig.json --target ES6"
+    "docs": "typedoc --exclude \"*.spec.ts\" --out docs/ --mode file --excludeNotExported --excludePrivate --excludeExternals --tsconfig tsconfig.json ./src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -49,21 +49,22 @@
     "@types/ws": "0.0.38",
     "awesome-typescript-loader": "^3.0.4-rc.2",
     "chai": "^3.5.0",
+    "faker": "^4.1.0",
     "fetch-cookie": "^0.4.1",
     "mocha": "^3.0.2",
     "node-fetch": "^1.6.3",
+    "nodemon": "^1.11.0",
     "rimraf": "^2.6.0",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
     "ts-node": "^2.0.0",
     "tslint": "^4.3.1",
     "tslint-microsoft-contrib": "4.0.0",
-    "typedoc": "^0.5.7",
+    "typedoc": "^0.6.0",
     "typescript": "^2.1.6",
     "webpack": "^2.2.1",
     "webpack-bundle-analyzer": "^2.3.0",
-    "ws": "^1.1.1",
-    "faker": "^4.1.0"
+    "ws": "^1.1.1"
   },
   "dependencies": {
     "deepmerge": "^1.3.2"

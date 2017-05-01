@@ -7,12 +7,10 @@ export * from './util';
 export * from './errors';
 
 /**
- * You will likely not need to set this in a browser environment.
- * You will not need to set this if WebSocket is globally available.
- * Set the websocket implementation.
+ * This allows you to specify which WebSocket implementation your
+ * environment is using. You do not need to do this in Browser environments.
  *
- * @example
- * Interactive.setWebsocket = require('ws');
+ * @example `Interactive.setWebsocket(require('ws'));`
  */
 export function setWebSocket(ws: any) {
     InteractiveSocket.WebSocket = ws;
