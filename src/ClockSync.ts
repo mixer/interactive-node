@@ -3,26 +3,44 @@ import { EventEmitter } from 'events';
 import { delay } from './util';
 
 export enum ClockSyncerState {
-    // Indicates that the clock syncer has JUST started up.
+    /**
+     * Indicates that the clock syncer has JUST started up.
+     */
     Started,
-    // Indicates that the clock syncer is actively synchronizing its time with the server.
+    /**
+     * Indicates that the clock syncer is actively synchronizing its time with the server.
+     */
     Synchronizing,
-    // Indicates that the clock syncer is not actively synchronizing.
+    /**
+     * Indicates that the clock syncer is not actively synchronizing.
+     */
     Idle,
-    // Indicates that the clock syncer has been stopped.
+    /**
+     * Indicates that the clock syncer has been stopped.
+     */
     Stopped,
 }
 
 export interface IClockSyncOptions {
-    // How often should we check for a sync status
+    /**
+     * How often should we check for a sync status
+     */
     checkInterval?: number;
-    // When retrieving a time from the server how many samples should we take?
+    /**
+     * When retrieving a time from the server how many samples should we take?
+     */
     sampleSize?: number;
-    // If the clock falls this far out of sync, re-sync from the server
+    /**
+     * If the clock falls this far out of sync, re-sync from the server
+     */
     threshold?: number;
-    // the function to call to check the server time. Should resolve with the unix timestamp of the server.
+    /**
+     * the function to call to check the server time. Should resolve with the unix timestamp of the server.
+     */
     sampleFunc: () => Promise<number>;
-    // How long to wait between sampling during a sync call
+    /**
+     * How long to wait between sampling during a sync call.
+     */
     sampleDelay?: number;
 }
 
@@ -33,7 +51,15 @@ const defaultOptions = {
     sampleDelay: 5000,
 };
 /**
- * Clock sync's goal is to keep a local clock in sync with a server clock.
+ * Clock syncer's goal is to keep a local clock in sync with a server clock.
+ *
+ * It does this by sampling the server time a few times and then monitoring the
+ * local clock for any time disturbances. Should these occur it will re-sample the
+ * server.
+ *
+ * After the sample period it is able to provide a delta value for its difference
+ * from the server clock, which can be used to make time based adjustments to local
+ * time based operations.
  */
 export class ClockSync extends EventEmitter {
     public state = ClockSyncerState.Stopped;
@@ -78,7 +104,7 @@ export class ClockSync extends EventEmitter {
         this.expectedTime = Date.now() + this.options.checkInterval;
     }
 
-    public sync(): Promise<void> {
+    private sync(): Promise<void> {
         this.state = ClockSyncerState.Synchronizing;
         const samplePromises: Promise<number>[] = [];
 
@@ -160,10 +186,10 @@ export class ClockSync extends EventEmitter {
     }
 
     private addDelta(delta: number): number {
-        //Add new one
+        // Add new one
         this.deltas.push(delta);
 
-        //Re-calculate delta with this number
+        // Re-calculate delta with this number
         return this.getDelta(true);
     }
 }
