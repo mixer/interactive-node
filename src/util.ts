@@ -70,8 +70,8 @@ export function delay<T>(delay: number, value?: T): Promise<T> {
  * Imported from frontend2
  *
  * @example
- * // Surpress an error
- * return foo.catch(only(AlreadyExistsErrror));
+ * // Suppress an error
+ * return foo.catch(only(AlreadyExistsError));
  * // Handle a error
  * return foo.catch(only(AdapterResponseError, err => alert(err.toLocaleString())));
  */

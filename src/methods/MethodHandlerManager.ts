@@ -7,10 +7,17 @@ import { onReadyParams } from './methodTypes';
 import { IGroupDataArray, IGroupDeletionParams } from '../state/interfaces/IGroup';
 import { ISceneData, ISceneDataArray, ISceneDeletionParams } from '../state/interfaces/IScene';
 
+/**
+ * A Method handler takes a given method and handles it, optionally replying with a reply instance.
+ */
 export interface IMethodHandler<T> {
     (method: Method<T>) : Reply | void;
 }
 
+/**
+ * A manager class which allows for methods on the interactive protocol to have handlers registered.
+ * When the manager is handed a method, it will look up the relevant method handler and call it.
+ */
 export class MethodHandlerManager {
     private handlers: {[key: string]: IMethodHandler<any>} = {};
 
@@ -36,14 +43,23 @@ export class MethodHandlerManager {
     public addHandler<T extends IInput>(method: 'giveInput', handler: IMethodHandler<IInputEvent<T>>): void;
 
     public addHandler<T>(method: string, handler: IMethodHandler<T>): void;
+    /**
+     * Registers a handler for a method name.
+     */
     public addHandler(method: string, handler: IMethodHandler<any>): void {
         this.handlers[method] = handler;
     }
 
+    /**
+     * Removes a handler for a method.
+     */
     public removeHandler(method: string) {
         delete this.handlers[method];
     }
 
+    /**
+     * Looks up a handler for a given method and calls it.
+     */
     public handle<T>(method: Method<T>): Reply | void {
         if (this.handlers[method.method]) {
             return this.handlers[method.method](method);

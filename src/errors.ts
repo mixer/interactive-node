@@ -62,9 +62,24 @@ export class MessageParseError extends BaseError {
     }
 }
 
+/**
+ * An interactive error, sent in a reply to a method that failed.
+ */
 export interface IInteractiveError {
+    /**
+     * A unique numerical code for this error.
+     *
+     * @example `4019`
+     */
     code: number;
+    /**
+     * A human readable message detailing the cause of this error.
+     */
     message: string;
+    /**
+     * An optional path that points at the element within an interactive session that
+     * caused this error to occur.
+     */
     path?: string;
 }
 
