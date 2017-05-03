@@ -9,7 +9,7 @@ import {
     setWebSocket,
 } from '../lib';
 
-if (process.argv.length < 5) {
+if (process.argv.length < 4) {
     console.log('Usage gameClient.exe <token> <versionId>');
     process.exit();
 }
