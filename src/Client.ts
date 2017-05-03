@@ -21,23 +21,41 @@ import {
     CompressionScheme,
     InteractiveSocket,
     ISocketOptions,
-    State as InteractiveSocketState,
+    SocketState as InteractiveSocketState,
 } from './wire/Socket';
 
 export enum ClientType {
+    /**
+     * A Participant type is used when the client is participating in the session.
+     */
     Participant,
+    /**
+     * A GameClient type is used when the client is running the interactive session.
+     */
     GameClient,
 }
 
 export class Client extends EventEmitter implements IClient {
+    /**
+     * The type this client instance is running as.
+     */
     public clientType: ClientType;
 
+    /**
+     * The client's state store.
+     */
     public state: IState;
 
+    /**
+     * The client's socket.
+     */
     protected socket: InteractiveSocket;
 
     private methodHandler = new MethodHandlerManager();
 
+    /**
+     * Constructs and sets up a client of the given type.
+     */
     constructor(clientType: ClientType) {
         super();
         this.clientType = clientType;
@@ -48,10 +66,17 @@ export class Client extends EventEmitter implements IClient {
         });
     }
 
+    /**
+     * Processes a method through the client's method handler.
+     */
     public processMethod(method: Method<any>) {
         return this.methodHandler.handle(method);
     }
 
+    /**
+     * Creates a socket on the client using the specified options.
+     * Use [client.open]{@link Client.open} to open the created socket.
+     */
     private createSocket(options: ISocketOptions): void {
         if (this.socket) {
             // GC the old socket
@@ -97,7 +122,7 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
-     * Boots the connection to interactive
+     * Opens the connection to interactive.
      */
     public open(options: ISocketOptions): Promise<this> {
         this.state.reset();
@@ -118,8 +143,9 @@ export class Client extends EventEmitter implements IClient {
 
     //TODO: Actually implement compression
     /**
-     * setCompression is a negotiation process between the server and our client,
-     * We send the compression we support, and it sends back the agreed compression scheme
+     * Begins a negotiation process between the server and this client,
+     * the compression preferences of the client are sent to the server and then
+     * the server responds with the chosen compression scheme.
      */
     public setCompression(preferences: CompressionScheme[]): Promise<void> {
         return this.socket.execute('setCompression', {
@@ -129,35 +155,82 @@ export class Client extends EventEmitter implements IClient {
         });
     }
 
+    /**
+     * Sends a given reply to the server.
+     */
     public reply(reply: Reply) {
         return this.socket.reply(reply);
     }
 
+    /**
+     * Retrieves the scenes stored on the interactive server.
+     */
     public getScenes(): Promise<ISceneDataArray> {
         return this.execute('getScenes', null, false);
     }
 
+    /**
+     * Retrieves the scenes on the server and hydrates the state store with them.
+     */
     public synchronizeScenes(): Promise<IScene[]> {
         return this.getScenes()
             .then(res => this.state.synchronizeScenes(res));
     }
 
+    /**
+     * Gets the time from the server as a unix timestamp in UTC.
+     */
     public getTime(): Promise<number> {
         return this.execute('getTime', null, false)
             .then(res => {
                 return res.time;
             });
     }
-
+    /**
+     * `createControls` will instruct the server to create your provided controls in the active,
+     * project. Participants will see the new controls as they are added.
+     */
     public execute(method: 'createControls', params: ISceneData, discard: false ): Promise<ISceneData>;
+    /**
+     * `ready` allows you to indicate to the server the ready state of your GameClient.
+     * By specifying `isReady` false you can pause participant interaction whilst you
+     * setup scenes and controls.
+     */
     public execute(method: 'ready', params: onReadyParams, discard: false ): Promise<void>;
+    /**
+     * `capture` is used to capture a spark transaction that you have received from the server.
+     */
     public execute(method: 'capture', params: ITransactionCapture, discard: false ): Promise<void>;
+    /**
+     * `getTime` retrieves the server's unix timestamp. You can use this to synchronize your clock with
+     * the servers. See [ClockSync]{@link ClockSync} for a Clock Synchronizer.
+     */
     public execute(method: 'getTime', params: null, discard: false ): Promise<{time: number}>;
+    /**
+     * `getScenes` retrieves scenes stored ont he server. If you've used the studio to create your project,
+     * then you can use this to retrieve the scenes and controls created there.
+     */
     public execute(method: 'getScenes', params: null, discard: false ): Promise<ISceneDataArray>;
+    /**
+     * `giveInput` is used to send participant interactive events to the server.
+     * These events will be received by the corresponding GameClient.
+     */
     public execute<K extends IInput>(method: 'giveInput', params: K, discard: false): Promise<void>;
+    /**
+     * `updateControls` is used to update control properties within a scene, such as disabling a control.
+     */
     public execute(method: 'updateControls', params: ISceneDataArray, discard: false): Promise<void>;
+    /**
+     * `deleteControls` will delete the specified controls from the server. Participants will see these controls
+     * vanish and will not be able to interact with them.
+     */
     public execute(method: 'deleteControls', params: ISceneControlDeletion, discard: false): Promise<void>;
-    public execute<T>(method: string, params: T, discard: boolean): Promise<any>
+    public execute<T>(method: string, params: T, discard: boolean): Promise<any>;
+    /**
+     * Execute will construct and send a method to the server for execution.
+     * It will resolve with the server's reply. It is recommended that you use an
+     * existing Client method if available instead of manually calling `execute`.
+     */
     public execute(method: string, params: any, discard: boolean): Promise<any> {
         return this.socket.execute(method, params, discard);
     }

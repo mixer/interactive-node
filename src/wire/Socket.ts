@@ -59,20 +59,32 @@ export interface ICloseEvent {
 }
 
 /**
- * State is used to record the status of the websocket connection.
+ * SocketState is used to record the status of the websocket connection.
  */
-export enum State {
-    // a connection attempt has not been made yet
+export enum SocketState {
+    /**
+     * A connection attempt has not been made yet.
+     */
     Idle = 1,
-    // a connection attempt is currently being made
+    /**
+     * A connection attempt is currently being made.
+     */
     Connecting,
-    // the socket is connection and data may be sent
+    /**
+     * The socket is connection and data may be sent.
+     */
     Connected,
-    // the socket is gracefully closing; after this it will become Idle
+    /**
+     * The socket is gracefully closing; after this it will become Idle.
+     */
     Closing,
-    // the socket is reconnecting after closing unexpectedly
+    /**
+     * The socket is reconnecting after closing unexpectedly.
+     */
     Reconnecting,
-    // connect was called whilst the old socket was still open
+    /**
+     * Connect was called whilst the old socket was still open.
+     */
     Refreshing,
 }
 
@@ -98,7 +110,7 @@ export class InteractiveSocket extends EventEmitter {
 
     private reconnectTimeout: NodeJS.Timer;
     private options: ISocketOptions;
-    private state: State;
+    private state: SocketState;
     private socket: any;
     private queue: Set<Packet> = new Set<Packet>();
 
@@ -118,7 +130,7 @@ export class InteractiveSocket extends EventEmitter {
 
         this.on('open', () => {
             this.options.reconnectionPolicy.reset();
-            this.state = State.Connected;
+            this.state = SocketState.Connected;
             this.queue.forEach(data => this.send(data));
         });
 
@@ -127,24 +139,24 @@ export class InteractiveSocket extends EventEmitter {
             // We raise it as an error and refuse to connect.
             if (recoverableCloseCodes.indexOf(evt.code) === -1) {
                 const err = InteractiveError.fromSocketMessage({code: evt.code, message: evt.reason});
-                this.state = State.Closing;
+                this.state = SocketState.Closing;
                 this.emit('error', err);
                 // Refuse to continue, these errors usually mean something is very wrong with our connection.
                 return;
             }
 
-            if (this.state === State.Refreshing) {
-                this.state = State.Idle;
+            if (this.state === SocketState.Refreshing) {
+                this.state = SocketState.Idle;
                 this.connect();
                 return;
             }
 
-            if (this.state === State.Closing || !this.options.autoReconnect) {
-                this.state = State.Idle;
+            if (this.state === SocketState.Closing || !this.options.autoReconnect) {
+                this.state = SocketState.Idle;
                 return;
             }
 
-            this.state = State.Reconnecting;
+            this.state = SocketState.Reconnecting;
 
             this.reconnectTimeout = setTimeout(
                 () => {
@@ -172,8 +184,8 @@ export class InteractiveSocket extends EventEmitter {
      * connect when creating a new instance.
      */
     public connect(): this {
-        if (this.state === State.Closing) {
-            this.state = State.Refreshing;
+        if (this.state === SocketState.Closing) {
+            this.state = SocketState.Refreshing;
             return this;
         }
         const defaultHeaders = {
@@ -201,14 +213,14 @@ export class InteractiveSocket extends EventEmitter {
 
         this.socket = new InteractiveSocket.WebSocket(Url.format(url), [], extras);
 
-        this.state = State.Connecting;
+        this.state = SocketState.Connecting;
 
         this.socket.addEventListener('close', (evt: ICloseEvent) => this.emit('close', evt));
         this.socket.addEventListener('open', () => this.emit('open'));
         this.socket.addEventListener('message', (evt: any) => this.emit('message', evt.data));
 
         this.socket.addEventListener('error', (err: any) => {
-            if (this.state === State.Closing) {
+            if (this.state === SocketState.Closing) {
                 // Ignore errors on a closing socket.
                 return;
             }
@@ -223,7 +235,7 @@ export class InteractiveSocket extends EventEmitter {
      * Returns the current state of the socket.
      * @return {State}
      */
-    public getState(): State {
+    public getState(): SocketState {
         return this.state;
     }
 
@@ -231,13 +243,13 @@ export class InteractiveSocket extends EventEmitter {
      * Close gracefully shuts down the websocket.
      */
     public close() {
-        if (this.state === State.Reconnecting) {
+        if (this.state === SocketState.Reconnecting) {
             clearTimeout(this.reconnectTimeout);
-            this.state = State.Idle;
+            this.state = SocketState.Idle;
             return;
         }
 
-        this.state = State.Closing;
+        this.state = SocketState.Closing;
         this.socket.close(1000, 'Closed normally.');
         this.queue.forEach(packet => packet.cancel());
         this.queue.clear();
@@ -265,7 +277,7 @@ export class InteractiveSocket extends EventEmitter {
 
         // If the socket has not said hello, queue the request and return
         // the promise eventually emitted when it is sent.
-        if (this.state !== State.Connected) {
+        if (this.state !== SocketState.Connected) {
             return Promise.race([
                 resolveOn(packet, 'send'),
                 resolveOn(packet, 'cancel')

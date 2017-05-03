@@ -8,7 +8,9 @@ import { IControlData } from './interfaces/controls';
 import { IClient } from '../IClient';
 import { ISceneData } from './interfaces/IScene';
 import { Scene } from './Scene';
-
+/**
+ * The StateFactory creates the apropriate instance of a class for a given socket message.
+ */
 export class StateFactory {
     private client: IClient;
 
