@@ -1,9 +1,14 @@
-# Features
+# Planned Features
 - [ ] GZIP Compression
+- [ ] Endpoint discovery
+- [ ] Complete group management
+- [ ] Dynamic scene creation
+- [ ] Server side throttle settings
 
-# Methods
+# Protocol Support
+A list of all protocol level methods and this client's support of them. Used to track protocol level support.
+## Methods
 ### GameClient Methods
-- [X] recieveInput(giveInput from the mediator)
 - [X] ready
 - [ ] getMemoryStats
 
@@ -19,8 +24,8 @@
 - [ ] updateScenes
 
 - [X] createControls
-- [ ] deleteControls
-- [ ] updateControls
+- [X] deleteControls
+- [X] updateControls
 
 - [X] capture
 
@@ -45,3 +50,7 @@
 - [X] onControlCreate
 - [X] onControlDelete
 - [X] onControlUpdate
+- [X] onGroupCreate
+- [X] onGroupUpdate
+- [X] onGroupDelete
+
