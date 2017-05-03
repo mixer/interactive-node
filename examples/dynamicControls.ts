@@ -13,7 +13,7 @@ import {
 } from '../lib';
 
 if (process.argv.length < 5) {
-    console.log('Usage gameClient.exe <token> <url> <experienceId>');
+    console.log('Usage gameClient.exe <token> <versionId>');
     process.exit();
 }
 // We need to tell the interactive client what type of websocket we are using.
@@ -29,13 +29,6 @@ client.on('open', () => console.log('Connected to interactive'));
 // client.on('message', (err: any) => console.log('<<<', err));
 // client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
-
-// Now we open the connection passing in our authentication details and an experienceId.
-client.open({
-    authToken: process.argv[2],
-    url: process.argv[3] || 'wss://interactive1-dal.beam.pro',
-    versionId: parseInt(process.argv[4], 10),
-});
 
 /**
  * This makes button objects, it will make the amount of buttons we tell it to
@@ -93,13 +86,20 @@ function loop() {
         .then(() => loop());
 }
 
-/* Pull in the scenes stored on the server
- * then call ready so our controls show up.
- * then call loop() to begin our loop.
-*/
-client.synchronizeScenes()
-    .then(() => client.ready(true))
-    .then(() => loop());
+// Now we open the connection passing in our authentication details and an experienceId.
+client.open({
+    authToken: process.argv[2],
+    versionId: parseInt(process.argv[3], 10),
+})
+.then(() => {
+    /* Pull in the scenes stored on the server
+    * then call ready so our controls show up.
+    * then call loop() to begin our loop.
+    */
+    return client.synchronizeScenes();
+})
+.then(() => client.ready(true))
+.then(() => loop());
 
 client.state.on('participantJoin', (participant: IParticipant ) => {
     console.log(`${participant.username}(${participant.sessionID}) Joined`);
