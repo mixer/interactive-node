@@ -1,6 +1,8 @@
 # Beam Interactive Node 2
 
-A TypeScript, NodeJS and Browser compatible client for Beam.pro's interactive 2 Protocol.
+A TypeScript, NodeJS and Browser compatible client for [Beam.pro's interactive 2 Protocol](https://dev.beam.pro/reference/interactive/protocol.pdf). 
+
+For an introduction to interactive2 checkout the [reference docs](https://dev.beam.pro/reference/interactive/index.html) on the developers site.
 
 ## Installation
 You can use npm(recommended) or download a zip from the [releases page](https://github.com/WatchBeam/beam-interactive-node2/releases).
@@ -16,6 +18,12 @@ You can use npm(recommended) or download a zip from the [releases page](https://
 npm i --save beam-interactive-node2
 ```
 ## Usage
+
+### Authentication
+[OAuth 2.0](https://tools.ietf.org/html/rfc6749) is used for authentication. Valid bearer tokens can be passed in the [Client.open](https://watchbeam.github.io/beam-interactive-node2/classes/client.html#open) method.
+
+For more information about Beam's OAuth visit the [OAuth reference page](https://dev.beam.pro/reference/oauth/index.html) on our developer site.
+
 ### Browser
 
 #### index.html
