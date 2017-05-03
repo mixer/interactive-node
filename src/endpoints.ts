@@ -17,10 +17,7 @@ function makeRequest<T>(url: string): Promise<T> {
         const req = https.get(url, res => {
             let body = '';
             res.on('data', str => body = body + str.toString());
-            res.on('end', () => {
-                console.log(body);
-                resolve(JSON.parse(body))
-            });
+            res.on('end', () => resolve(JSON.parse(body)));
         });
         req.on('error', err => reject(err));
         req.on('timeout', () => reject(new TimeoutError('Request timed out')));
