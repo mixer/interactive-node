@@ -84,6 +84,10 @@ Checkout our [examples](examples/) to get up to speed quickly!
 * [dynamicControls](examples/dynamicControls.ts) - Connects and then creates and destroys 5 buttons with random text.
 * [joystick](examples/joystick.ts) - Connects and creates a joystick, logs participant coordinate values.
 
+## Documentation
+
+Checkout our reference docs [here](https://watchbeam.github.io/beam-interactive-node2/).
+
 ## Development
 
 To get a development environment setup:
