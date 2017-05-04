@@ -1,4 +1,5 @@
 # Beam Interactive Node 2
+[![Build Status](https://travis-ci.org/WatchBeam/beam-interactive-node2.svg?branch=master)](https://travis-ci.org/WatchBeam/beam-interactive-node2)
 
 A TypeScript, NodeJS and Browser compatible client for [Beam.pro's interactive 2 Protocol](https://dev.beam.pro/reference/interactive/protocol.pdf). 
 
