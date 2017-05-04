@@ -86,13 +86,11 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
 
         packet[attribute] = value;
 
+        console.log(this.scene.sceneID);
+
         return this.client.updateControls({
-            scenes: [
-                {
-                    sceneID: this.scene.sceneID,
-                    controls: [packet],
-                },
-            ],
+            sceneID: this.scene.sceneID,
+            controls: [packet],
         });
     }
 

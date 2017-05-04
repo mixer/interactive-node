@@ -217,7 +217,7 @@ export class Client extends EventEmitter implements IClient {
     /**
      * `updateControls` is used to update control properties within a scene, such as disabling a control.
      */
-    public execute(method: 'updateControls', params: ISceneDataArray, discard: false): Promise<void>;
+    public execute(method: 'updateControls', params: ISceneData, discard: false): Promise<void>;
     /**
      * `deleteControls` will delete the specified controls from the server. Participants will see these controls
      * vanish and will not be able to interact with them.
@@ -237,7 +237,7 @@ export class Client extends EventEmitter implements IClient {
         throw new PermissionDeniedError('createControls', 'Participant');
     }
 
-    public updateControls(_: ISceneDataArray): Promise<void> {
+    public updateControls(_: ISceneData): Promise<void> {
         throw new PermissionDeniedError('updateControls', 'Participant');
     }
 
