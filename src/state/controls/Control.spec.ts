@@ -8,7 +8,6 @@ import { Button } from './';
 // tslint:disable-next-line:no-require-imports no-var-requires
 use(require('sinon-chai'));
 
-
 const buttonData = {
     controlID: '0',
     text: 'foo',
@@ -18,6 +17,7 @@ describe('control', () => {
     let control: Button;
     let mockClient: Client;
     let scene;
+
     before(() => {
         mockClient = new Client(ClientType.GameClient);
     });
@@ -28,6 +28,7 @@ describe('control', () => {
         control.setScene(scene);
         control.setClient(mockClient);
     });
+
     it('lets you update attributes', () => {
         const buttonDiff = {
             text: 'bar',
@@ -40,5 +41,6 @@ describe('control', () => {
             sceneID: 'default',
             controls: [updatedButton],
         });
+        stub.restore();
     });
 });
