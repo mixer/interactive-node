@@ -50,4 +50,4 @@ wallaby.js
 /dist
 
 # Prefer to compile these
-examples/*.js
+examples/**/*.js
