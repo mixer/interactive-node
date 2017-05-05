@@ -1,3 +1,4 @@
+import { ETag } from './controls';
 import { IMeta } from './controls/IMeta';
 
 export interface IParticipantArray {
@@ -41,4 +42,8 @@ export interface IParticipant {
      */
     groupID?: string;
     meta?: IMeta;
+    /**
+     * The participant's ETag.
+     */
+    etag?: ETag;
 }
