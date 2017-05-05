@@ -19,7 +19,8 @@
     "build:webpack": "rimraf dist && webpack && webpack --config webpack.config.min.js",
     "build:examples": "rimraf examples/*.js && cd examples && tsc",
     "build": "npm run build:ts && npm run build:webpack && npm run build:examples",
-    "test": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
+    "test": "npm run lint && npm run test:unit",
+    "test:unit": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
     "prepublish": "npm run build",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
     "docs": "typedoc --exclude \"*.spec.ts\" --out docs/ --mode file --excludeNotExported --excludePrivate --excludeExternals --tsconfig tsconfig.json ./src/index.ts"

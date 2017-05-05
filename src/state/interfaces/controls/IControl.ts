@@ -9,7 +9,6 @@ import { IMeta } from './IMeta';
 export type ControlKind = 'button' | 'joystick';
 export type GridSize = 'large' | 'medium' | 'small';
 
-
 /**
  * Represents the raw data a control has when transmitted
  * and received over a socket connection.
@@ -71,7 +70,6 @@ export interface IControl extends IControlData, EventEmitter {
      * Merges in updated control data from the mediator
      */
     update(controlData: IControlData): void;
-
 
     /**
      * Fired when the control is deleted.

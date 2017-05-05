@@ -18,7 +18,7 @@ export interface IClient extends EventEmitter {
     ready(isReady: boolean): Promise<void>;
 
     createControls(controls: ISceneData): Promise<IControl[]>;
-    updateControls(controls: ISceneDataArray): Promise<void>;
+    updateControls(controls: ISceneData): Promise<void>;
     deleteControls(controls: ISceneControlDeletion): Promise<void>;
     updateScenes(scenes: ISceneDataArray): Promise<void>;
     giveInput<T extends IInput>(_: T): Promise<void>;

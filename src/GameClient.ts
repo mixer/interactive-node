@@ -64,7 +64,7 @@ export class GameClient extends Client {
      * Instructs the server to update controls within a scene with your specified parameters.
      * Participants on the scene will see the controls update automatically.
      */
-    public updateControls(params: ISceneDataArray): Promise<void> {
+    public updateControls(params: ISceneData): Promise<void> {
         return this.execute('updateControls', params, false);
     }
 
