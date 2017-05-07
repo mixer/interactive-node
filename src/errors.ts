@@ -63,6 +63,17 @@ export class MessageParseError extends BaseError {
 }
 
 /**
+ * NoInteractiveServersAvailable indicates that a request to retrieve
+ * available interactive servers failed and that none can be located.
+ */
+export class NoInteractiveServersAvailable extends BaseError {
+    constructor(message: string) {
+        super(message);
+        NoInteractiveServersAvailable.setProto(this);
+    }
+}
+
+/**
  * An interactive error, sent in a reply to a method that failed.
  */
 export interface IInteractiveError {
