@@ -100,7 +100,7 @@ Checkout our reference docs [here](https://watchbeam.github.io/beam-interactive-
 ## Development
 
 To get a development environment setup:
-1. Clone this repository
+1. [Clone this repository](https://help.github.com/articles/cloning-a-repository/)
 1. `npm install`
 1. `npm run build`
 
