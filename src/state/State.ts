@@ -324,7 +324,10 @@ export class State extends EventEmitter implements IState {
     public getControl(id: string): IControl {
         let result: IControl;
         this.scenes.forEach(scene => {
-            result = scene.getControl(id);
+            const found = scene.getControl(id);
+            if (found) {
+                result = found;
+            }
         });
         return result;
     }

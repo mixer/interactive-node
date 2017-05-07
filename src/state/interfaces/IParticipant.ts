@@ -1,3 +1,4 @@
+import { ETag } from './controls';
 import { IMeta } from './controls/IMeta';
 
 export interface IParticipantArray {
@@ -35,10 +36,14 @@ export interface IParticipant {
     /**
      * The disabled state of this participant, when disabled they cannot provide input
      */
-    disable?: boolean;
+    disabled?: boolean;
     /**
      * The ID of the Group this user belongs to
      */
     groupID?: string;
     meta?: IMeta;
+    /**
+     * The participant's ETag.
+     */
+    etag?: ETag;
 }
