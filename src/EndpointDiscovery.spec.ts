@@ -5,7 +5,9 @@ import * as sinon from 'sinon';
 import chaip = require('chai-as-promised');
 use(<any>chaip);
 
-import * as endpoints from './endpoints';
+import { EndpointDiscovery } from './EndpointDiscovery';
+import { NoInteractiveServersAvailable } from './errors';
+import { Requester } from './Requester';
 
 const servers = [
     {
@@ -20,17 +22,21 @@ const servers = [
 ];
 
 describe('endpoint discovery', () => {
+    const requester = new Requester();
     let stub: sinon.SinonStub;
+    const discovery = new EndpointDiscovery(requester);
     beforeEach(() => {
-        stub = sinon.stub(endpoints, 'makeRequest');
+        stub = sinon.stub(requester, 'request');
     });
     afterEach(() => {
         stub.restore();
     });
     it('resolves with a list of endpoints', () => {
         stub.resolves(servers);
-        expect(endpoints.getInteractiveEndpoints()).to.eventually.equal(servers);
+        expect(discovery.retrieveEndpoints()).to.eventually.equal(servers);
     });
-
-
+    it('rejects with a NoInteractiveServersAvailable if the response contains no servers', () => {
+        stub.resolves([]);
+        expect(discovery.retrieveEndpoints()).to.be.rejectedWith(NoInteractiveServersAvailable);
+    });
 });

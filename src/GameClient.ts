@@ -1,5 +1,6 @@
 import { Client, ClientType } from './Client';
-import { getInteractiveEndpoints } from './endpoints';
+import { EndpointDiscovery } from './EndpointDiscovery';
+import { Requester } from './Requester';
 import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/interfaces';
 import { IControl } from './state/interfaces/controls/IControl';
 
@@ -20,6 +21,7 @@ export interface IGameClientOptions {
 }
 
 export class GameClient extends Client {
+    private discovery  = new EndpointDiscovery(new Requester());
     constructor() {
         super(ClientType.GameClient);
     }
@@ -27,7 +29,8 @@ export class GameClient extends Client {
      * Opens a connection to the interactive service using the provided options.
      */
     public open(options: IGameClientOptions): Promise<this> {
-        return getInteractiveEndpoints()
+        return this.discovery
+        .retrieveEndpoints()
         .then(endpoints => {
             return super.open({
                 authToken: options.authToken,
