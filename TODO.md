@@ -1,6 +1,6 @@
 # Planned Features
 - [ ] GZIP Compression
-- [ ] Endpoint discovery
+- [X] Endpoint discovery
 - [ ] Complete group management
 - [ ] Dynamic scene creation
 - [ ] Server side throttle settings
