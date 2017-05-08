@@ -1,3 +1,4 @@
+import { IncomingMessage } from 'http';
 export class BaseError extends Error {
     constructor(public readonly message: string) {
         super();
@@ -31,6 +32,24 @@ export class CancelledError extends BaseError {
 }
 
 /**
+ * HTTPError is used when a request does not respond successfully.
+ */
+export class HTTPError extends BaseError {
+    constructor(
+        public code: number,
+        message: string,
+        private res: IncomingMessage,
+    ) {
+        super(message);
+        HTTPError.setProto(this);
+    }
+
+    public cause(): IncomingMessage {
+        return this.res;
+    }
+}
+
+/**
  * This error is thrown when you try to perform an action which is not supported by an
  * instantiated [Client]{@link Client}.
  */
@@ -59,6 +78,17 @@ export class MessageParseError extends BaseError {
     constructor(message: string) {
         super(message);
         MessageParseError.setProto(this);
+    }
+}
+
+/**
+ * NoInteractiveServersAvailable indicates that a request to retrieve
+ * available interactive servers failed and that none can be located.
+ */
+export class NoInteractiveServersAvailable extends BaseError {
+    constructor(message: string) {
+        super(message);
+        NoInteractiveServersAvailable.setProto(this);
     }
 }
 

@@ -9,8 +9,8 @@ import {
     setWebSocket,
 } from '../lib';
 
-if (process.argv.length < 5) {
-    console.log('Usage gameClient.exe <token> <url> <experienceId>');
+if (process.argv.length < 4) {
+    console.log('Usage gameClient.exe <token> <versionId>');
     process.exit();
 }
 // We need to tell the interactive client what type of websocket we are using.
@@ -26,13 +26,6 @@ client.on('open', () => console.log('Connected to interactive'));
 client.on('message', (err: any) => console.log('<<<', err));
 client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
-
-// Now we open the connection passing in our authentication details and an experienceId.
-client.open({
-    authToken: process.argv[2],
-    url: process.argv[3],
-    versionId: parseInt(process.argv[4], 10),
-});
 
 /**
  * This makes button objects, it will make the amount of buttons we tell it to
@@ -75,12 +68,17 @@ function makeControls(amount: number): IControlData[] {
     }
     return controls;
 }
-
-// Now we can create the controls, We need to add them to a scene though.
-// Every Interactive Experience has a "default" scene so we'll add them there there.
-client.createControls({
-    sceneID: 'default',
-    controls: makeControls(5),
+// Now we open the connection passing in our authentication details and an experienceId.
+client.open({
+    authToken: process.argv[2],
+    versionId: parseInt(process.argv[3], 10),
+}).then(() => {
+    // Now we can create the controls, We need to add them to a scene though.
+    // Every Interactive Experience has a "default" scene so we'll add them there there.
+    return client.createControls({
+        sceneID: 'default',
+        controls: makeControls(5),
+    });
 }).then(controls => {
 
     // Now that the controls are created we can add some event listeners to them!

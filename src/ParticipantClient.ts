@@ -24,8 +24,8 @@ export class ParticipantClient extends Client {
         super(ClientType.Participant);
     }
 
-    public open(options: IParticipantOptions): this {
-        super.open({
+    public open(options: IParticipantOptions): Promise<this> {
+        return super.open({
             jwt: options.jwt,
             url: options.url,
             queryParams: Object.assign(
@@ -35,7 +35,6 @@ export class ParticipantClient extends Client {
                 options.extraParams,
             ),
         });
-        return this;
     }
     /**
      * Sends an input event to the Interactive Server. This should only be called

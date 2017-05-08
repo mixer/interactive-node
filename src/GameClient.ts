@@ -1,4 +1,6 @@
 import { Client, ClientType } from './Client';
+import { EndpointDiscovery } from './EndpointDiscovery';
+import { Requester } from './Requester';
 import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/interfaces';
 import { IControl } from './state/interfaces/controls/IControl';
 
@@ -15,25 +17,29 @@ export interface IGameClientOptions {
     /**
      * An interactive server url, these should be retrieved from https://beam.pro/api/v1/interactive/hosts.
      */
-    url: string;
+    url?: string;
 }
 
 export class GameClient extends Client {
+    private discovery = new EndpointDiscovery(new Requester());
     constructor() {
         super(ClientType.GameClient);
     }
     /**
      * Opens a connection to the interactive service using the provided options.
      */
-    public open(options: IGameClientOptions): this {
-        super.open({
-            authToken: options.authToken,
-            url: options.url,
-            extraHeaders: {
-                'X-Interactive-Version': options.versionId,
-            },
+    public open(options: IGameClientOptions): Promise<this> {
+        return this.discovery
+        .retrieveEndpoints()
+        .then(endpoints => {
+            return super.open({
+                authToken: options.authToken,
+                url: endpoints[0].address,
+                extraHeaders: {
+                    'X-Interactive-Version': options.versionId,
+                },
+            });
         });
-        return this;
     }
 
     /**

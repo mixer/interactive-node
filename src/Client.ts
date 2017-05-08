@@ -1,9 +1,8 @@
 import { EventEmitter } from 'events';
-import { MethodHandlerManager } from './methods/MethodHandlerManager';
-import { IState } from './state/IState';
 
 import { PermissionDeniedError } from './errors';
 import { IClient } from './IClient';
+import { MethodHandlerManager } from './methods/MethodHandlerManager';
 import { onReadyParams } from './methods/methodTypes';
 import {
     IControl,
@@ -14,7 +13,9 @@ import {
     ISceneDataArray,
     ITransactionCapture,
 } from './state/interfaces';
+import { IState } from './state/IState';
 import { State } from './state/State';
+import { resolveOn } from './util';
 import { Method, Reply } from './wire/packets';
 import {
     CompressionScheme,
@@ -123,11 +124,12 @@ export class Client extends EventEmitter implements IClient {
     /**
      * Opens the connection to interactive.
      */
-    public open(options: ISocketOptions): this {
+    public open(options: ISocketOptions): Promise<this> {
         this.state.reset();
         this.createSocket(options);
         this.socket.connect();
-        return this;
+        return resolveOn(this, 'open')
+        .then(() => this);
     }
 
     /**
