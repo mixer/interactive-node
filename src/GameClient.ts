@@ -21,7 +21,7 @@ export interface IGameClientOptions {
 }
 
 export class GameClient extends Client {
-    private discovery  = new EndpointDiscovery(new Requester());
+    private discovery = new EndpointDiscovery(new Requester());
     constructor() {
         super(ClientType.GameClient);
     }
