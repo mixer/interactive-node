@@ -1,7 +1,7 @@
 # Beam Interactive Node 2
 [![Build Status](https://travis-ci.org/WatchBeam/beam-interactive-node2.svg?branch=master)](https://travis-ci.org/WatchBeam/beam-interactive-node2)
 
-A TypeScript, NodeJS and Browser compatible client for [Beam.pro's interactive 2 Protocol](https://dev.beam.pro/reference/interactive/protocol.pdf). 
+A TypeScript, Node.js and Browser(JavaScript) compatible client for [Beam.pro's interactive 2 Protocol](https://dev.beam.pro/reference/interactive/protocol.pdf). 
 
 For an introduction to interactive2 checkout the [reference docs](https://dev.beam.pro/reference/interactive/index.html) on the developers site.
 
@@ -92,6 +92,8 @@ Checkout our [examples](examples/) to get up to speed quickly!
 * [basic](examples/basic.ts) - Connects and sets up 5 buttons, when they are clicked the participant is charged 1 spark.
 * [dynamicControls](examples/dynamicControls.ts) - Connects and then creates and destroys 5 buttons with random text.
 * [joystick](examples/joystick.ts) - Connects and creates a joystick, logs participant coordinate values.
+
+Using Node.js? Clone this repo and run `npm run build` and the examples will be converted to JavaScript for you!
 
 ## Documentation
 
