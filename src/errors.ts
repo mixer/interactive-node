@@ -1,3 +1,4 @@
+import { IncomingMessage } from 'http';
 export class BaseError extends Error {
     constructor(public readonly message: string) {
         super();
@@ -34,9 +35,17 @@ export class CancelledError extends BaseError {
  * HTTPError is used when a request does not respond successfully.
  */
 export class HTTPError extends BaseError {
-    constructor(public code: number, message: string) {
+    constructor(
+        public code: number,
+        message: string,
+        private res: IncomingMessage,
+    ) {
         super(message);
         HTTPError.setProto(this);
+    }
+
+    public cause(): IncomingMessage {
+        return this.res;
     }
 }
 

@@ -10,7 +10,7 @@ export class Requester implements IRequester {
         return new Promise((resolve, reject) => {
             const req = https.get(url, res => {
                 if (res.statusCode !== 200) {
-                    reject(new HTTPError(res.statusCode, res.statusMessage));
+                    reject(new HTTPError(res.statusCode, res.statusMessage, res));
                 }
                 let body = '';
                 res.on('data', str => body = body + str.toString());
