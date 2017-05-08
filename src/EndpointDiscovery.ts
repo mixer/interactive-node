@@ -16,7 +16,7 @@ export class EndpointDiscovery {
      * fail.
      */
     public retrieveEndpoints(): Promise<IInteractiveEndpoint[]> {
-        return this.requester.request<IInteractiveEndpoint[]>(endpoint)
+        return this.requester.request(endpoint)
         .then(res => {
             if (res.length > 0) {
                 return res;

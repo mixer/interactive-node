@@ -31,6 +31,16 @@ export class CancelledError extends BaseError {
 }
 
 /**
+ * HTTPError is used when a request does not respond successfully.
+ */
+export class HTTPError extends BaseError {
+    constructor(public code: number, message: string) {
+        super(message);
+        HTTPError.setProto(this);
+    }
+}
+
+/**
  * This error is thrown when you try to perform an action which is not supported by an
  * instantiated [Client]{@link Client}.
  */

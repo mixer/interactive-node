@@ -1,14 +1,17 @@
 import * as https from 'https';
-import { TimeoutError } from './errors';
+import { HTTPError, TimeoutError } from './errors';
 
 export interface IRequester {
-    request<T>(url: string ): Promise<T>;
+    request(url: string): Promise<any>;
 }
 
 export class Requester implements IRequester {
-    public request<T>(url: string): Promise<T> {
+    public request(url: string): Promise<any> {
         return new Promise((resolve, reject) => {
             const req = https.get(url, res => {
+                if (res.statusCode !== 200) {
+                    reject(new HTTPError(res.statusCode, res.statusMessage));
+                }
                 let body = '';
                 res.on('data', str => body = body + str.toString());
                 res.on('end', () => resolve(JSON.parse(body)));
