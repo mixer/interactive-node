@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>@mcph/beam-interactive-node2</title>
+	<title>beam-interactive-node2</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">@mcph/beam-interactive-node2</a>
+					<a href="index.html" class="title">beam-interactive-node2</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,7 +52,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> @mcph/beam-interactive-node2</h1>
+			<h1> beam-interactive-node2</h1>
 		</div>
 	</div>
 </header>
@@ -61,7 +61,9 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h1 id="beam-interactive-node-2">Beam Interactive Node 2</h1>
-				<p>A TypeScript, NodeJS and Browser compatible client for Beam.pro&#39;s interactive 2 Protocol.</p>
+				<p><a href="https://travis-ci.org/WatchBeam/beam-interactive-node2"><img src="https://travis-ci.org/WatchBeam/beam-interactive-node2.svg?branch=master" alt="Build Status"></a></p>
+				<p>A TypeScript, NodeJS and Browser compatible client for <a href="https://dev.beam.pro/reference/interactive/protocol.pdf">Beam.pro&#39;s interactive 2 Protocol</a>. </p>
+				<p>For an introduction to interactive2 checkout the <a href="https://dev.beam.pro/reference/interactive/index.html">reference docs</a> on the developers site.</p>
 				<h2 id="installation">Installation</h2>
 				<p>You can use npm(recommended) or download a zip from the <a href="https://github.com/WatchBeam/beam-interactive-node2/releases">releases page</a>.</p>
 				<h3 id="browser">Browser</h3>
@@ -70,6 +72,9 @@
 				<h3 id="node">Node</h3>
 				<pre><code>npm <span class="hljs-selector-tag">i</span> --save beam-interactive-node2
 </code></pre><h2 id="usage">Usage</h2>
+				<h3 id="authentication">Authentication</h3>
+				<p><a href="https://tools.ietf.org/html/rfc6749">OAuth 2.0</a> is used for authentication. Valid bearer tokens can be passed in the <a href="https://watchbeam.github.io/beam-interactive-node2/classes/client.html#open">Client.open</a> method.</p>
+				<p>For more information about Beam&#39;s OAuth visit the <a href="https://dev.beam.pro/reference/oauth/index.html">OAuth reference page</a> on our developer site.</p>
 				<h3 id="browser">Browser</h3>
 				<h4 id="index-html">index.html</h4>
 				<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">doctype</span> <span class="hljs-attr">html</span>&gt;</span>
@@ -121,10 +126,19 @@ client.open({
     versionId: <span class="hljs-number">1234</span>,
 });
 </code></pre>
+				<h2 id="examples">Examples</h2>
+				<p>Checkout our <a href="examples/">examples</a> to get up to speed quickly!</p>
+				<ul>
+					<li><a href="examples/basic.ts">basic</a> - Connects and sets up 5 buttons, when they are clicked the participant is charged 1 spark.</li>
+					<li><a href="examples/dynamicControls.ts">dynamicControls</a> - Connects and then creates and destroys 5 buttons with random text.</li>
+					<li><a href="examples/joystick.ts">joystick</a> - Connects and creates a joystick, logs participant coordinate values.</li>
+				</ul>
+				<h2 id="documentation">Documentation</h2>
+				<p>Checkout our reference docs <a href="https://watchbeam.github.io/beam-interactive-node2/">here</a>.</p>
 				<h2 id="development">Development</h2>
 				<p>To get a development environment setup:</p>
 				<ol>
-					<li>Clone this repository</li>
+					<li><a href="https://help.github.com/articles/cloning-a-repository/">Clone this repository</a></li>
 					<li><code>npm install</code></li>
 					<li><code>npm run build</code></li>
 				</ol>
@@ -177,6 +191,9 @@ client.open({
 						<a href="classes/control.html" class="tsd-kind-icon">Control</a>
 					</li>
 					<li class=" tsd-kind-class">
+						<a href="classes/endpointdiscovery.html" class="tsd-kind-icon">Endpoint<wbr>Discovery</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="classes/exponentialreconnectionpolicy.html" class="tsd-kind-icon">Exponential<wbr>Reconnection<wbr>Policy</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -184,6 +201,9 @@ client.open({
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/group.html" class="tsd-kind-icon">Group</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/httperror.html" class="tsd-kind-icon">HTTPError</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/interactivesocket.html" class="tsd-kind-icon">Interactive<wbr>Socket</a>
@@ -201,6 +221,9 @@ client.open({
 						<a href="classes/methodhandlermanager.html" class="tsd-kind-icon">Method<wbr>Handler<wbr>Manager</a>
 					</li>
 					<li class=" tsd-kind-class">
+						<a href="classes/nointeractiveserversavailable.html" class="tsd-kind-icon">No<wbr>Interactive<wbr>Servers<wbr>Available</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="classes/packet.html" class="tsd-kind-icon">Packet</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -211,6 +234,9 @@ client.open({
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/reply.html" class="tsd-kind-icon">Reply</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/requester.html" class="tsd-kind-icon">Requester</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/scene.html" class="tsd-kind-icon">Scene</a>
@@ -273,6 +299,9 @@ client.open({
 						<a href="interfaces/iinputevent.html" class="tsd-kind-icon">IInput<wbr>Event</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/iinteractiveendpoint.html" class="tsd-kind-icon">IInteractive<wbr>Endpoint</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/iinteractiveerror.html" class="tsd-kind-icon">IInteractive<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-interface">
@@ -313,6 +342,9 @@ client.open({
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/ireconnectionpolicy.html" class="tsd-kind-icon">IReconnection<wbr>Policy</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/irequester.html" class="tsd-kind-icon">IRequester</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/iscene.html" class="tsd-kind-icon">IScene</a>
