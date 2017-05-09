@@ -1,4 +1,4 @@
-import { NoInteractiveServersAvailable } from '../src/errors';
+import { NoInteractiveServersAvailable } from './errors';
 import { IRequester } from './Requester';
 
 export interface IInteractiveEndpoint {
