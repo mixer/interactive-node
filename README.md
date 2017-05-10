@@ -47,7 +47,6 @@ const client = new interactive.GameClient();
 
 client.open({
     authToken: '<OAuth Token>',
-    url: '<Server Url>',
     versionId: 1234,
 });
 ```
@@ -64,7 +63,6 @@ const client = new interactive.GameClient();
 
 client.open({
     authToken: '<OAuth Token>',
-    url: '<Server Url>',
     versionId: 1234,
 });
 ```
@@ -80,7 +78,6 @@ const client = new GameClient();
 
 client.open({
     authToken: '<OAuth Token>',
-    url: '<Server Url>',
     versionId: 1234,
 });
 ```
