@@ -60,12 +60,12 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="beam-interactive-node-2">Beam Interactive Node 2</h1>
-				<p><a href="https://travis-ci.org/WatchBeam/beam-interactive-node2"><img src="https://travis-ci.org/WatchBeam/beam-interactive-node2.svg?branch=master" alt="Build Status"></a></p>
-				<p>A TypeScript, NodeJS and Browser compatible client for <a href="https://dev.beam.pro/reference/interactive/protocol.pdf">Beam.pro&#39;s interactive 2 Protocol</a>. </p>
+				<h1 id="interactive-node">Interactive Node</h1>
+				<p><a href="https://travis-ci.org/WatchBeam/beam-interactive-node2"><img src="https://travis-ci.org/WatchBeam/interactive-node.svg?branch=master" alt="Build Status"></a></p>
+				<p>A TypeScript, Node.js and Browser(JavaScript) compatible client for <a href="https://dev.beam.pro/reference/interactive/protocol/protocol.pdf">Beam.pro&#39;s interactive 2 Protocol</a>.</p>
 				<p>For an introduction to interactive2 checkout the <a href="https://dev.beam.pro/reference/interactive/index.html">reference docs</a> on the developers site.</p>
 				<h2 id="installation">Installation</h2>
-				<p>You can use npm(recommended) or download a zip from the <a href="https://github.com/WatchBeam/beam-interactive-node2/releases">releases page</a>.</p>
+				<p>You can use npm(recommended) or download a zip from the <a href="https://github.com/WatchBeam/interactive-node/releases">releases page</a>.</p>
 				<h3 id="browser">Browser</h3>
 				<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"dist/interactive.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 </code></pre>
@@ -73,7 +73,7 @@
 				<pre><code>npm <span class="hljs-selector-tag">i</span> --save beam-interactive-node2
 </code></pre><h2 id="usage">Usage</h2>
 				<h3 id="authentication">Authentication</h3>
-				<p><a href="https://tools.ietf.org/html/rfc6749">OAuth 2.0</a> is used for authentication. Valid bearer tokens can be passed in the <a href="https://watchbeam.github.io/beam-interactive-node2/classes/client.html#open">Client.open</a> method.</p>
+				<p><a href="https://tools.ietf.org/html/rfc6749">OAuth 2.0</a> is used for authentication. Valid bearer tokens can be passed in the <a href="https://watchbeam.github.io/interactive-node/classes/client.html#open">Client.open</a> method.</p>
 				<p>For more information about Beam&#39;s OAuth visit the <a href="https://dev.beam.pro/reference/oauth/index.html">OAuth reference page</a> on our developer site.</p>
 				<h3 id="browser">Browser</h3>
 				<h4 id="index-html">index.html</h4>
@@ -93,7 +93,6 @@
 
 client.open({
     <span class="hljs-attr">authToken</span>: <span class="hljs-string">'&lt;OAuth Token&gt;'</span>,
-    <span class="hljs-attr">url</span>: <span class="hljs-string">'&lt;Server Url&gt;'</span>,
     <span class="hljs-attr">versionId</span>: <span class="hljs-number">1234</span>,
 });
 </code></pre>
@@ -108,7 +107,6 @@ interactive.setWebSocket(ws);
 
 client.open({
     <span class="hljs-attr">authToken</span>: <span class="hljs-string">'&lt;OAuth Token&gt;'</span>,
-    <span class="hljs-attr">url</span>: <span class="hljs-string">'&lt;Server Url&gt;'</span>,
     <span class="hljs-attr">versionId</span>: <span class="hljs-number">1234</span>,
 });
 </code></pre>
@@ -122,7 +120,6 @@ setWebSocket(ws);
 
 client.open({
     authToken: <span class="hljs-string">'&lt;OAuth Token&gt;'</span>,
-    url: <span class="hljs-string">'&lt;Server Url&gt;'</span>,
     versionId: <span class="hljs-number">1234</span>,
 });
 </code></pre>
@@ -133,8 +130,9 @@ client.open({
 					<li><a href="examples/dynamicControls.ts">dynamicControls</a> - Connects and then creates and destroys 5 buttons with random text.</li>
 					<li><a href="examples/joystick.ts">joystick</a> - Connects and creates a joystick, logs participant coordinate values.</li>
 				</ul>
+				<p>Using Node.js? Clone this repo and run <code>npm run build</code> and the examples will be converted to JavaScript for you!</p>
 				<h2 id="documentation">Documentation</h2>
-				<p>Checkout our reference docs <a href="https://watchbeam.github.io/beam-interactive-node2/">here</a>.</p>
+				<p>Checkout our reference docs <a href="https://watchbeam.github.io/interactive-node/">here</a>.</p>
 				<h2 id="development">Development</h2>
 				<p>To get a development environment setup:</p>
 				<ol>
@@ -144,7 +142,7 @@ client.open({
 				</ol>
 				<h3 id="contributing">Contributing</h3>
 				<p>Thanks for your interested in contributing, checkout <a href="TODO.md">TODO.md</a> for a list of tasks!</p>
-				<p>Open a <a href="https://github.com/WatchBeam/beam-interactive-node2/pulls">Pull Request</a> we&#39;d love to see your contributions.</p>
+				<p>Open a <a href="https://github.com/WatchBeam/interactive-node/pulls">Pull Request</a> we&#39;d love to see your contributions.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
