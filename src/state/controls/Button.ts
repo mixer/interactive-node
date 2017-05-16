@@ -58,6 +58,14 @@ export class Button extends Control<IButtonData> implements IButton {
     }
 
     /**
+     * Sets the spark cost for this button.
+     * An Integer greater than 0
+     */
+    public setCost(cost: number): Promise<void> {
+        return this.updateAttribute('cost', cost);
+    }
+
+    /**
      * Sends an input event from a participant to the server for consumption.
      */
     public giveInput(input: IButtonInput): Promise<void> {
