@@ -10,14 +10,9 @@ use(require('sinon-chai'));
 
 const buttonData = {
     controlID: '0',
-    text: 'foo',
     etag: '1234',
 };
-const buttonData2 = {
-    controlID: '0',
-    cost: 100,
-    etag: '1234',
-};
+
 describe('control', () => {
     let control: Button;
     let mockClient: Client;
@@ -53,9 +48,9 @@ describe('control', () => {
         const buttonDiff = {
             cost: 200,
         };
-        const updatedButton = Object.assign({}, buttonData2, buttonDiff);
+        const updatedButton = Object.assign({}, buttonData, buttonDiff);
         const stub = sinon.stub(mockClient, 'updateControls');
-        control.setCost(200);
+        control.setCost(buttonDiff.cost);
         expect(stub).to.be
         .calledWith({
             sceneID: 'default',
