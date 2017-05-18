@@ -34,7 +34,7 @@ export class GameClient extends Client {
         .then(endpoints => {
             return super.open({
                 authToken: options.authToken,
-                url: endpoints[0].address,
+                url: options.url || endpoints[0].address,
                 extraHeaders: {
                     'X-Interactive-Version': options.versionId,
                 },
