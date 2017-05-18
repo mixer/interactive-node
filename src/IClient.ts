@@ -4,13 +4,13 @@ import { ClientType } from './Client';
 import { InteractiveError } from './errors';
 import {
     IControl,
-    IGroupDeletionParams,
     IGroupDataArray,
+    IGroupDeletionParams,
     IInput,
+    IParticipantArray,
     ISceneControlDeletion,
     ISceneData,
     ISceneDataArray,
-    IParticipantArray
 } from './state/interfaces';
 import { IState } from './state/IState';
 

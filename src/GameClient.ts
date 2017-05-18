@@ -2,12 +2,12 @@ import { Client, ClientType } from './Client';
 import { EndpointDiscovery } from './EndpointDiscovery';
 import { Requester } from './Requester';
 import {
+    IGroupDataArray,
+    IGroupDeletionParams,
+    IParticipantArray,
     ISceneControlDeletion,
     ISceneData,
     ISceneDataArray,
-    IParticipantArray,
-    IGroupDataArray,
-    IGroupDeletionParams
 } from './state/interfaces';
 import { IControl } from './state/interfaces/controls/IControl';
 
@@ -95,7 +95,7 @@ export class GameClient extends Client {
         return this.execute('updateControls', params, false);
     }
 
-    /** 
+    /**
      * Instructs the server to update the participant within the session with your specified parameters.
      * Participants within the group will see applicable scene changes automatically.
      */
@@ -110,11 +110,11 @@ export class GameClient extends Client {
         return this.execute('updateScenes', scenes, false);
     }
 
-    /** 
+    /**
      * Instructs the server to update the participant within the session with your specified parameters.
      */
     public updateParticipants(participants: IParticipantArray): Promise<void> {
-        return this.execute('updateParticipants', participants, false)
+        return this.execute('updateParticipants', participants, false);
     }
 
     /**

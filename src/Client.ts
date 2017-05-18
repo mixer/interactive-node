@@ -10,11 +10,11 @@ import {
     IGroupDataArray,
     IGroupDeletionParams,
     IInput,
+    IParticipantArray,
     IScene,
     ISceneControlDeletion,
     ISceneData,
     ISceneDataArray,
-    IParticipantArray,
     ITransactionCapture,
 } from './state/interfaces';
 import { IState } from './state/IState';
@@ -279,7 +279,7 @@ export class Client extends EventEmitter implements IClient {
     }
 
     public updateParticipants(_: IParticipantArray): Promise<void> {
-        throw new PermissionDeniedError('updateParticipants', 'Participant')
+        throw new PermissionDeniedError('updateParticipants', 'Participant');
     }
 
     public giveInput<T extends IInput>(_: T): Promise<void> {
@@ -289,7 +289,7 @@ export class Client extends EventEmitter implements IClient {
     public deleteControls(_: ISceneControlDeletion): Promise<void> {
         throw new PermissionDeniedError('deleteControls', 'Participant');
     }
-    
+
     public deleteGroup(_: IGroupDeletionParams): Promise<void> {
         throw new PermissionDeniedError('deleteGroup', 'Participant');
     }
