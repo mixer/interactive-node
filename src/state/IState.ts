@@ -5,7 +5,7 @@ import { Method, Reply } from '../wire/packets';
 import { Group } from './Group';
 import { IScene, ISceneData, ISceneDataArray } from './interfaces';
 import { IControl } from './interfaces/controls/IControl';
-import { IGroup } from './interfaces/IGroup';
+import { IGroup, IGroupDataArray } from './interfaces/IGroup';
 import { IParticipant } from './interfaces/IParticipant';
 
 export interface IState extends EventEmitter {
@@ -20,6 +20,7 @@ export interface IState extends EventEmitter {
     getScene(id: string): IScene;
     onSceneCreate(data: ISceneData): IScene;
     synchronizeScenes(data: ISceneDataArray): IScene[];
+    synchronizeGroups(data: IGroupDataArray): IGroup[];
 
     getControl(id: string): IControl;
 

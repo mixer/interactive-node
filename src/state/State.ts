@@ -11,7 +11,7 @@ import { Method, Reply } from '../wire/packets';
 import { Group } from './Group';
 import { IParticipant, IScene, ISceneDataArray } from './interfaces';
 import { IControl } from './interfaces/controls/IControl';
-import { IGroup } from './interfaces/IGroup';
+import { IGroup, IGroupData, IGroupDataArray } from './interfaces/IGroup';
 import { ISceneData } from './interfaces/IScene';
 import { Scene } from './Scene';
 import { StateFactory } from './StateFactory';
@@ -119,6 +119,10 @@ export class State extends EventEmitter implements IState {
      */
     public synchronizeScenes(data: ISceneDataArray): IScene[] {
         return data.scenes.map(scene => this.onSceneCreate(scene));
+    }
+
+    public synchronizeGroups(data: IGroupDataArray): IGroup[] {
+        return data.groups.map(group => this.onGroupCreate(group));
     }
 
     private addParticipantHandlers() {
@@ -267,7 +271,7 @@ export class State extends EventEmitter implements IState {
     /**
      * Updates an existing scene in the game session.
      */
-    public onGroupUpdate(group: IGroup) {
+    public onGroupUpdate(group: IGroupData) {
         const targetGroup = this.getGroup(group.groupID);
         if (targetGroup) {
             targetGroup.update(group);
@@ -289,7 +293,7 @@ export class State extends EventEmitter implements IState {
     /**
      * Inserts a new group into the game session.
      */
-    public onGroupCreate(data: IGroup): Group {
+    public onGroupCreate(data: IGroupData): Group {
         let group = this.groups.get(data.groupID);
         if (group) {
             if (group.etag === data.etag) {

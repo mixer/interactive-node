@@ -3,7 +3,7 @@ import { ETag } from './';
 import { IMeta } from './controls/IMeta';
 
 export interface IGroupDataArray {
-    groups: IGroup[];
+    groups: IGroupData[];
 }
 
 export interface IGroupDeletionParams {
@@ -11,7 +11,7 @@ export interface IGroupDeletionParams {
     reassignGroupID: string;
 }
 
-export interface IGroup extends EventEmitter {
+export interface IGroupData {
     /**
      * The ID of the group.
      */
@@ -31,7 +31,9 @@ export interface IGroup extends EventEmitter {
      * The group's ETag.
      */
     etag?: ETag;
+}
 
+export interface IGroup extends EventEmitter, IGroupData {
     /**
      * Fired when the group is updated with new data from the server.
      */

@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 
 import { merge } from '../merge';
 import { IMeta } from './interfaces/controls';
-import { IGroup } from './interfaces/IGroup';
+import { IGroup, IGroupData } from './interfaces/IGroup';
 
 /**
  * A Group is a collection of participants.
@@ -13,7 +13,7 @@ export class Group extends EventEmitter implements IGroup {
     public etag: string;
     public meta: IMeta = {};
 
-    constructor(group: IGroup) {
+    constructor(group: IGroupData) {
         super();
         merge(this, group);
     }
@@ -23,7 +23,7 @@ export class Group extends EventEmitter implements IGroup {
     /**
      * Updates this group with new data from the server.
      */
-    public update(data: IGroup) {
+    public update(data: IGroupData) {
         merge(this, data);
         this.emit('updated', this);
     }
