@@ -47,6 +47,54 @@
                     ]
                 }
             ]
+        },
+                {
+            "sceneID": "existing second scene",
+            "etag": "252143549",
+            "controls": [
+                {
+                    "controlID": "sudo_win_the_game_btn",
+                    "etag": "262543579",
+                    "kind": "button",
+                    "text": "Sudo Win the Game",
+                    "cost": 0,
+                    "progress": 0.75,
+                    "keyCode": 30,
+                    "disabled": false,
+                    "meta": {
+                        "glow": {
+                            "etag": "254344348",
+                            "value": {
+                                "color": "#0f0",
+                                "radius": 10
+                            }
+                        }
+                    },
+                    "position": [
+                        {
+                            "size":"large",
+                            "width":2,
+                            "height":2,
+                            "x":2,
+                            "y":3
+                        },
+                        {
+                            "size":"medium",
+                            "width":2,
+                            "height":2,
+                            "x":2,
+                            "y":3
+                        },
+                        {
+                            "size":"small",
+                            "width":2,
+                            "height":2,
+                            "x":2,
+                            "y":3
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

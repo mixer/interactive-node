@@ -4,7 +4,9 @@ import * as path from 'path';
 
 import { ClientType } from '../Client';
 import { Method } from '../wire/packets';
+import { Group } from './Group';
 import { IControl } from './interfaces/controls/IControl';
+import { IGroup, IGroupDataArray, IGroupDeletionParams } from './interfaces/IGroup';
 import { ISceneDataArray } from './interfaces/IScene';
 import { State } from './State';
 
@@ -12,6 +14,20 @@ function loadFixture(name: string): ISceneDataArray {
     return JSON.parse(fs.readFileSync(name).toString());
 }
 
+const groupsFixture: IGroupDataArray = {
+    groups: [
+        {
+            groupID: 'default',
+            etag: '5344324324',
+            sceneID: 'my awesome scene',
+        },
+        {
+            groupID: 'deleatable',
+            etag: '6846940396',
+            sceneID: 'my awesome scene',
+        },
+    ],
+};
 describe('state', () => {
     let state: State;
 
@@ -19,6 +35,7 @@ describe('state', () => {
         state = new State(ClientType.GameClient);
         const data = loadFixture(path.join(__dirname, '../../test/fixtures', fixture));
         state.processMethod(new Method('onSceneCreate', { scenes: data.scenes }));
+        state.processMethod(new Method('onGroupCreate', { groups: groupsFixture.groups }));
     }
 
     describe('initialization', () => {
@@ -218,6 +235,81 @@ describe('state', () => {
                     }],
                 },
             ));
+        });
+    });
+    describe('groups', () => {
+        let group: IGroup;
+        before(() => {
+            initializeState('testGame.json');
+        });
+        it('finds a group by ID', () => {
+            const targetGroup = groupsFixture.groups[0].groupID;
+            group = state.getGroup(targetGroup);
+            expect(group).to.exist;
+            expect(group.groupID).to.be.equal(targetGroup);
+
+        });
+        it('applies an update to a group', done => {
+            const targetScene = 'existing second scene';
+            group = state.getGroup(groupsFixture.groups[0].groupID);
+            expect(group).to.exist;
+            group.on('updated', () => {
+                expect(group.sceneID).to.equal(targetScene);
+                done();
+            });
+            state.processMethod(new Method(
+                'onGroupUpdate',
+                {
+                    groups:
+                    [
+                        {
+                            groupID: group.groupID,
+                            etag: group.etag,
+                            sceneID: targetScene,
+                        },
+                    ],
+                },
+            ));
+        });
+        it('creates a new group and adds it to state tree', done => {
+            const targetGroup: IGroupDataArray = {
+                groups: [
+                    {
+                        groupID: 'a new group',
+                        etag: '4295943293',
+                        sceneID: 'my awesome scene',
+                    },
+                ],
+            };
+            state.on('groupCreated', (newGroup: Group) => {
+                expect(newGroup).to.exist;
+                expect(newGroup.groupID).to.be.equal(targetGroup.groups[0].groupID);
+                done();
+            });
+            state.processMethod(new Method('onGroupCreate', targetGroup));
+            group = state.getGroup(targetGroup.groups[0].groupID);
+            expect(group).to.exist('Group', 'new group should exist');
+            expect(group.groupID).to.be.equal(targetGroup.groups[0].groupID, 'should have the created group id');
+        });
+        it('deletes a group', done => {
+            const targetGroup = groupsFixture.groups[1].groupID;
+            const delGroup = state.getGroup(targetGroup);
+            const delGroupParams: IGroupDeletionParams = {
+                groupID: delGroup.groupID,
+                reassignGroupID: groupsFixture.groups[0].groupID,
+            };
+            state.on('groupDeleted', (id: string, reassignId: string) => {
+                expect(id).to.equal(targetGroup);
+                expect(reassignId).to.equal(delGroupParams.reassignGroupID);
+                group = state.getGroup(targetGroup);
+                expect(group).to.not.exist;
+                done();
+            });
+            state.processMethod(new Method(
+                'onGroupDelete',
+                delGroupParams,
+            ));
+
         });
     });
 });
