@@ -4,7 +4,10 @@ import { ClientType } from './Client';
 import { InteractiveError } from './errors';
 import {
     IControl,
+    IGroupDataArray,
+    IGroupDeletionParams,
     IInput,
+    IParticipantArray,
     ISceneControlDeletion,
     ISceneData,
     ISceneDataArray,
@@ -18,9 +21,14 @@ export interface IClient extends EventEmitter {
     ready(isReady: boolean): Promise<void>;
 
     createControls(controls: ISceneData): Promise<IControl[]>;
+    createGroups(groups: IGroupDataArray): Promise<void>;
+    createScenes(scenes: ISceneDataArray): Promise<ISceneDataArray>;
     updateControls(controls: ISceneData): Promise<void>;
+    updateGroups(groups: IGroupDataArray): Promise<IGroupDataArray>;
     deleteControls(controls: ISceneControlDeletion): Promise<void>;
+    deleteGroup(data: IGroupDeletionParams): Promise<void>;
     updateScenes(scenes: ISceneDataArray): Promise<void>;
+    updateParticipants(participants: IParticipantArray): Promise<void>;
     giveInput<T extends IInput>(_: T): Promise<void>;
 
     getTime(): Promise<number>;

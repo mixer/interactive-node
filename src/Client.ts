@@ -6,7 +6,11 @@ import { MethodHandlerManager } from './methods/MethodHandlerManager';
 import { onReadyParams } from './methods/methodTypes';
 import {
     IControl,
+    IGroup,
+    IGroupDataArray,
+    IGroupDeletionParams,
     IInput,
+    IParticipantArray,
     IScene,
     ISceneControlDeletion,
     ISceneData,
@@ -178,6 +182,21 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
+     * Retrieves the groups stored on the interactive server.
+     */
+    public getGroups(): Promise<IGroupDataArray> {
+        return this.execute('getGroups', null, false);
+    }
+
+    /**
+     * Retrieves the groups on the server and hydrates the state store with them.
+     */
+    public synchronizeGroups(): Promise<IGroup[]> {
+        return this.getGroups()
+            .then(res => this.state.synchronizeGroups(res));
+    }
+
+    /**
      * Gets the time from the server as a unix timestamp in UTC.
      */
     public getTime(): Promise<number> {
@@ -239,12 +258,28 @@ export class Client extends EventEmitter implements IClient {
         throw new PermissionDeniedError('createControls', 'Participant');
     }
 
+    public createGroups(_: IGroupDataArray): Promise<void> {
+        throw new PermissionDeniedError('createGroups', 'Participant');
+    }
+
+    public createScenes(_: ISceneDataArray): Promise<ISceneDataArray> {
+        throw new PermissionDeniedError('createScenes', 'Participant');
+    }
+
     public updateControls(_: ISceneData): Promise<void> {
         throw new PermissionDeniedError('updateControls', 'Participant');
     }
 
+    public updateGroups(_: IGroupDataArray): Promise<IGroupDataArray> {
+        throw new PermissionDeniedError('updateGroups', 'Participant');
+    }
+
     public updateScenes(_: ISceneDataArray): Promise<void> {
         throw new PermissionDeniedError('updateScenes', 'Participant');
+    }
+
+    public updateParticipants(_: IParticipantArray): Promise<void> {
+        throw new PermissionDeniedError('updateParticipants', 'Participant');
     }
 
     public giveInput<T extends IInput>(_: T): Promise<void> {
@@ -253,6 +288,10 @@ export class Client extends EventEmitter implements IClient {
 
     public deleteControls(_: ISceneControlDeletion): Promise<void> {
         throw new PermissionDeniedError('deleteControls', 'Participant');
+    }
+
+    public deleteGroup(_: IGroupDeletionParams): Promise<void> {
+        throw new PermissionDeniedError('deleteGroup', 'Participant');
     }
 
     public ready(_: boolean): Promise<void> {

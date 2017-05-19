@@ -14,14 +14,14 @@ A list of all protocol level methods and this client's support of them. Used to 
 
 - [ ] getAllParticipants
 - [ ] getActiveParticipants
-- [ ] updateParticipants
+- [x] updateParticipants
 
-- [ ] createGroups
-- [ ] updateGroups
+- [x] createGroups
+- [x] updateGroups
 
-- [ ] createScenes
+- [x] createScenes
 - [ ] deleteScene
-- [ ] updateScenes
+- [x] updateScenes
 
 - [X] createControls
 - [X] deleteControls

@@ -1,7 +1,14 @@
 import { Client, ClientType } from './Client';
 import { EndpointDiscovery } from './EndpointDiscovery';
 import { Requester } from './Requester';
-import { ISceneControlDeletion, ISceneData, ISceneDataArray } from './state/interfaces';
+import {
+    IGroupDataArray,
+    IGroupDeletionParams,
+    IParticipantArray,
+    ISceneControlDeletion,
+    ISceneData,
+    ISceneDataArray,
+} from './state/interfaces';
 import { IControl } from './state/interfaces/controls/IControl';
 
 export interface IGameClientOptions {
@@ -59,6 +66,20 @@ export class GameClient extends Client {
     }
 
     /**
+     * Instructs the server to create new groups with the specified parameters.
+     */
+    public createGroups(groups: IGroupDataArray): Promise<void> {
+        return this.execute('createGroups', groups, false);
+    }
+
+    /**
+     * Instructs the server to create new scenes with the specified parameters.
+     */
+    public createScenes(scenes: ISceneDataArray): Promise<ISceneDataArray> {
+        return this.execute('createScenes', scenes, false);
+    }
+
+    /**
      * Updates a sessions' ready state, when a client is not ready participants cannot
      * interact with the controls.
      */
@@ -75,10 +96,25 @@ export class GameClient extends Client {
     }
 
     /**
+     * Instructs the server to update the participant within the session with your specified parameters.
+     * Participants within the group will see applicable scene changes automatically.
+     */
+    public updateGroups(groups: IGroupDataArray): Promise<IGroupDataArray> {
+        return this.execute('updateGroups', groups, false);
+    }
+
+    /**
      * Instructs the server to update a scene within the session with your specified parameters.
      */
     public updateScenes(scenes: ISceneDataArray): Promise<void> {
         return this.execute('updateScenes', scenes, false);
+    }
+
+    /**
+     * Instructs the server to update the participant within the session with your specified parameters.
+     */
+    public updateParticipants(participants: IParticipantArray): Promise<void> {
+        return this.execute('updateParticipants', participants, false);
     }
 
     /**
@@ -98,5 +134,12 @@ export class GameClient extends Client {
      */
     public deleteControls(data: ISceneControlDeletion): Promise<void> {
         return this.execute('deleteControls', data, false);
+    }
+
+    /**
+     * Instructs the server to delete the provided group.
+     */
+    public deleteGroup(data: IGroupDeletionParams): Promise<void> {
+        return this.execute('deleteGroup', data, false);
     }
 }
