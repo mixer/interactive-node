@@ -258,7 +258,7 @@ export class Client extends EventEmitter implements IClient {
         throw new PermissionDeniedError('createControls', 'Participant');
     }
 
-    public createGroups(_: IGroupDataArray): Promise<void> {
+    public createGroups(_: IGroupDataArray): Promise<IGroupDataArray> {
         throw new PermissionDeniedError('createGroups', 'Participant');
     }
 
