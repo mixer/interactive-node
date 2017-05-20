@@ -1,6 +1,6 @@
 {
   "name": "beam-interactive-node2",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "A NodeJS and Browser compatible client for Beam.pro's interactive 2 Protocol",
   "contributors": [
     {
