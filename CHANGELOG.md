@@ -2,6 +2,25 @@
 
 ## 1.x
 
+## 2.0.0 Groups and Scenes **Breaking**
+
+With some awesome community contributions we've now added the following features:
+
+- Added `setCost` to Buttons thanks @kateract
+- Added methods to manipulate scenes and groups
+  - `createGroups`
+  - `updateGroups`
+  - `createScenes`
+  - `updateParticipants`
+  - `synchronizeGroups`
+  - `getGroups`
+
+### Breaking Changes
+
+This release includes some minor breaking changes:
+
+- Minor refactor of IGroup* interfaces to align with I, IData, IDataArray pattern used elsewhere.
+
 ## 1.0.0 Endpoint Discovery **Breaking**
 
 For interactive 2 its important to always retrieve a list of servers from our API before connecting. This used to be up to the implementer. With 1.0.0 we're placing this responsibility inside the client. This should make getting up and running easier.
