@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ClockSyncerState | beam-interactive-node2</title>
+	<title>IGroupData | beam-interactive-node2</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,91 +52,104 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="clocksyncerstate.html">ClockSyncerState</a>
+					<a href="igroupdata.html">IGroupData</a>
 				</li>
 			</ul>
-			<h1>Enumeration ClockSyncerState</h1>
+			<h1>Interface IGroupData</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">IGroupData</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="igroup.html" class="tsd-signature-type">IGroup</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Enumeration members</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="clocksyncerstate.html#idle" class="tsd-kind-icon">Idle</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="clocksyncerstate.html#started" class="tsd-kind-icon">Started</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="clocksyncerstate.html#stopped" class="tsd-kind-icon">Stopped</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="clocksyncerstate.html#synchronizing" class="tsd-kind-icon">Synchronizing</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igroupdata.html#etag" class="tsd-kind-icon">etag</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igroupdata.html#groupid" class="tsd-kind-icon">groupID</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igroupdata.html#meta" class="tsd-kind-icon">meta</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igroupdata.html#sceneid" class="tsd-kind-icon">sceneID</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Enumeration members</h2>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="idle" class="tsd-anchor"></a>
-					<h3>Idle</h3>
-					<div class="tsd-signature tsd-kind-icon">Idle<span class="tsd-signature-symbol">:</span> </div>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="etag" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> etag</h3>
+					<div class="tsd-signature tsd-kind-icon">etag<span class="tsd-signature-symbol">:</span> <a href="../globals.html#etag" class="tsd-signature-type">ETag</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/ClockSync.ts#L17">ClockSync.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/state/interfaces/IGroup.ts#L33">state/interfaces/IGroup.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Indicates that the clock syncer is not actively synchronizing.</p>
+							<p>The group&#39;s ETag.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="started" class="tsd-anchor"></a>
-					<h3>Started</h3>
-					<div class="tsd-signature tsd-kind-icon">Started<span class="tsd-signature-symbol">:</span> </div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="groupid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> groupID</h3>
+					<div class="tsd-signature tsd-kind-icon">groupID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/ClockSync.ts#L9">ClockSync.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/state/interfaces/IGroup.ts#L18">state/interfaces/IGroup.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Indicates that the clock syncer has JUST started up.</p>
+							<p>The ID of the group.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="stopped" class="tsd-anchor"></a>
-					<h3>Stopped</h3>
-					<div class="tsd-signature tsd-kind-icon">Stopped<span class="tsd-signature-symbol">:</span> </div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="meta" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> meta</h3>
+					<div class="tsd-signature tsd-kind-icon">meta<span class="tsd-signature-symbol">:</span> <a href="imeta.html" class="tsd-signature-type">IMeta</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/ClockSync.ts#L21">ClockSync.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/state/interfaces/IGroup.ts#L28">state/interfaces/IGroup.ts:28</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Indicates that the clock syncer has been stopped.</p>
+							<p>Metadata associated with the group.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="synchronizing" class="tsd-anchor"></a>
-					<h3>Synchronizing</h3>
-					<div class="tsd-signature tsd-kind-icon">Synchronizing<span class="tsd-signature-symbol">:</span> </div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="sceneid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> sceneID</h3>
+					<div class="tsd-signature tsd-kind-icon">sceneID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/ClockSync.ts#L13">ClockSync.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/state/interfaces/IGroup.ts#L23">state/interfaces/IGroup.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Indicates that the clock syncer is actively synchronizing its time with the server.</p>
+							<p>The scene the group is currently assigned to.</p>
 						</div>
 					</div>
 				</section>
@@ -154,20 +167,20 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-enum">
-						<a href="clocksyncerstate.html" class="tsd-kind-icon">Clock<wbr>Syncer<wbr>State</a>
+					<li class="current tsd-kind-interface">
+						<a href="igroupdata.html" class="tsd-kind-icon">IGroup<wbr>Data</a>
 						<ul>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="clocksyncerstate.html#idle" class="tsd-kind-icon">Idle</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="igroupdata.html#etag" class="tsd-kind-icon">etag</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="clocksyncerstate.html#started" class="tsd-kind-icon">Started</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="igroupdata.html#groupid" class="tsd-kind-icon">groupID</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="clocksyncerstate.html#stopped" class="tsd-kind-icon">Stopped</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="igroupdata.html#meta" class="tsd-kind-icon">meta</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="clocksyncerstate.html#synchronizing" class="tsd-kind-icon">Synchronizing</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="igroupdata.html#sceneid" class="tsd-kind-icon">sceneID</a>
 							</li>
 						</ul>
 					</li>

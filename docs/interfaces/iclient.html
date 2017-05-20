@@ -100,7 +100,10 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited"><a href="iclient.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iclient.html#createcontrols" class="tsd-kind-icon">create<wbr>Controls</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iclient.html#creategroups" class="tsd-kind-icon">create<wbr>Groups</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iclient.html#createscenes" class="tsd-kind-icon">create<wbr>Scenes</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iclient.html#deletecontrols" class="tsd-kind-icon">delete<wbr>Controls</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iclient.html#deletegroup" class="tsd-kind-icon">delete<wbr>Group</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited"><a href="iclient.html#emit" class="tsd-kind-icon">emit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited"><a href="iclient.html#eventnames" class="tsd-kind-icon">event<wbr>Names</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter"><a href="iclient.html#execute" class="tsd-kind-icon">execute</a></li>
@@ -118,6 +121,8 @@
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited"><a href="iclient.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited"><a href="iclient.html#setmaxlisteners" class="tsd-kind-icon">set<wbr>Max<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iclient.html#updatecontrols" class="tsd-kind-icon">update<wbr>Controls</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iclient.html#updategroups" class="tsd-kind-icon">update<wbr>Groups</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iclient.html#updateparticipants" class="tsd-kind-icon">update<wbr>Participants</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iclient.html#updatescenes" class="tsd-kind-icon">update<wbr>Scenes</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-static"><a href="iclient.html#listenercount-1" class="tsd-kind-icon">listener<wbr>Count</a></li>
 							</ul>
@@ -133,7 +138,7 @@
 					<div class="tsd-signature tsd-kind-icon">client<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/clienttype.html" class="tsd-signature-type">ClientType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L15">IClient.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L18">IClient.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -143,7 +148,7 @@
 					<div class="tsd-signature tsd-kind-icon">state<span class="tsd-signature-symbol">:</span> <a href="istate.html" class="tsd-signature-type">IState</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L16">IClient.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L19">IClient.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -199,7 +204,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L20">IClient.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L23">IClient.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -213,6 +218,52 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="creategroups" class="tsd-anchor"></a>
+					<h3>create<wbr>Groups</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Groups<span class="tsd-signature-symbol">(</span>groups<span class="tsd-signature-symbol">: </span><a href="igroupdataarray.html" class="tsd-signature-type">IGroupDataArray</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="igroupdataarray.html" class="tsd-signature-type">IGroupDataArray</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L24">IClient.ts:24</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>groups: <a href="igroupdataarray.html" class="tsd-signature-type">IGroupDataArray</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="igroupdataarray.html" class="tsd-signature-type">IGroupDataArray</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="createscenes" class="tsd-anchor"></a>
+					<h3>create<wbr>Scenes</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Scenes<span class="tsd-signature-symbol">(</span>scenes<span class="tsd-signature-symbol">: </span><a href="iscenedataarray.html" class="tsd-signature-type">ISceneDataArray</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="iscenedataarray.html" class="tsd-signature-type">ISceneDataArray</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L25">IClient.ts:25</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>scenes: <a href="iscenedataarray.html" class="tsd-signature-type">ISceneDataArray</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="iscenedataarray.html" class="tsd-signature-type">ISceneDataArray</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="deletecontrols" class="tsd-anchor"></a>
 					<h3>delete<wbr>Controls</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -222,13 +273,36 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L22">IClient.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L28">IClient.ts:28</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>controls: <a href="iscenecontroldeletion.html" class="tsd-signature-type">ISceneControlDeletion</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="deletegroup" class="tsd-anchor"></a>
+					<h3>delete<wbr>Group</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">delete<wbr>Group<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="igroupdeletionparams.html" class="tsd-signature-type">IGroupDeletionParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L29">IClient.ts:29</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>data: <a href="igroupdeletionparams.html" class="tsd-signature-type">IGroupDeletionParams</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -298,7 +372,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L17">IClient.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L20">IClient.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -352,7 +426,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L26">IClient.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L34">IClient.ts:34</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -369,7 +443,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L24">IClient.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L32">IClient.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -454,7 +528,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.on</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L28">IClient.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L36">IClient.ts:36</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -484,7 +558,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.on</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L29">IClient.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L37">IClient.ts:37</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -520,7 +594,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.on</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L30">IClient.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L38">IClient.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -556,7 +630,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.on</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L31">IClient.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L39">IClient.ts:39</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -592,7 +666,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.on</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L32">IClient.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L40">IClient.ts:40</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -622,7 +696,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.on</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L33">IClient.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L41">IClient.ts:41</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -732,7 +806,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L18">IClient.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L21">IClient.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -833,13 +907,59 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L21">IClient.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L26">IClient.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>controls: <a href="iscenedata.html" class="tsd-signature-type">ISceneData</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="updategroups" class="tsd-anchor"></a>
+					<h3>update<wbr>Groups</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Groups<span class="tsd-signature-symbol">(</span>groups<span class="tsd-signature-symbol">: </span><a href="igroupdataarray.html" class="tsd-signature-type">IGroupDataArray</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="igroupdataarray.html" class="tsd-signature-type">IGroupDataArray</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L27">IClient.ts:27</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>groups: <a href="igroupdataarray.html" class="tsd-signature-type">IGroupDataArray</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="igroupdataarray.html" class="tsd-signature-type">IGroupDataArray</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="updateparticipants" class="tsd-anchor"></a>
+					<h3>update<wbr>Participants</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Participants<span class="tsd-signature-symbol">(</span>participants<span class="tsd-signature-symbol">: </span><a href="iparticipantarray.html" class="tsd-signature-type">IParticipantArray</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L31">IClient.ts:31</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>participants: <a href="iparticipantarray.html" class="tsd-signature-type">IParticipantArray</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -856,7 +976,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/5e0caac/src/IClient.ts#L23">IClient.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/IClient.ts#L30">IClient.ts:30</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -929,7 +1049,16 @@
 								<a href="iclient.html#createcontrols" class="tsd-kind-icon">create<wbr>Controls</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="iclient.html#creategroups" class="tsd-kind-icon">create<wbr>Groups</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="iclient.html#createscenes" class="tsd-kind-icon">create<wbr>Scenes</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="iclient.html#deletecontrols" class="tsd-kind-icon">delete<wbr>Controls</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="iclient.html#deletegroup" class="tsd-kind-icon">delete<wbr>Group</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited">
 								<a href="iclient.html#emit" class="tsd-kind-icon">emit</a>
@@ -981,6 +1110,12 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="iclient.html#updatecontrols" class="tsd-kind-icon">update<wbr>Controls</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="iclient.html#updategroups" class="tsd-kind-icon">update<wbr>Groups</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="iclient.html#updateparticipants" class="tsd-kind-icon">update<wbr>Participants</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="iclient.html#updatescenes" class="tsd-kind-icon">update<wbr>Scenes</a>
