@@ -68,7 +68,7 @@ export class GameClient extends Client {
     /**
      * Instructs the server to create new groups with the specified parameters.
      */
-    public createGroups(groups: IGroupDataArray): Promise<void> {
+    public createGroups(groups: IGroupDataArray): Promise<IGroupDataArray> {
         return this.execute('createGroups', groups, false);
     }
 
