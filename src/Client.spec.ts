@@ -1,8 +1,10 @@
+import { expect } from 'chai';
+import * as sinon from 'sinon';
 import * as WebSocket from 'ws';
 import { setWebSocket } from './';
-import { Method } from './wire/packets';
-
 import { Client, ClientType } from './Client';
+import { IClient } from './IClient';
+import { Method } from './wire/packets';
 
 setWebSocket(WebSocket);
 const port = process.env.SERVER_PORT || 1339;
@@ -58,6 +60,38 @@ describe('client', () => {
                 done();
             });
             client.processMethod(new Method('hello', {}, true, 0));
+        });
+    });
+
+    describe('state synchronization', () => {
+        let mockClient: IClient;
+        beforeEach(() => {
+            client = createClient();
+            client.execute = sinon.stub().returns(new Promise(resolve => { resolve(); }));
+            //client.open(socketOptions);
+        });
+        it('synchronizes scenes', () => {
+            const scenes = client.getScenes();
+            mockClient = client;
+            //const stub = sinon.stub(mockClient, 'execute');
+            client.synchronizeScenes();
+            expect(client.execute).to.be.calledWith(new Promise(resolve => {resolve(scenes); }));
+        });
+        it('synchronizes groups', () => {
+            const groups = client.getGroups();
+            mockClient = client;
+            //const stub = sinon.stub(mockClient, 'execute');
+            client.synchronizeGroups();
+            expect(client.execute).to.be.calledWith(groups);
+        });
+        it('synchronizes state', () => {
+            const scenes = client.getScenes();
+            const groups = client.getGroups();
+            mockClient = client;
+            //const stub = sinon.stub(mockClient, 'execute');
+            client.synchronizeState();
+            expect(client.execute).to.be.calledWith(scenes);
+            expect(client.execute).to.be.calledWith(groups);
         });
     });
 
