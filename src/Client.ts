@@ -133,7 +133,7 @@ export class Client extends EventEmitter implements IClient {
         this.createSocket(options);
         this.socket.connect();
         return resolveOn(this, 'open')
-        .then(() => this);
+            .then(() => this);
     }
 
     /**
@@ -194,6 +194,13 @@ export class Client extends EventEmitter implements IClient {
     public synchronizeGroups(): Promise<IGroup[]> {
         return this.getGroups()
             .then(res => this.state.synchronizeGroups(res));
+    }
+
+    public synchronizeState(): Promise<[IGroup[], IScene[]]> {
+        return Promise.all([
+            this.getGroups().then(res => this.state.synchronizeGroups(res)),
+            this.getScenes().then(res => this.state.synchronizeScenes(res))
+        ]);
     }
 
     /**
