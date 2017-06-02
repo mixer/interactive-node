@@ -196,19 +196,14 @@ export class Client extends EventEmitter implements IClient {
             .then(res => this.state.synchronizeGroups(res));
     }
 
+    /**
+     * Retrieves and hydrates client side stores with state from the server
+     */
     public synchronizeState(): Promise<[IGroup[], IScene[]]> {
         return Promise.all([
             this.getGroups().then(res => this.state.synchronizeGroups(res)),
             this.getScenes().then(res => this.state.synchronizeScenes(res))
         ]);
-    }
-
-    /**
-     * Retrieves and hydrates client side stores with state from the server
-     */
-    public synchronizeState(): Promise<void> {
-        return Promise.all([this.synchronizeGroups(), this.synchronizeScenes()])
-            .then(() => {/** */});
     }
 
     /**
