@@ -254,6 +254,8 @@ export class InteractiveSocket extends EventEmitter {
             this.socket.close(1000, 'Closed normally.');
             this.queue.forEach(packet => packet.cancel());
             this.queue.clear();
+        } else {
+            this.state = SocketState.Closing;
         }
     }
 
