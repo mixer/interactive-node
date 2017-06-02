@@ -166,7 +166,7 @@ client
         versionId: parseInt(process.argv[3], 10),
     })
 
-    // Pull the scenes from the interactive server
+    // Pull the scenes and groups from the interactive server
     .then(() => client.synchronizeState())
 
     // Set the client as ready so that interactive controls show up
