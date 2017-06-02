@@ -1,12 +1,12 @@
 # Interactive Node
 [![Build Status](https://travis-ci.org/mixer/interactive-node.svg?branch=master)](https://travis-ci.org/mixer/interactive-node)
 
-A TypeScript, Node.js and Browser(JavaScript) compatible client for [Beam.pro's interactive 2 Protocol](https://dev.beam.pro/reference/interactive/protocol/protocol.pdf).
+A TypeScript, Node.js and Browser(JavaScript) compatible client for [Mixer.com's interactive 2 Protocol](https://dev.mixer.com/reference/interactive/protocol/protocol.pdf).
 
-For an introduction to interactive2 checkout the [reference docs](https://dev.beam.pro/reference/interactive/index.html) on the developers site.
+For an introduction to interactive2 checkout the [reference docs](https://dev.mixer.com/reference/interactive/index.html) on the developers site.
 
 ## Installation
-You can use npm(recommended) or download a zip from the [releases page](https://github.com/WatchBeam/interactive-node/releases).
+You can use npm(recommended) or download a zip from the [releases page](https://github.com/mixer/interactive-node/releases).
 
 ### Browser
 
@@ -21,9 +21,9 @@ npm i --save beam-interactive-node2
 ## Usage
 
 ### Authentication
-[OAuth 2.0](https://tools.ietf.org/html/rfc6749) is used for authentication. Valid bearer tokens can be passed in the [Client.open](https://watchbeam.github.io/interactive-node/classes/client.html#open) method.
+[OAuth 2.0](https://tools.ietf.org/html/rfc6749) is used for authentication. Valid bearer tokens can be passed in the [Client.open](https://mixer.github.io/interactive-node/classes/client.html#open) method.
 
-For more information about Beam's OAuth visit the [OAuth reference page](https://dev.beam.pro/reference/oauth/index.html) on our developer site.
+For more information about Mixer's OAuth visit the [OAuth reference page](https://dev.mixer.com/reference/oauth/index.html) on our developer site.
 
 ### Browser
 
@@ -94,7 +94,7 @@ Using Node.js? Clone this repo and run `npm run build` and the examples will be 
 
 ## Documentation
 
-Checkout our reference docs [here](https://watchbeam.github.io/interactive-node/).
+Checkout our reference docs [here](https://mixer.github.io/interactive-node/).
 
 ## Development
 
@@ -107,5 +107,5 @@ To get a development environment setup:
 
 Thanks for your interested in contributing, checkout [TODO.md](TODO.md) for a list of tasks!
 
-Open a [Pull Request](https://github.com/WatchBeam/interactive-node/pulls) we'd love to see your contributions.
+Open a [Pull Request](https://github.com/mixer/interactive-node/pulls) we'd love to see your contributions.
 
