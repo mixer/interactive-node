@@ -112,7 +112,7 @@ function createScenes(): Promise<ISceneDataArray> {
         sceneID: 'secondScene',
         controls: makeControls('second')
     };
-    
+
     return client.createScenes({
         scenes: [secondScene]
     });
@@ -138,7 +138,7 @@ function createGroups(): Promise<void> {
             sceneID: 'default'
         }
     );
-    
+
     return client
         // First update the default group
         .updateGroups({
@@ -165,12 +165,9 @@ client
         authToken: process.argv[2],
         versionId: parseInt(process.argv[3], 10),
     })
-    
-    // Pull the scenes from the interactive server
-    .then(() => client.synchronizeScenes())
 
-    // Pull the groups from the interactive server
-    .then(() => client.synchronizeGroups())
+    // Pull the scenes from the interactive server
+    .then(() => client.synchronizeState())
 
     // Set the client as ready so that interactive controls show up
     .then(() => client.ready(true))

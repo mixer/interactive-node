@@ -96,7 +96,7 @@ client.open({
     * then call ready so our controls show up.
     * then call loop() to begin our loop.
     */
-    return client.synchronizeScenes();
+    return client.synchronizeState();
 })
 .then(() => client.ready(true))
 .then(() => loop());

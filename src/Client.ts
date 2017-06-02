@@ -197,6 +197,14 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
+     * Retrieves and hydrates client side stores with state from the server
+     */
+    public synchronizeState(): Promise<void> {
+        return Promise.all([this.synchronizeGroups(), this.synchronizeScenes()])
+            .then(() => {/** */});
+    }
+
+    /**
      * Gets the time from the server as a unix timestamp in UTC.
      */
     public getTime(): Promise<number> {
