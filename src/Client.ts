@@ -202,7 +202,7 @@ export class Client extends EventEmitter implements IClient {
     public synchronizeState(): Promise<[IGroup[], IScene[]]> {
         return Promise.all([
             this.getGroups().then(res => this.state.synchronizeGroups(res)),
-            this.getScenes().then(res => this.state.synchronizeScenes(res))
+            this.getScenes().then(res => this.state.synchronizeScenes(res)),
         ]);
     }
 
