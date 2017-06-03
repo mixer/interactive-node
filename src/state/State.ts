@@ -114,7 +114,7 @@ export class State extends EventEmitter implements IState {
     }
 
     /**
-     * Syncronize scenes takes a collection of scenes from the server
+     * Synchronize scenes takes a collection of scenes from the server
      * and hydrates the Scene store with them.
      */
     public synchronizeScenes(data: ISceneDataArray): IScene[] {
