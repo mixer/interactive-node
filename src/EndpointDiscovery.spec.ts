@@ -33,10 +33,10 @@ describe('endpoint discovery', () => {
     });
     it('resolves with a list of endpoints', () => {
         stub.resolves(servers);
-        expect(discovery.retrieveEndpoints()).to.eventually.equal(servers);
+        return expect(discovery.retrieveEndpoints()).to.eventually.equal(servers);
     });
     it('rejects with a NoInteractiveServersAvailable if the response contains no servers', () => {
         stub.resolves([]);
-        expect(discovery.retrieveEndpoints()).to.be.rejectedWith(NoInteractiveServersAvailable);
+        return expect(discovery.retrieveEndpoints()).to.be.rejectedWith(NoInteractiveServersAvailable);
     });
 });
