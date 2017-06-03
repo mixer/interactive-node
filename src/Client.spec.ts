@@ -1,9 +1,10 @@
-import { IGroupData, ISceneData } from './state/interfaces';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as WebSocket from 'ws';
+
 import { setWebSocket } from './';
 import { Client, ClientType } from './Client';
+import { IGroupData, ISceneData } from './state/interfaces';
 import { Method } from './wire/packets';
 
 setWebSocket(WebSocket);
@@ -109,7 +110,6 @@ describe('client', () => {
                 syncGroupsStub.restore();
                 syncScenesStub.restore();
             });
-        })
-
+        });
     });
 });
