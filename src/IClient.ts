@@ -22,6 +22,7 @@ export interface IClient extends EventEmitter {
 
     createControls(controls: ISceneData): Promise<IControl[]>;
     createGroups(groups: IGroupDataArray): Promise<IGroupDataArray>;
+    createScene(scene: ISceneData): Promise<ISceneData>;
     createScenes(scenes: ISceneDataArray): Promise<ISceneDataArray>;
     updateControls(controls: ISceneData): Promise<void>;
     updateGroups(groups: IGroupDataArray): Promise<IGroupDataArray>;
