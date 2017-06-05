@@ -187,7 +187,7 @@ export class State extends EventEmitter implements IState {
     }
 
     /**
-     * Returns the local time matched to the sync of the Beam server clock.
+     * Returns the local time matched to the sync of the Mixer server clock.
      */
     public synchronizeLocalTime(time: Date | number = Date.now()): Date {
         if (time instanceof Date) {
@@ -346,14 +346,14 @@ export class State extends EventEmitter implements IState {
         return result;
     }
     /**
-     * Retrieve a participant by their Beam UserId.
+     * Retrieve a participant by their Mixer UserId.
      */
     public getParticipantByUserID(id: number): IParticipant {
         return this.getParticipantBy('userID', id);
     }
 
     /**
-     * Retrieve a participant by their Beam Username.
+     * Retrieve a participant by their Mixer Username.
      */
     public getParticipantByUsername(name: string): IParticipant {
         return this.getParticipantBy('username', name);

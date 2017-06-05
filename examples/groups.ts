@@ -5,7 +5,7 @@ import {
     GameClient,
     IButtonData,
     IControlData,
-    ISceneDataArray,
+    ISceneData,
     IParticipant,
     setWebSocket,
     Group
@@ -102,9 +102,9 @@ function removeParticipant(participantSessionId: string): void {
 }
 
 /**
- * Create the scenes used by the application.
+ * Create the second scene used by the application.
  */
-function createScenes(): Promise<ISceneDataArray> {
+function createSecondScene(): Promise<ISceneData> {
     const defaultScene = client.state.getScene('default');
     defaultScene.createControls(makeControls('default'));
 
@@ -113,9 +113,7 @@ function createScenes(): Promise<ISceneDataArray> {
         controls: makeControls('second')
     };
     
-    return client.createScenes({
-        scenes: [secondScene]
-    });
+    return client.createScene(secondScene);
 }
 
 /**
@@ -160,7 +158,7 @@ function createGroups(): Promise<void> {
 
 // Now we open the connection passing in our authentication details and an experienceId.
 client
-    // Open the Beam client with command line args
+    // Open the Mixer client with command line args
     .open({
         authToken: process.argv[2],
         versionId: parseInt(process.argv[3], 10),
@@ -175,8 +173,8 @@ client
     // Set the client as ready so that interactive controls show up
     .then(() => client.ready(true))
 
-    // Create the scenes for our application
-    .then(createScenes)
+    // Create the second scene for our application
+    .then(createSecondScene)
 
     // Create the groups for our application
     .then(createGroups)

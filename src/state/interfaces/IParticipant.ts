@@ -13,15 +13,15 @@ export interface IParticipant {
      */
     sessionID: string;
     /**
-     * This participant's Beam UserId
+     * This participant's Mixer UserId
      */
     userID?: number;
     /**
-     * This participant's Beam Username
+     * This participant's Mixer Username
      */
     username?: string;
     /**
-     * This participant's Beam level
+     * This participant's Mixer level
      */
     level?: number;
     /**
