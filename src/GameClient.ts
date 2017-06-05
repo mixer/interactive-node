@@ -14,7 +14,7 @@ import { IControl } from './state/interfaces/controls/IControl';
 export interface IGameClientOptions {
     /**
      * Your project version id is a unique id to your Interactive Project Version. You can retrieve one
-     * from the Interactive Studio on Beam.pro in the Code step.
+     * from the Interactive Studio on Mixer.com in the Code step.
      */
     versionId: number;
     /**
@@ -22,7 +22,7 @@ export interface IGameClientOptions {
      */
     authToken: string;
     /**
-     * An interactive server url, these should be retrieved from https://beam.pro/api/v1/interactive/hosts.
+     * An interactive server url, these should be retrieved from https://mixer.com/api/v1/interactive/hosts.
      */
     url?: string;
 }
