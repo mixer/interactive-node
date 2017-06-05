@@ -76,7 +76,7 @@ export class GameClient extends Client {
      * Instructs the server to create a new scene with the specified parameters.
      */
     public createScene(scene: ISceneData): Promise<ISceneData> {
-        return this.execute('createScenes', { scenes: [ scene ] } as ISceneDataArray, false)
+        return this.createScenes({ scenes: [ scene ] })
         .then(scenes => {
             return scenes.scenes[0];
         });
