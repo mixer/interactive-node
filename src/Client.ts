@@ -262,6 +262,10 @@ export class Client extends EventEmitter implements IClient {
         throw new PermissionDeniedError('createGroups', 'Participant');
     }
 
+    public createScene(_: ISceneData): Promise<ISceneData> {
+        throw new PermissionDeniedError('createScene', 'Participant');
+    }
+
     public createScenes(_: ISceneDataArray): Promise<ISceneDataArray> {
         throw new PermissionDeniedError('createScenes', 'Participant');
     }
