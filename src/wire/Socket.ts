@@ -110,7 +110,7 @@ export class InteractiveSocket extends EventEmitter {
 
     private reconnectTimeout: NodeJS.Timer;
     private options: ISocketOptions;
-    private state: SocketState;
+    private state: SocketState = SocketState.Idle;
     private socket: any;
     private queue: Set<Packet> = new Set<Packet>();
 
@@ -249,10 +249,12 @@ export class InteractiveSocket extends EventEmitter {
             return;
         }
 
-        this.state = SocketState.Closing;
-        this.socket.close(1000, 'Closed normally.');
-        this.queue.forEach(packet => packet.cancel());
-        this.queue.clear();
+        if (this.state !== SocketState.Idle) {
+            this.state = SocketState.Closing;
+            this.socket.close(1000, 'Closed normally.');
+            this.queue.forEach(packet => packet.cancel());
+            this.queue.clear();
+        }
     }
 
     /**
