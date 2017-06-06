@@ -5,6 +5,7 @@ export * from './state/Group';
 export * from './IClient';
 export * from './GameClient';
 export * from './ParticipantClient';
+export * from './InteractiveConstants';
 export * from './util';
 export * from './errors';
 

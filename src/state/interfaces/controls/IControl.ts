@@ -8,6 +8,12 @@ import { IMeta } from './IMeta';
 export type ControlKind = 'button' | 'joystick';
 export type GridSize = 'large' | 'medium' | 'small';
 
+export interface IGridLayout {
+    readonly size: GridSize;
+    readonly width: number;
+    readonly height: number;
+}
+
 /**
  * Represents the raw data a control has when transmitted
  * and received over a socket connection.
