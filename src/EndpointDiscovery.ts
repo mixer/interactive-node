@@ -21,7 +21,7 @@ export class EndpointDiscovery {
             if (res.length > 0) {
                 return res;
             }
-            return new NoInteractiveServersAvailable('No Interactive servers are available, please try again.');
+            throw new NoInteractiveServersAvailable('No Interactive servers are available, please try again.');
         });
     }
 }
