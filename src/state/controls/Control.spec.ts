@@ -66,10 +66,8 @@ describe('control', () => {
             text: 'foobar',
         };
         const updatedButton = {
-            ...{
-                etag: buttonData.etag,
-                controlID: buttonData.controlID,
-            },
+            etag: buttonData.etag,
+            controlID: buttonData.controlID,
             ...buttonDiff,
         };
         const stub = sinon.stub(mockClient, 'updateControls');

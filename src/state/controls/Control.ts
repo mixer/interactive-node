@@ -104,7 +104,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     /**
      * Update this control on the server.
      */
-    public update<T extends IControlUpdate>(controlUpdate: T): Promise<void> {
+    public update<T2 extends IControlUpdate>(controlUpdate: T2): Promise<void> {
         const changedData = {
             ...<IControlUpdate>controlUpdate,
             controlID: this.controlID,

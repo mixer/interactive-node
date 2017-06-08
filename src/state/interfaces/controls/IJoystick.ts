@@ -8,7 +8,7 @@ import { IInputEvent, IJoystickInput } from './IInput';
 export interface IJoystickData extends IControlData {
     /**
      * The angle of the Joysticks direction indicator.
-     * In radians 0 - 2.
+     * In radians 0 - 2π.
      */
     angle?: number;
     /**
@@ -31,7 +31,7 @@ export interface IJoystickData extends IControlData {
 export interface IJoystickUpdate extends IControlUpdate {
     /**
      * Updates the angle of the Joysticks direction indicator.
-     * In radians 0 - 2.
+     * In radians 0 - 2π.
      */
     angle?: number;
     /**
