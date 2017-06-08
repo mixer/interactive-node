@@ -341,8 +341,7 @@ export class InteractiveSocket extends EventEmitter {
     }
 
     private sendRaw(packet: any) {
-        // The last argument here replaces
-        // any circular references with nothing, effectively truncating them
+        // Replace circular references with nothing.
         const data = stringify(packet, null, 0, () => {/** */});
         const payload = data;
 
