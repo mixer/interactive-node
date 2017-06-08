@@ -64,14 +64,13 @@ describe('control', () => {
             cost: 200,
             text: 'foobar',
         };
-        const updatedButton = Object.assign(
-            {},
-            {
+        const updatedButton = {
+            ...{
                 etag: buttonData.etag,
                 controlID: buttonData.controlID,
             },
-            buttonDiff,
-        );
+            ...buttonDiff,
+        };
         const stub = sinon.stub(mockClient, 'updateControls');
         control.update(buttonDiff);
         expect(stub).to.be

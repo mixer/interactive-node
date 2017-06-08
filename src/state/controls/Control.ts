@@ -107,7 +107,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
         changedData.etag = this.etag;
         return this.client.updateControls({
             sceneID: this.scene.sceneID,
-            controls: [ changedData ],
+            controls: [changedData],
         });
     }
 
