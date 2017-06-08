@@ -1,4 +1,4 @@
-import { IButton, IButtonData } from '../interfaces/controls/IButton';
+import { IButton, IButtonData, IButtonUpdate } from '../interfaces/controls/IButton';
 import { IButtonInput } from '../interfaces/controls/IInput';
 import { Control } from './Control';
 
@@ -60,7 +60,7 @@ export class Button extends Control<IButtonData> implements IButton {
     /**
      * Sets the spark cost for this button.
      * An Integer greater than 0
-     */
+     */s
     public setCost(cost: number): Promise<void> {
         return this.updateAttribute('cost', cost);
     }
@@ -72,7 +72,12 @@ export class Button extends Control<IButtonData> implements IButton {
         return this.sendInput(input);
     }
 
-    public update(changedData: Partial<IButtonData>): Promise<void> {
+    /**
+     * Update this button on the server.
+     */
+    public update(controlUpdate: IButtonUpdate): Promise<void> {
+        // Clone to prevent mutations
+        const changedData = {...controlUpdate};
         if (changedData.cooldown) {
             changedData.cooldown = this.client.state.synchronizeLocalTime().getTime() + changedData.cooldown;
         }

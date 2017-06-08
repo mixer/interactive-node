@@ -7,6 +7,7 @@ import {
     ControlKind,
     IControl,
     IControlData,
+    IControlUpdate,
     IGridPlacement,
 } from '../interfaces/controls/IControl';
 import { IInput, IInputEvent } from '../interfaces/controls/IInput';
@@ -100,11 +101,18 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
         this.emit('updated', this);
     }
 
-    public update(changedData: Partial<IControlData>): Promise<void> {
+    /**
+     * Update this control on the server.
+     */
+    public update(controlUpdate: IControlUpdate): Promise<void> {
         // These must be present and correct at the time of the update,
         // Use values we have, not values given.
-        changedData.controlID = this.controlID;
-        changedData.etag = this.etag;
+        const changedData = {
+            ...controlUpdate,
+            controlID: this.controlID,
+            etag: this.etag,
+        };
+
         return this.client.updateControls({
             sceneID: this.scene.sceneID,
             controls: [changedData],

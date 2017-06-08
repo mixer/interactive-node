@@ -2,6 +2,7 @@ import { expect, use } from 'chai';
 import * as sinon from 'sinon';
 
 import { Client, ClientType } from '../../Client';
+import { IButtonUpdate } from '../interfaces/controls';
 import { Scene } from '../Scene';
 import { Button } from './';
 
@@ -60,7 +61,7 @@ describe('control', () => {
     });
 
     it('allows batch updates', () => {
-        const buttonDiff = {
+        const buttonDiff: IButtonUpdate = {
             cost: 200,
             text: 'foobar',
         };
