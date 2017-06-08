@@ -1,5 +1,5 @@
 import { IParticipant } from '../';
-import { IControl, IControlData } from './IControl';
+import { IControl, IControlData, IControlUpdate } from './IControl';
 import { IInputEvent, IJoystickInput } from './IInput';
 
 /**
@@ -8,7 +8,7 @@ import { IInputEvent, IJoystickInput } from './IInput';
 export interface IJoystickData extends IControlData {
     /**
      * The angle of the Joysticks direction indicator.
-     * In radians 0 - 2.
+     * In radians 0 - 2π.
      */
     angle?: number;
     /**
@@ -18,6 +18,28 @@ export interface IJoystickData extends IControlData {
     /**
      * The requested sample rate for this joystick, the client should send
      * coordinate updates at this rate.
+     *
+     * In milliseconds.
+     */
+    sampleRate?: number;
+}
+
+/**
+ * Represents updatable components of a joystick which developers can update
+ * from game clients.
+ */
+export interface IJoystickUpdate extends IControlUpdate {
+    /**
+     * Updates the angle of the Joysticks direction indicator.
+     * In radians 0 - 2π.
+     */
+    angle?: number;
+    /**
+     * updates the strength/opacity of the direction indicator.
+     */
+    intensity?: number;
+    /**
+     * Updates the sampleRate of this joystick
      *
      * In milliseconds.
      */
@@ -47,6 +69,11 @@ export interface IJoystick extends IControl, IJoystickData {
      * Sets the opacity/strength of the direction indicator for this joystick.
      */
     setIntensity(intensity: number): Promise<void>;
+
+    /**
+     * Updates the joystick with the supplied joystick parameters
+     */
+    update(controlUpdate: IJoystickUpdate): Promise<void>;
 
     /**
      * Fired when a participant moves this joystick.

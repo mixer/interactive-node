@@ -1,4 +1,4 @@
-import { IButton, IButtonData } from '../interfaces/controls/IButton';
+import { IButton, IButtonData, IButtonUpdate } from '../interfaces/controls/IButton';
 import { IButtonInput } from '../interfaces/controls/IInput';
 import { Control } from './Control';
 
@@ -70,5 +70,17 @@ export class Button extends Control<IButtonData> implements IButton {
      */
     public giveInput(input: IButtonInput): Promise<void> {
         return this.sendInput(input);
+    }
+
+    /**
+     * Update this button on the server.
+     */
+    public update(controlUpdate: IButtonUpdate): Promise<void> {
+        // Clone to prevent mutations
+        const changedData = {...controlUpdate};
+        if (changedData.cooldown) {
+            changedData.cooldown = this.client.state.synchronizeLocalTime().getTime() + changedData.cooldown;
+        }
+        return super.update(changedData);
     }
 }

@@ -2,6 +2,7 @@ import { expect, use } from 'chai';
 import * as sinon from 'sinon';
 
 import { Client, ClientType } from '../../Client';
+import { IButtonUpdate } from '../interfaces/controls';
 import { Scene } from '../Scene';
 import { Button } from './';
 
@@ -56,6 +57,26 @@ describe('control', () => {
             sceneID: 'default',
             controls: [updatedButton],
         });
+        stub.restore();
+    });
+
+    it('allows batch updates', () => {
+        const buttonDiff: IButtonUpdate = {
+            cost: 200,
+            text: 'foobar',
+        };
+        const updatedButton = {
+            etag: buttonData.etag,
+            controlID: buttonData.controlID,
+            ...buttonDiff,
+        };
+        const stub = sinon.stub(mockClient, 'updateControls');
+        control.update(buttonDiff);
+        expect(stub).to.be
+            .calledWith({
+                sceneID: 'default',
+                controls: [updatedButton],
+            });
         stub.restore();
     });
 });

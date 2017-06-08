@@ -7,6 +7,7 @@ import {
     ControlKind,
     IControl,
     IControlData,
+    IControlUpdate,
     IGridPlacement,
 } from '../interfaces/controls/IControl';
 import { IInput, IInputEvent } from '../interfaces/controls/IInput';
@@ -93,11 +94,27 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     }
 
     /**
-     * Merges in values from the server in response to an update operation.
+     * Merges in values from the server in response to an update operation from the server.
      */
-    public update(controlData: IControlData) {
+    public onUpdate(controlData: IControlData) {
         merge(this, controlData);
         this.emit('updated', this);
+    }
+
+    /**
+     * Update this control on the server.
+     */
+    public update<T2 extends IControlUpdate>(controlUpdate: T2): Promise<void> {
+        const changedData = {
+            ...<IControlUpdate>controlUpdate,
+            controlID: this.controlID,
+            etag: this.etag,
+        };
+
+        return this.client.updateControls({
+            sceneID: this.scene.sceneID,
+            controls: [changedData],
+        });
     }
 
     public destroy(): void {
