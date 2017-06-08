@@ -39,6 +39,7 @@ export interface IButton extends IControl, IButtonData {
     setProgress(progress: number): Promise<void>;
     setCooldown(duration: number): Promise<void>;
     setCost(cost: number): Promise<void>;
+    update(changedData: Partial<IButtonData>): Promise<void>;
 
     /**
      * Fired when a participant presses this button.

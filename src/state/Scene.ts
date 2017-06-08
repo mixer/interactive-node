@@ -82,7 +82,7 @@ export class Scene extends EventEmitter implements IScene {
     private onControlUpdated(controlData: IControlData) {
         const control = this.getControl(controlData.controlID);
         if (control) {
-            control.update(controlData);
+            control.onUpdate(controlData);
         }
     }
     /**

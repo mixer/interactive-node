@@ -71,4 +71,11 @@ export class Button extends Control<IButtonData> implements IButton {
     public giveInput(input: IButtonInput): Promise<void> {
         return this.sendInput(input);
     }
+
+    public update(changedData: Partial<IButtonData>): Promise<void> {
+        if (changedData.cooldown) {
+            changedData.cooldown = this.client.state.synchronizeLocalTime().getTime() + changedData.cooldown;
+        }
+        return super.update(changedData);
+    }
 }

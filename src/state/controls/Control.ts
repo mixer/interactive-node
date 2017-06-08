@@ -93,11 +93,22 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     }
 
     /**
-     * Merges in values from the server in response to an update operation.
+     * Merges in values from the server in response to an update operation from the server.
      */
-    public update(controlData: IControlData) {
+    public onUpdate(controlData: IControlData) {
         merge(this, controlData);
         this.emit('updated', this);
+    }
+
+    public update(changedData: Partial<IControlData>): Promise<void> {
+        // These must be present and correct at the time of the update,
+        // Use values we have, not values given.
+        changedData.controlID = this.controlID;
+        changedData.etag = this.etag;
+        return this.client.updateControls({
+            sceneID: this.scene.sceneID,
+            controls: [ changedData ],
+        });
     }
 
     public destroy(): void {

@@ -69,7 +69,7 @@ export interface IControl extends IControlData, EventEmitter {
     /**
      * Merges in updated control data from the mediator
      */
-    update(controlData: IControlData): void;
+    onUpdate(controlData: IControlData): void;
 
     /**
      * Fired when the control is deleted.
