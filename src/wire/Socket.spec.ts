@@ -227,14 +227,14 @@ describe('socket', () => {
         });
 
         it('handles circular references', () => {
-            ws.on('message', payload => {
-                expect(payload.params.bar).to.not.exist;
-                assertAndReplyTo(payload);
-            });
             const params: any  = {
                 foo: 'bar',
             };
             params.bar = params;
+            ws.on('message', payload => {
+                assertAndReplyTo(payload);
+            });
+
             return socket.execute('hello', params)
             .then(res => {
                 expect(res).to.equal('hi');
