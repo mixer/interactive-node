@@ -60,7 +60,7 @@ export class Button extends Control<IButtonData> implements IButton {
     /**
      * Sets the spark cost for this button.
      * An Integer greater than 0
-     */s
+     */
     public setCost(cost: number): Promise<void> {
         return this.updateAttribute('cost', cost);
     }
