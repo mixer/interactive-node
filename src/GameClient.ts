@@ -14,7 +14,7 @@ import { IControl } from './state/interfaces/controls/IControl';
 export interface IGameClientOptions {
     /**
      * Your project version id is a unique id to your Interactive Project Version. You can retrieve one
-     * from the Interactive Studio on Beam.pro in the Code step.
+     * from the Interactive Studio on Mixer.com in the Code step.
      */
     versionId: number;
     /**
