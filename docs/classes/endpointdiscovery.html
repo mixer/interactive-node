@@ -101,7 +101,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/EndpointDiscovery.ts#L10">EndpointDiscovery.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/31ca60b/src/EndpointDiscovery.ts#L8">EndpointDiscovery.ts:8</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -121,23 +121,29 @@
 					<a name="retrieveendpoints" class="tsd-anchor"></a>
 					<h3>retrieve<wbr>Endpoints</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">retrieve<wbr>Endpoints<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/iinteractiveendpoint.html" class="tsd-signature-type">IInteractiveEndpoint</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">retrieve<wbr>Endpoints<span class="tsd-signature-symbol">(</span>endpoint<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/iinteractiveendpoint.html" class="tsd-signature-type">IInteractiveEndpoint</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/EndpointDiscovery.ts#L18">EndpointDiscovery.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/31ca60b/src/EndpointDiscovery.ts#L16">EndpointDiscovery.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Retrieves available interactive servers from Beam&#39;s REST API.
+									<p>Retrieves available interactive servers from Mixer&#39;s REST API.
 										Game Clients should connect to the first one in the list and use
 										other servers in the list should a connection attempt to the first
 									fail.</p>
 								</div>
 							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> endpoint: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;https://mixer.com/api/v1/interactive/hosts&quot;</span></h5>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/iinteractiveendpoint.html" class="tsd-signature-type">IInteractiveEndpoint</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>

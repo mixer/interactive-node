@@ -78,7 +78,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igameclientoptions.html#authtoken" class="tsd-kind-icon">auth<wbr>Token</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igameclientoptions.html#url" class="tsd-kind-icon">url</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igameclientoptions.html#discoveryurl" class="tsd-kind-icon">discovery<wbr>Url</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igameclientoptions.html#versionid" class="tsd-kind-icon">version<wbr>Id</a></li>
 							</ul>
 						</section>
@@ -93,7 +93,7 @@
 					<div class="tsd-signature tsd-kind-icon">auth<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/GameClient.ts#L23">GameClient.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/31ca60b/src/GameClient.ts#L23">GameClient.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -103,17 +103,18 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="url" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> url</h3>
-					<div class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="discoveryurl" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> discovery<wbr>Url</h3>
+					<div class="tsd-signature tsd-kind-icon">discovery<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/GameClient.ts#L27">GameClient.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/31ca60b/src/GameClient.ts#L29">GameClient.ts:29</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>An interactive server url, these should be retrieved from <a href="https://beam.pro/api/v1/interactive/hosts">https://beam.pro/api/v1/interactive/hosts</a>.</p>
+							<p>A url which can be used to discover interactive servers.
+							Defaults to <a href="https://mixer.com/api/v1/interactive/hosts">https://mixer.com/api/v1/interactive/hosts</a></p>
 						</div>
 					</div>
 				</section>
@@ -123,13 +124,13 @@
 					<div class="tsd-signature tsd-kind-icon">version<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/GameClient.ts#L19">GameClient.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/31ca60b/src/GameClient.ts#L19">GameClient.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Your project version id is a unique id to your Interactive Project Version. You can retrieve one
-							from the Interactive Studio on Beam.pro in the Code step.</p>
+							from the Interactive Studio on Mixer.com in the Code step.</p>
 						</div>
 					</div>
 				</section>
@@ -154,7 +155,7 @@
 								<a href="igameclientoptions.html#authtoken" class="tsd-kind-icon">auth<wbr>Token</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="igameclientoptions.html#url" class="tsd-kind-icon">url</a>
+								<a href="igameclientoptions.html#discoveryurl" class="tsd-kind-icon">discovery<wbr>Url</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="igameclientoptions.html#versionid" class="tsd-kind-icon">version<wbr>Id</a>

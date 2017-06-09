@@ -1,8 +1,20 @@
 # Changelog
 
-## 1.x
+## 2.x
 
-## 2.0.0 Groups and Scenes **Breaking**
+### 2.1.0 Bug Fixes and Utility Methods
+
+- Fixed some re-branding issues (#51 #52 #55)
+  - Thanks @alfw, @kateract !
+- Add an initial state to the socket (#56)
+- Add a singular form of `createScenes` called `createScene` which can be used for tidier use cases (#62)
+  - Thanks @metaa !
+- Added `synchronizeState` which will retrieve `Scenes` and `Groups` from the server (#57)
+  - Can be used in the place of two calls to `synchronizeScenes` and `synchronizeGroups`
+- Added an `update` method to `Button` and `Joystick` which allows batch updates (#65)
+- Added the ability to specify a custom discovery url for internal Mixer developments (#69)
+
+### 2.0.0 Groups and Scenes **Breaking**
 
 With some awesome community contributions we've now added the following features:
 
@@ -15,13 +27,15 @@ With some awesome community contributions we've now added the following features
   - `synchronizeGroups`
   - `getGroups`
 
-### Breaking Changes
+#### Breaking Changes
 
 This release includes some minor breaking changes:
 
 - Minor refactor of IGroup* interfaces to align with I, IData, IDataArray pattern used elsewhere.
 
-## 1.0.0 Endpoint Discovery **Breaking**
+## 1.x
+
+### 1.0.0 Endpoint Discovery **Breaking**
 
 For interactive 2 its important to always retrieve a list of servers from our API before connecting. This used to be up to the implementer. With 1.0.0 we're placing this responsibility inside the client. This should make getting up and running easier.
 
@@ -31,7 +45,7 @@ All of the [examples](examples/) have been updated to reflect this change.
 
 ## 0.x
 
-## 0.11.0 Protocol Fixes
+### 0.11.0 Protocol Fixes
 
 This fixes several protocol issues with our initial implementation.
 

@@ -62,11 +62,27 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Represents updatable components of a control which developers can update
+						from game clients.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
 						<span class="target">IControlUpdate</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="ibuttonupdate.html" class="tsd-signature-type">IButtonUpdate</a>
+							</li>
+							<li>
+								<a href="ijoystickupdate.html" class="tsd-signature-type">IJoystickUpdate</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -77,7 +93,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="icontrolupdate.html#scenes" class="tsd-kind-icon">scenes</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="icontrolupdate.html#disabled" class="tsd-kind-icon">disabled</a></li>
 							</ul>
 						</section>
 					</div>
@@ -86,14 +102,20 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="scenes" class="tsd-anchor"></a>
-					<h3>scenes</h3>
-					<div class="tsd-signature tsd-kind-icon">scenes<span class="tsd-signature-symbol">:</span> <a href="iscenedataarray.html" class="tsd-signature-type">ISceneDataArray</a></div>
+					<a name="disabled" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> disabled</h3>
+					<div class="tsd-signature tsd-kind-icon">disabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/ac8b372/src/state/interfaces/controls/IControl.ts#L118">state/interfaces/controls/IControl.ts:118</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/31ca60b/src/state/interfaces/controls/IControl.ts#L52">state/interfaces/controls/IControl.ts:52</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>When set to true this will disable the control.
+							When set to false this will enable the control.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -113,7 +135,7 @@
 						<a href="icontrolupdate.html" class="tsd-kind-icon">IControl<wbr>Update</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="icontrolupdate.html#scenes" class="tsd-kind-icon">scenes</a>
+								<a href="icontrolupdate.html#disabled" class="tsd-kind-icon">disabled</a>
 							</li>
 						</ul>
 					</li>
