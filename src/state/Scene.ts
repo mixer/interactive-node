@@ -122,6 +122,13 @@ export class Scene extends EventEmitter implements IScene {
     }
 
     /**
+     * Updates a collection of controls in this scene, sending it to the server.
+     */
+    public updateControls(controls: IControlData[]): Promise<void> {
+        return this.client.updateControls({sceneID: this.sceneID, controls});
+    }
+
+    /**
      * Deletes controls in this scene from the server.
      */
     public deleteControls(controlIDs: string[]): Promise<void> {

@@ -58,6 +58,7 @@ export interface IScene extends EventEmitter {
 
     createControl(controlData: IControlData): Promise<IControl>;
     createControls(controls: IControlData[]): Promise<IControl[]>;
+    updateControls(controls: IControlData[]): Promise<void>;
     deleteControls(controlIDs: string[]): Promise<void>;
     deleteControl(controlIDs: string): Promise<void>;
     deleteAllControls(): Promise<void>;
