@@ -9,7 +9,7 @@ import {
     setWebSocket,
 } from '../lib';
 
-if (process.argv.length < 5) {
+if (process.argv.length < 4) {
     console.log('Usage gameClient.exe <token> <url> <experienceId>');
     process.exit();
 }
@@ -71,7 +71,6 @@ function makeControls(amount: number): IControlData[] {
 // Now we open the connection passing in our authentication details and an experienceId.
 client.open({
     authToken: process.argv[2],
-    url: process.argv[3],
     versionId: parseInt(process.argv[4], 10),
 })
 .then(() => {

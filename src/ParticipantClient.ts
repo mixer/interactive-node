@@ -4,13 +4,13 @@ import { IInput } from './state/interfaces/controls';
 
 export interface IParticipantOptions {
     /**
-     * A JWT representing a Beam.pro session
+     * A JWT representing a Mixer.com session
      */
     jwt: string;
     /**
      * A url for the Interactive session you'd like to join.
-     * This should be retrieved from https://beam.pro/api/v1/interactive/{channelId}
-     * @example wss://interactive1-dal.beam.pro/participant?channel=<channelid>
+     * This should be retrieved from https://mixer.com/api/v1/interactive/{channelId}
+     * @example wss://interactive1-dal.mixer.com/participant?channel=<channelid>
      */
     url: string;
     /**

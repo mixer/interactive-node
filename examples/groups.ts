@@ -160,7 +160,7 @@ function createGroups(): Promise<void> {
 
 // Now we open the connection passing in our authentication details and an experienceId.
 client
-    // Open the Beam client with command line args
+    // Open the Mixer interactive client with command line args
     .open({
         authToken: process.argv[2],
         versionId: parseInt(process.argv[3], 10),
