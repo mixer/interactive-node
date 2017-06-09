@@ -5,8 +5,6 @@ export interface IInteractiveEndpoint {
     address: string;
 }
 
-const endpoint = `https://beam.pro/api/v1/interactive/hosts`;
-
 export class EndpointDiscovery {
     constructor(private requester: IRequester) {}
     /**
@@ -15,7 +13,7 @@ export class EndpointDiscovery {
      * other servers in the list should a connection attempt to the first
      * fail.
      */
-    public retrieveEndpoints(): Promise<IInteractiveEndpoint[]> {
+    public retrieveEndpoints(endpoint: string = 'https://beam.pro/api/v1/interactive/hosts'): Promise<IInteractiveEndpoint[]> {
         return this.requester.request(endpoint)
         .then(res => {
             if (res.length > 0) {

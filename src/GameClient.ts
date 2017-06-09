@@ -21,10 +21,12 @@ export interface IGameClientOptions {
      * An OAuth Bearer token as defined in {@link https://art.tools.ietf.org/html/rfc6750| OAuth 2.0 Bearer Token Usage}.
      */
     authToken: string;
+
     /**
-     * An interactive server url, these should be retrieved from https://beam.pro/api/v1/interactive/hosts.
+     * A url which can be used to discover interactive servers.
+     * Defaults to https://mixer.com/api/v1/interactive/hosts
      */
-    url?: string;
+    discoveryUrl?: string;
 }
 
 export class GameClient extends Client {
@@ -37,7 +39,7 @@ export class GameClient extends Client {
      */
     public open(options: IGameClientOptions): Promise<this> {
         return this.discovery
-        .retrieveEndpoints()
+        .retrieveEndpoints(options.discoveryUrl)
         .then(endpoints => {
             return super.open({
                 authToken: options.authToken,
