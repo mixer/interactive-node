@@ -127,7 +127,7 @@ export module InteractiveError {
 
     export function fromSocketMessage(error: IInteractiveError): Base {
         if (errors[error.code]) {
-            return new errors[error.code](error.message, error.code);
+            return new errors[error.code](error.message, error.code, error.path);
         }
 
         return new Base(error.message, error.code);
