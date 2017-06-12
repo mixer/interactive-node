@@ -115,7 +115,7 @@ export interface IInteractiveError {
 
 export module InteractiveError {
     export class Base extends BaseError {
-        public path: string;
+        public path: string | null;
         constructor(message: string, public code: number) {
             super(message);
             Base.setProto(this);
