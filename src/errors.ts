@@ -435,3 +435,4 @@ export module InteractiveError {
 
     errors[4999] = BadUserInput;
 }
+
