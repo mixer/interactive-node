@@ -146,7 +146,7 @@ export class State extends EventEmitter implements IState {
         this.methodHandler.addHandler('onParticipantLeave', res => {
             res.params.participants.forEach(participant => {
                 this.participants.delete(participant.sessionID);
-                this.emit('participantLeave', participant.sessionID);
+                this.emit('participantLeave', participant.sessionID, participant);
             });
         });
 

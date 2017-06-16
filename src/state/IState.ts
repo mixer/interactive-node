@@ -44,7 +44,7 @@ export interface IState extends EventEmitter {
     /**
      * Fired when a participant leaves.
      */
-    on(event: 'participantLeave', listener: (participantSessionID: string) => void): this;
+    on(event: 'participantLeave', listener: (participantSessionID: string, participant: IParticipant) => void): this;
 
     /**
      * Fired when a scene is deleted.
