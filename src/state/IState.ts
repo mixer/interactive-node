@@ -9,6 +9,10 @@ import { IGroup, IGroupDataArray } from './interfaces/IGroup';
 import { IParticipant } from './interfaces/IParticipant';
 
 export interface IState extends EventEmitter {
+    groups: Map<string, IGroup>;
+    scenes: Map<string, IScene>;
+    participants: Map<string, IParticipant>;
+
     setClient(client: IClient): void;
     processMethod(method: Method<any>): void | Reply;
     synchronizeLocalTime(time?: Date | number): Date;

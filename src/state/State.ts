@@ -27,7 +27,7 @@ export class State extends EventEmitter implements IState {
     /**
      * A Map of group ids to their corresponding Group Object.
      */
-    private groups = new Map<string, Group>();
+    private _groups = new Map<string, Group>();
     /**
      * the ready state of this session, is the GameClient in this session ready to recieve input?
      */
@@ -35,11 +35,11 @@ export class State extends EventEmitter implements IState {
 
     private methodHandler = new MethodHandlerManager();
     private stateFactory = new StateFactory();
-    private scenes = new Map<string, Scene>();
+    private _scenes = new Map<string, Scene>();
 
     private client: IClient;
 
-    private participants = new Map<string, IParticipant>();
+    private _participants = new Map<string, IParticipant>();
 
     private clockDelta: number = 0;
 
@@ -83,20 +83,20 @@ export class State extends EventEmitter implements IState {
 
         // Control Events
         this.methodHandler.addHandler('onControlCreate', res => {
-            const scene = this.scenes.get(res.params.sceneID);
+            const scene = this._scenes.get(res.params.sceneID);
             if (scene) {
                 scene.onControlsCreated(res.params.controls);
             }
         });
 
         this.methodHandler.addHandler('onControlDelete', res => {
-            const scene = this.scenes.get(res.params.sceneID);
+            const scene = this._scenes.get(res.params.sceneID);
             if (scene) {
                 scene.onControlsDeleted(res.params.controls);
             }
         });
         this.methodHandler.addHandler('onControlUpdate', res => {
-            const scene = this.scenes.get(res.params.sceneID);
+            const scene = this._scenes.get(res.params.sceneID);
             if (scene) {
                 scene.onControlsUpdated(res.params.controls);
             }
@@ -138,21 +138,21 @@ export class State extends EventEmitter implements IState {
     private addGameClientHandlers() {
         this.methodHandler.addHandler('onParticipantJoin', res => {
             res.params.participants.forEach(participant => {
-                this.participants.set(participant.sessionID, participant);
+                this._participants.set(participant.sessionID, participant);
                 this.emit('participantJoin', participant);
             });
         });
 
         this.methodHandler.addHandler('onParticipantLeave', res => {
             res.params.participants.forEach(participant => {
-                this.participants.delete(participant.sessionID);
+                this._participants.delete(participant.sessionID);
                 this.emit('participantLeave', participant.sessionID);
             });
         });
 
         this.methodHandler.addHandler('onParticipantUpdate', res => {
             res.params.participants.forEach(participant => {
-                merge(this.participants.get(participant.sessionID), participant);
+                merge(this._participants.get(participant.sessionID), participant);
             });
         });
 
@@ -210,12 +210,12 @@ export class State extends EventEmitter implements IState {
      * Completely clears this state instance emptying all Scene, Group and Participant records
      */
     public reset() {
-        this.scenes.forEach(scene => scene.destroy());
-        this.scenes.clear();
+        this._scenes.forEach(scene => scene.destroy());
+        this._scenes.clear();
         this.clockDelta = 0;
         this.isReady = false;
-        this.participants.clear();
-        this.groups.clear();
+        this._participants.clear();
+        this._groups.clear();
     }
 
     /**
@@ -235,7 +235,7 @@ export class State extends EventEmitter implements IState {
         const targetScene = this.getScene(sceneID);
         if (targetScene) {
             targetScene.destroy();
-            this.scenes.delete(sceneID);
+            this._scenes.delete(sceneID);
             this.emit('sceneDeleted', sceneID, reassignSceneID);
         }
     }
@@ -244,10 +244,10 @@ export class State extends EventEmitter implements IState {
      * Inserts a new scene into the game session.
      */
     public onSceneCreate(data: ISceneData): IScene {
-        let scene = this.scenes.get(data.sceneID);
+        let scene = this._scenes.get(data.sceneID);
         if (scene) {
             if (scene.etag === data.etag) {
-                return this.scenes.get(data.sceneID);
+                return this._scenes.get(data.sceneID);
             }
             this.onSceneUpdate(data);
             return scene;
@@ -256,7 +256,7 @@ export class State extends EventEmitter implements IState {
         if (data.controls) {
             scene.onControlsCreated(data.controls);
         }
-        this.scenes.set(data.sceneID, scene);
+        this._scenes.set(data.sceneID, scene);
         this.emit('sceneCreated', scene);
         return scene;
     }
@@ -285,7 +285,7 @@ export class State extends EventEmitter implements IState {
         const targetGroup = this.getGroup(groupID);
         if (targetGroup) {
             targetGroup.destroy();
-            this.groups.delete(groupID);
+            this._groups.delete(groupID);
             this.emit('groupDeleted', groupID, reassignGroupID);
         }
     }
@@ -294,16 +294,16 @@ export class State extends EventEmitter implements IState {
      * Inserts a new group into the game session.
      */
     public onGroupCreate(data: IGroupData): Group {
-        let group = this.groups.get(data.groupID);
+        let group = this._groups.get(data.groupID);
         if (group) {
             if (group.etag === data.etag) {
-                return this.groups.get(data.groupID);
+                return this._groups.get(data.groupID);
             }
             this.onGroupUpdate(data);
             return group;
         }
         group = new Group(data);
-        this.groups.set(data.groupID, group);
+        this._groups.set(data.groupID, group);
         this.emit('groupCreated', group);
         return group;
     }
@@ -312,14 +312,28 @@ export class State extends EventEmitter implements IState {
      * Retrieve a group with the matching ID from the group store.
      */
     public getGroup(id: string): Group {
-        return this.groups.get(id);
+        return this._groups.get(id);
+    }
+
+    /**
+     * Retrieve all groups.
+     */
+    public get groups(): Map<string, Group> {
+        return this._groups;
     }
 
     /**
      * Retrieve a scene with the matching ID from the scene store.
      */
     public getScene(id: string): IScene {
-        return this.scenes.get(id);
+        return this._scenes.get(id);
+    }
+
+    /**
+     * Retrieve all scenes
+     */
+    public get scenes(): Map<string, Scene> {
+        return this._scenes;
     }
 
     /**
@@ -327,7 +341,7 @@ export class State extends EventEmitter implements IState {
      */
     public getControl(id: string): IControl {
         let result: IControl;
-        this.scenes.forEach(scene => {
+        this._scenes.forEach(scene => {
             const found = scene.getControl(id);
             if (found) {
                 result = found;
@@ -336,9 +350,16 @@ export class State extends EventEmitter implements IState {
         return result;
     }
 
+    /**
+     * Retrieve all participants.
+     */
+    public get participants(): Map<string, IParticipant> {
+        return this._participants;
+    }
+
     private getParticipantBy<K extends keyof IParticipant>(field: K, value: IParticipant[K]): IParticipant {
         let result;
-        this.participants.forEach(participant => {
+        this._participants.forEach(participant => {
             if (participant[field] === value) {
                 result = participant;
             }
@@ -362,6 +383,6 @@ export class State extends EventEmitter implements IState {
      * Retrieve a participant by their sessionID with the current Interactive session.
      */
     public getParticipantBySessionID(id: string): IParticipant {
-        return this.participants.get(id);
+        return this._participants.get(id);
     }
 }
