@@ -115,6 +115,7 @@ export interface IInteractiveError {
 
 export module InteractiveError {
     export class Base extends BaseError {
+        public path: string | null;
         constructor(message: string, public code: number) {
             super(message);
             Base.setProto(this);
@@ -127,7 +128,9 @@ export module InteractiveError {
 
     export function fromSocketMessage(error: IInteractiveError): Base {
         if (errors[error.code]) {
-            return new errors[error.code](error.message, error.code);
+            const err = new errors[error.code](error.message, error.code);
+            err.path = error.path;
+            return err;
         }
 
         return new Base(error.message, error.code);
