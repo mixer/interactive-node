@@ -15,6 +15,7 @@ import {
     ISceneControlDeletion,
     ISceneData,
     ISceneDataArray,
+    ISceneDeletionParams,
     ITransactionCapture,
 } from './state/interfaces';
 import { IState } from './state/IState';
@@ -306,6 +307,10 @@ export class Client extends EventEmitter implements IClient {
 
     public deleteGroup(_: IGroupDeletionParams): Promise<void> {
         throw new PermissionDeniedError('deleteGroup', 'Participant');
+    }
+
+    public deleteScene(_: ISceneDeletionParams): Promise<void> {
+        throw new PermissionDeniedError('deleteScene', 'Participant');
     }
 
     public ready(_: boolean): Promise<void> {

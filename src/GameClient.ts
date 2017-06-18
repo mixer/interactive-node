@@ -8,6 +8,7 @@ import {
     ISceneControlDeletion,
     ISceneData,
     ISceneDataArray,
+    ISceneDeletionParams,
 } from './state/interfaces';
 import { IControl } from './state/interfaces/controls/IControl';
 
@@ -153,5 +154,12 @@ export class GameClient extends Client {
      */
     public deleteGroup(data: IGroupDeletionParams): Promise<void> {
         return this.execute('deleteGroup', data, false);
+    }
+
+    /**
+     * Instructs the server to delete the provided scene.
+     */
+    public deleteScene(data: ISceneDeletionParams): Promise<void> {
+        return this.execute('deleteScene', data, false);
     }
 }

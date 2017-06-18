@@ -11,6 +11,7 @@ import {
     ISceneControlDeletion,
     ISceneData,
     ISceneDataArray,
+    ISceneDeletionParams,
 } from './state/interfaces';
 import { IState } from './state/IState';
 
@@ -28,6 +29,7 @@ export interface IClient extends EventEmitter {
     updateGroups(groups: IGroupDataArray): Promise<IGroupDataArray>;
     deleteControls(controls: ISceneControlDeletion): Promise<void>;
     deleteGroup(data: IGroupDeletionParams): Promise<void>;
+    deleteScene(data: ISceneDeletionParams): Promise<void>;
     updateScenes(scenes: ISceneDataArray): Promise<void>;
     updateParticipants(participants: IParticipantArray): Promise<void>;
     giveInput<T extends IInput>(_: T): Promise<void>;
