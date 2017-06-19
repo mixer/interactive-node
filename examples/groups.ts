@@ -197,8 +197,8 @@ client.state.on('participantJoin', (participant: IParticipant ) => {
     }
 });
 
-client.state.on('participantLeave', (participant: string ) => {
-    console.log(`${participant} Left`);
-    removeParticipant(participant)
+client.state.on('participantLeave', (participantSessionID: string, participant: IParticipant ) => {
+    console.log(`${participant.username}(${participantSessionID}) Left`);
+    removeParticipant(participantSessionID)
 });
 /* tslint:enable:no-console */

@@ -6,6 +6,7 @@ import {
     IButton,
     IButtonData,
     IControlData,
+    IParticipant,
     setWebSocket,
 } from '../lib';
 
@@ -108,7 +109,7 @@ client.open({
 client.state.on('participantJoin', participant => {
     console.log(`${participant.username}(${participant.sessionID}) Joined`);
 });
-client.state.on('participantLeave', (participant: string ) => {
-    console.log(`${participant} Left`);
+client.state.on('participantLeave', (participantSessionID: string, participant: IParticipant ) => {
+    console.log(`${participant.username}(${participantSessionID}) Left`);
 });
 /* tslint:enable:no-console */
