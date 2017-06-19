@@ -9,10 +9,6 @@ import { IGroup, IGroupDataArray } from './interfaces/IGroup';
 import { IParticipant } from './interfaces/IParticipant';
 
 export interface IState extends EventEmitter {
-    groups: Map<string, IGroup>;
-    scenes: Map<string, IScene>;
-    participants: Map<string, IParticipant>;
-
     setClient(client: IClient): void;
     processMethod(method: Method<any>): void | Reply;
     synchronizeLocalTime(time?: Date | number): Date;
@@ -20,7 +16,9 @@ export interface IState extends EventEmitter {
 
     reset(): void;
 
+    getGroups(): Map<string, IGroup>;
     getGroup(id: string): IGroup;
+    getScenes(): Map<string, IScene>;
     getScene(id: string): IScene;
     onSceneCreate(data: ISceneData): IScene;
     synchronizeScenes(data: ISceneDataArray): IScene[];
@@ -28,6 +26,7 @@ export interface IState extends EventEmitter {
 
     getControl(id: string): IControl;
 
+    getParticipants(): Map<string, IParticipant>;
     getParticipantByUserID(id: number): IParticipant;
     getParticipantByUsername(name: string): IParticipant;
     getParticipantBySessionID(id: string): IParticipant;
