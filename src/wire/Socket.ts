@@ -7,6 +7,8 @@ import { resolveOn } from '../util';
 import { Method, Packet, PacketState, Reply } from './packets';
 import { ExponentialReconnectionPolicy, IReconnectionPolicy } from './reconnection';
 
+import stringify = require('json-stringify-safe'); //tslint:disable-line
+
 /**
  * Close codes that are deemed to be recoverable by the reconnection policy
  */
@@ -339,7 +341,8 @@ export class InteractiveSocket extends EventEmitter {
     }
 
     private sendRaw(packet: any) {
-        const data = JSON.stringify(packet);
+        // Replace circular references with nothing.
+        const data = stringify(packet, null, 0, () => {/** */});
         const payload = data;
 
         this.emit('send', payload);

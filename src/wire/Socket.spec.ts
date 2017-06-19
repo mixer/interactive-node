@@ -226,6 +226,21 @@ describe('socket', () => {
             });
         });
 
+        it('handles circular references', () => {
+            const params: any  = {
+                foo: 'bar',
+            };
+            params.bar = params;
+            ws.on('message', payload => {
+                assertAndReplyTo(payload);
+            });
+
+            return socket.execute('hello', params)
+            .then(res => {
+                expect(res).to.equal('hi');
+            });
+        });
+
         it('emits a method sent to it', done => {
             ws.send(JSON.stringify(METHOD));
             socket.on('method', (method: Method<any>) => {
