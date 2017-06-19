@@ -3,8 +3,8 @@ import { IGridLayout } from './state/interfaces/controls';
 /**
  * Offers constant information values to use in an application.
  */
-export class InteractiveConstants {
-    private static readonly _gridLayoutSizes: IGridLayout[] = [
+export module InteractiveConstants {
+    export const gridLayoutSizes: IGridLayout[] = <IGridLayout[]> Object.freeze([
         {
             size: 'large',
             width: 80,
@@ -18,12 +18,5 @@ export class InteractiveConstants {
             width: 30,
             height: 40,
         },
-    ];
-
-	/**
-     * @returns {{GridLayout[]}} a copy of the stored layout definitions to prevent users from breaking it.
-	 */
-	public static get gridLayoutSizes(): IGridLayout[] {
-        return {...InteractiveConstants._gridLayoutSizes};
-    }
+    ]);
 }
