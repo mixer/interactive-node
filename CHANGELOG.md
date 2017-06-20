@@ -2,6 +2,10 @@
 
 ## 2.x
 
+## 2.2
+- Added `State.getGroups()`, `State.getParticipants()` and `State.getScenes()` (#78)
+- Internal project cleanup
+
 ### 2.1.0 Bug Fixes and Utility Methods
 
 - Fixed some re-branding issues (#51 #52 #55)
