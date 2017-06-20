@@ -5,8 +5,9 @@ export * from './state/Group';
 export * from './IClient';
 export * from './GameClient';
 export * from './ParticipantClient';
-export * from './util';
+export * from './constants';
 export * from './errors';
+export * from './util';
 
 /**
  * This allows you to specify which WebSocket implementation your
