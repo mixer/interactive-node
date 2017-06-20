@@ -1,7 +1,7 @@
 {
   "name": "beam-interactive-node2",
   "version": "2.1.0",
-  "description": "A NodeJS and Browser compatible client for Beam.pro's interactive 2 Protocol",
+  "description": "A NodeJS and Browser compatible client for mixer.com's interactive 2 Protocol",
   "contributors": [
     {
       "name": "Richard Fox",
@@ -21,23 +21,23 @@
     "build": "npm run build:ts && npm run build:webpack && npm run build:examples",
     "test": "npm run lint && npm run test:unit",
     "test:unit": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
-    "prepublish": "npm run build",
+    "prepublish": "npm run build && node doc-postprocess.js",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
-    "docs": "typedoc --exclude \"*.spec.ts\" --out docs/ --mode file --excludeNotExported --excludePrivate --excludeExternals --tsconfig tsconfig.json ./src/index.ts"
+    "docs": "typedoc --exclude \"{*.spec.ts,**/node_modules/**}\" --out docs/ --mode file --excludeNotExported --excludePrivate --excludeExternals --tsconfig tsconfig.json ./src/index.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WatchBeam/beam-interactive-node2.git"
+    "url": "git+https://github.com/mixer/beam-interactive-node2.git"
   },
   "keywords": [
     "Interactive",
-    "Beam"
+    "Mixer"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/WatchBeam/beam-interactive-node2/issues"
+    "url": "https://github.com/mixer/beam-interactive-node2/issues"
   },
-  "homepage": "https://github.com/WatchBeam/beam-interactive-node2#readme",
+  "homepage": "https://github.com/mixer/beam-interactive-node2#readme",
   "devDependencies": {
     "@types/chai": "^3.4.34",
     "@types/chai-as-promised": "0.0.30",
