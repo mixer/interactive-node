@@ -16,7 +16,9 @@ export interface IState extends EventEmitter {
 
     reset(): void;
 
+    getGroups(): Map<string, IGroup>;
     getGroup(id: string): IGroup;
+    getScenes(): Map<string, IScene>;
     getScene(id: string): IScene;
     onSceneCreate(data: ISceneData): IScene;
     synchronizeScenes(data: ISceneDataArray): IScene[];
@@ -24,6 +26,7 @@ export interface IState extends EventEmitter {
 
     getControl(id: string): IControl;
 
+    getParticipants(): Map<string, IParticipant>;
     getParticipantByUserID(id: number): IParticipant;
     getParticipantByUsername(name: string): IParticipant;
     getParticipantBySessionID(id: string): IParticipant;

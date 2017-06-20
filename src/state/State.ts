@@ -309,10 +309,24 @@ export class State extends EventEmitter implements IState {
     }
 
     /**
+     * Retrieve all groups.
+     */
+    public getGroups(): Map<string, Group> {
+        return this.groups;
+    }
+
+    /**
      * Retrieve a group with the matching ID from the group store.
      */
     public getGroup(id: string): Group {
         return this.groups.get(id);
+    }
+
+    /**
+     * Retrieve all scenes
+     */
+    public getScenes(): Map<string, Scene> {
+        return this.scenes;
     }
 
     /**
@@ -334,6 +348,13 @@ export class State extends EventEmitter implements IState {
             }
         });
         return result;
+    }
+
+    /**
+     * Retrieve all participants.
+     */
+    public getParticipants(): Map<string, IParticipant> {
+        return this.participants;
     }
 
     private getParticipantBy<K extends keyof IParticipant>(field: K, value: IParticipant[K]): IParticipant {
