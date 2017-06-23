@@ -6,8 +6,8 @@ import { ETag } from './';
  * It contains a value and an Etag.
  */
 export interface IMetaProperty {
-    value: IJSON;
-    etag: ETag;
+  value: IJSON;
+  etag: ETag;
 }
 
 /**
@@ -19,5 +19,5 @@ export interface IMetaProperty {
  * state element.
  */
 export interface IMeta {
-    [property: string]: IMetaProperty;
+  [property: string]: IMetaProperty;
 }

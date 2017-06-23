@@ -1,3 +1,3 @@
 export type onReadyParams = {
-    isReady: boolean;
+  isReady: boolean;
 };

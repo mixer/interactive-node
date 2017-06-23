@@ -1,4 +1,3 @@
-
 /**
  * Etags are a synchronization mechanism within interactive.
  * Each time state on a Control, Group, Participant or Scene

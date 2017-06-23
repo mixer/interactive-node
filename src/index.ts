@@ -16,5 +16,5 @@ export * from './util';
  * @example `Interactive.setWebsocket(require('ws'));`
  */
 export function setWebSocket(ws: any) {
-    InteractiveSocket.WebSocket = ws;
+  InteractiveSocket.WebSocket = ws;
 }
