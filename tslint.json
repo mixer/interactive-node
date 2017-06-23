@@ -4,7 +4,7 @@
         "node_modules/tslint-microsoft-contrib"
     ],
     "rules": {
-        "align": [true, "members", "elements", "parameters", "statements" ],
+        "align": [true],
         "no-multiline-string": false,
         "arrow-parens": [true, "ban-single-arg-parens"],
         "max-file-line-count": [true, 600],
