@@ -15,7 +15,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "fmt": "prettier --single-quote --trailing-comma all --write \"{src/**/*.ts,*.js}\"",
+    "fmt": "prettier --single-quote --trailing-comma all --tab-width 4 --write \"{src/**/*.ts,*.js}\"",
     "build:ts": "rimraf lib dist && tsc",
     "build:webpack": "rimraf dist && webpack && webpack --config webpack.config.min.js",
     "build:examples": "rimraf examples/*.js && cd examples && tsc",

@@ -3,5 +3,5 @@ import deepmerge = require('deepmerge'); //tslint:disable-line no-require-import
  * Merges the properties of two objects together, mutating the first object. Similar to lodash's merge.
  */
 export function merge<T>(x: T, y: T): T {
-  return Object.assign(x, deepmerge(x, y));
+    return Object.assign(x, deepmerge(x, y));
 }

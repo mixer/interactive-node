@@ -7,18 +7,18 @@ const { sync } = require('glob');
 const { readFileSync, writeFileSync } = require('fs');
 
 function escapeRegExp(str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 }
 
 const pwd = process.cwd();
 const regExp = new RegExp(
-  `Defined in ${escapeRegExp(pwd)}.+node_modules/(.+)`,
-  'gi',
+    `Defined in ${escapeRegExp(pwd)}.+node_modules/(.+)`,
+    'gi',
 );
 sync('docs/**/*.html').forEach(path => {
-  const contents = readFileSync(path, 'utf8');
-  writeFileSync(
-    path,
-    contents.replace(regExp, 'Defined in external package $1'),
-  );
+    const contents = readFileSync(path, 'utf8');
+    writeFileSync(
+        path,
+        contents.replace(regExp, 'Defined in external package $1'),
+    );
 });

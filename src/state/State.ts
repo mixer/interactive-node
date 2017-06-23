@@ -24,370 +24,377 @@ import { StateFactory } from './StateFactory';
  * examine and alter components of the interactive session.
  */
 export class State extends EventEmitter implements IState {
-  /**
+    /**
      * A Map of group ids to their corresponding Group Object.
      */
-  private groups = new Map<string, Group>();
-  /**
+    private groups = new Map<string, Group>();
+    /**
      * the ready state of this session, is the GameClient in this session ready to recieve input?
      */
-  public isReady: boolean;
+    public isReady: boolean;
 
-  private methodHandler = new MethodHandlerManager();
-  private stateFactory = new StateFactory();
-  private scenes = new Map<string, Scene>();
+    private methodHandler = new MethodHandlerManager();
+    private stateFactory = new StateFactory();
+    private scenes = new Map<string, Scene>();
 
-  private client: IClient;
+    private client: IClient;
 
-  private participants = new Map<string, IParticipant>();
+    private participants = new Map<string, IParticipant>();
 
-  private clockDelta: number = 0;
+    private clockDelta: number = 0;
 
-  private clockSyncer = new ClockSync({
-    sampleFunc: () => this.client.getTime(),
-  });
+    private clockSyncer = new ClockSync({
+        sampleFunc: () => this.client.getTime(),
+    });
 
-  /**
+    /**
      * Constructs a new State instance. Based on the passed client type it will
      * hook into the appropriate methods for that type to keep itself up to date.
      */
-  constructor(private clientType: ClientType) {
-    super();
+    constructor(private clientType: ClientType) {
+        super();
 
-    this.methodHandler.addHandler('onReady', readyMethod => {
-      this.isReady = readyMethod.params.isReady;
-      this.emit('ready', this.isReady);
-    });
+        this.methodHandler.addHandler('onReady', readyMethod => {
+            this.isReady = readyMethod.params.isReady;
+            this.emit('ready', this.isReady);
+        });
 
-    // Scene Events
-    this.methodHandler.addHandler('onSceneCreate', res => {
-      res.params.scenes.forEach(scene => this.onSceneCreate(scene));
-    });
-    this.methodHandler.addHandler('onSceneDelete', res => {
-      this.onSceneDelete(res.params.sceneID, res.params.reassignSceneID);
-    });
-    this.methodHandler.addHandler('onSceneUpdate', res => {
-      res.params.scenes.forEach(scene => this.onSceneUpdate(scene));
-    });
+        // Scene Events
+        this.methodHandler.addHandler('onSceneCreate', res => {
+            res.params.scenes.forEach(scene => this.onSceneCreate(scene));
+        });
+        this.methodHandler.addHandler('onSceneDelete', res => {
+            this.onSceneDelete(res.params.sceneID, res.params.reassignSceneID);
+        });
+        this.methodHandler.addHandler('onSceneUpdate', res => {
+            res.params.scenes.forEach(scene => this.onSceneUpdate(scene));
+        });
 
-    // Group Events
-    this.methodHandler.addHandler('onGroupCreate', res => {
-      res.params.groups.forEach(group => this.onGroupCreate(group));
-    });
-    this.methodHandler.addHandler('onGroupDelete', res => {
-      this.onGroupDelete(res.params.groupID, res.params.reassignGroupID);
-    });
-    this.methodHandler.addHandler('onGroupUpdate', res => {
-      res.params.groups.forEach(group => this.onGroupUpdate(group));
-    });
+        // Group Events
+        this.methodHandler.addHandler('onGroupCreate', res => {
+            res.params.groups.forEach(group => this.onGroupCreate(group));
+        });
+        this.methodHandler.addHandler('onGroupDelete', res => {
+            this.onGroupDelete(res.params.groupID, res.params.reassignGroupID);
+        });
+        this.methodHandler.addHandler('onGroupUpdate', res => {
+            res.params.groups.forEach(group => this.onGroupUpdate(group));
+        });
 
-    // Control Events
-    this.methodHandler.addHandler('onControlCreate', res => {
-      const scene = this.scenes.get(res.params.sceneID);
-      if (scene) {
-        scene.onControlsCreated(res.params.controls);
-      }
-    });
+        // Control Events
+        this.methodHandler.addHandler('onControlCreate', res => {
+            const scene = this.scenes.get(res.params.sceneID);
+            if (scene) {
+                scene.onControlsCreated(res.params.controls);
+            }
+        });
 
-    this.methodHandler.addHandler('onControlDelete', res => {
-      const scene = this.scenes.get(res.params.sceneID);
-      if (scene) {
-        scene.onControlsDeleted(res.params.controls);
-      }
-    });
-    this.methodHandler.addHandler('onControlUpdate', res => {
-      const scene = this.scenes.get(res.params.sceneID);
-      if (scene) {
-        scene.onControlsUpdated(res.params.controls);
-      }
-    });
+        this.methodHandler.addHandler('onControlDelete', res => {
+            const scene = this.scenes.get(res.params.sceneID);
+            if (scene) {
+                scene.onControlsDeleted(res.params.controls);
+            }
+        });
+        this.methodHandler.addHandler('onControlUpdate', res => {
+            const scene = this.scenes.get(res.params.sceneID);
+            if (scene) {
+                scene.onControlsUpdated(res.params.controls);
+            }
+        });
 
-    this.clockSyncer.on('delta', (delta: number) => {
-      this.clockDelta = delta;
-    });
+        this.clockSyncer.on('delta', (delta: number) => {
+            this.clockDelta = delta;
+        });
 
-    if (this.clientType === ClientType.GameClient) {
-      this.addGameClientHandlers();
-    } else {
-      this.addParticipantHandlers();
+        if (this.clientType === ClientType.GameClient) {
+            this.addGameClientHandlers();
+        } else {
+            this.addParticipantHandlers();
+        }
     }
-  }
 
-  /**
+    /**
      * Synchronize scenes takes a collection of scenes from the server
      * and hydrates the Scene store with them.
      */
-  public synchronizeScenes(data: ISceneDataArray): IScene[] {
-    return data.scenes.map(scene => this.onSceneCreate(scene));
-  }
+    public synchronizeScenes(data: ISceneDataArray): IScene[] {
+        return data.scenes.map(scene => this.onSceneCreate(scene));
+    }
 
-  public synchronizeGroups(data: IGroupDataArray): IGroup[] {
-    return data.groups.map(group => this.onGroupCreate(group));
-  }
+    public synchronizeGroups(data: IGroupDataArray): IGroup[] {
+        return data.groups.map(group => this.onGroupCreate(group));
+    }
 
-  private addParticipantHandlers() {
-    // A participant only gets onParticipantUpdate/Join events for themselves.
-    this.methodHandler.addHandler('onParticipantUpdate', res => {
-      this.emit('selfUpdate', res.params.participants[0]);
-    });
-    this.methodHandler.addHandler('onParticipantJoin', res => {
-      this.emit('selfUpdate', res.params.participants[0]);
-    });
-  }
+    private addParticipantHandlers() {
+        // A participant only gets onParticipantUpdate/Join events for themselves.
+        this.methodHandler.addHandler('onParticipantUpdate', res => {
+            this.emit('selfUpdate', res.params.participants[0]);
+        });
+        this.methodHandler.addHandler('onParticipantJoin', res => {
+            this.emit('selfUpdate', res.params.participants[0]);
+        });
+    }
 
-  private addGameClientHandlers() {
-    this.methodHandler.addHandler('onParticipantJoin', res => {
-      res.params.participants.forEach(participant => {
-        this.participants.set(participant.sessionID, participant);
-        this.emit('participantJoin', participant);
-      });
-    });
+    private addGameClientHandlers() {
+        this.methodHandler.addHandler('onParticipantJoin', res => {
+            res.params.participants.forEach(participant => {
+                this.participants.set(participant.sessionID, participant);
+                this.emit('participantJoin', participant);
+            });
+        });
 
-    this.methodHandler.addHandler('onParticipantLeave', res => {
-      res.params.participants.forEach(participant => {
-        this.participants.delete(participant.sessionID);
-        this.emit('participantLeave', participant.sessionID, participant);
-      });
-    });
+        this.methodHandler.addHandler('onParticipantLeave', res => {
+            res.params.participants.forEach(participant => {
+                this.participants.delete(participant.sessionID);
+                this.emit(
+                    'participantLeave',
+                    participant.sessionID,
+                    participant,
+                );
+            });
+        });
 
-    this.methodHandler.addHandler('onParticipantUpdate', res => {
-      res.params.participants.forEach(participant => {
-        merge(this.participants.get(participant.sessionID), participant);
-      });
-    });
+        this.methodHandler.addHandler('onParticipantUpdate', res => {
+            res.params.participants.forEach(participant => {
+                merge(
+                    this.participants.get(participant.sessionID),
+                    participant,
+                );
+            });
+        });
 
-    this.methodHandler.addHandler('giveInput', res => {
-      const control = this.getControl(res.params.input.controlID);
-      if (control) {
-        const participant = this.getParticipantBySessionID(
-          res.params.participantID,
-        );
-        control.receiveInput(res.params, participant);
-      }
-    });
-  }
+        this.methodHandler.addHandler('giveInput', res => {
+            const control = this.getControl(res.params.input.controlID);
+            if (control) {
+                const participant = this.getParticipantBySessionID(
+                    res.params.participantID,
+                );
+                control.receiveInput(res.params, participant);
+            }
+        });
+    }
 
-  public setClient(client: IClient) {
-    this.client = client;
-    this.client.on('open', () => this.clockSyncer.start());
-    this.client.on('close', () => this.clockSyncer.stop());
-    this.stateFactory.setClient(client);
-  }
+    public setClient(client: IClient) {
+        this.client = client;
+        this.client.on('open', () => this.clockSyncer.start());
+        this.client.on('close', () => this.clockSyncer.stop());
+        this.stateFactory.setClient(client);
+    }
 
-  /**
+    /**
      * Processes a server side method using State's method handler.
      */
-  public processMethod(method: Method<any>): void | Reply {
-    try {
-      return this.methodHandler.handle(method);
-    } catch (e) {
-      if (e instanceof InteractiveError.Base) {
-        return Reply.fromError(method.id, e);
-      }
-      throw e;
+    public processMethod(method: Method<any>): void | Reply {
+        try {
+            return this.methodHandler.handle(method);
+        } catch (e) {
+            if (e instanceof InteractiveError.Base) {
+                return Reply.fromError(method.id, e);
+            }
+            throw e;
+        }
     }
-  }
 
-  /**
+    /**
      * Returns the local time matched to the sync of the Mixer server clock.
      */
-  public synchronizeLocalTime(time: Date | number = Date.now()): Date {
-    if (time instanceof Date) {
-      time = time.getTime();
+    public synchronizeLocalTime(time: Date | number = Date.now()): Date {
+        if (time instanceof Date) {
+            time = time.getTime();
+        }
+        return new Date(time - this.clockDelta);
     }
-    return new Date(time - this.clockDelta);
-  }
 
-  /**
+    /**
      * Returns the remote time matched to the local clock.
      */
-  public synchronizeRemoteTime(time: Date | number): Date {
-    if (time instanceof Date) {
-      time = time.getTime();
+    public synchronizeRemoteTime(time: Date | number): Date {
+        if (time instanceof Date) {
+            time = time.getTime();
+        }
+        return new Date(time + this.clockDelta);
     }
-    return new Date(time + this.clockDelta);
-  }
 
-  /**
+    /**
      * Completely clears this state instance emptying all Scene, Group and Participant records
      */
-  public reset() {
-    this.scenes.forEach(scene => scene.destroy());
-    this.scenes.clear();
-    this.clockDelta = 0;
-    this.isReady = false;
-    this.participants.clear();
-    this.groups.clear();
-  }
+    public reset() {
+        this.scenes.forEach(scene => scene.destroy());
+        this.scenes.clear();
+        this.clockDelta = 0;
+        this.isReady = false;
+        this.participants.clear();
+        this.groups.clear();
+    }
 
-  /**
+    /**
      * Updates an existing scene in the game session.
      */
-  public onSceneUpdate(scene: ISceneData) {
-    const targetScene = this.getScene(scene.sceneID);
-    if (targetScene) {
-      targetScene.update(scene);
+    public onSceneUpdate(scene: ISceneData) {
+        const targetScene = this.getScene(scene.sceneID);
+        if (targetScene) {
+            targetScene.update(scene);
+        }
     }
-  }
 
-  /**
+    /**
      * Removes a scene and reassigns the groups that were on it.
      */
-  public onSceneDelete(sceneID: string, reassignSceneID: string) {
-    const targetScene = this.getScene(sceneID);
-    if (targetScene) {
-      targetScene.destroy();
-      this.scenes.delete(sceneID);
-      this.emit('sceneDeleted', sceneID, reassignSceneID);
+    public onSceneDelete(sceneID: string, reassignSceneID: string) {
+        const targetScene = this.getScene(sceneID);
+        if (targetScene) {
+            targetScene.destroy();
+            this.scenes.delete(sceneID);
+            this.emit('sceneDeleted', sceneID, reassignSceneID);
+        }
     }
-  }
 
-  /**
+    /**
      * Inserts a new scene into the game session.
      */
-  public onSceneCreate(data: ISceneData): IScene {
-    let scene = this.scenes.get(data.sceneID);
-    if (scene) {
-      if (scene.etag === data.etag) {
-        return this.scenes.get(data.sceneID);
-      }
-      this.onSceneUpdate(data);
-      return scene;
+    public onSceneCreate(data: ISceneData): IScene {
+        let scene = this.scenes.get(data.sceneID);
+        if (scene) {
+            if (scene.etag === data.etag) {
+                return this.scenes.get(data.sceneID);
+            }
+            this.onSceneUpdate(data);
+            return scene;
+        }
+        scene = this.stateFactory.createScene(data);
+        if (data.controls) {
+            scene.onControlsCreated(data.controls);
+        }
+        this.scenes.set(data.sceneID, scene);
+        this.emit('sceneCreated', scene);
+        return scene;
     }
-    scene = this.stateFactory.createScene(data);
-    if (data.controls) {
-      scene.onControlsCreated(data.controls);
-    }
-    this.scenes.set(data.sceneID, scene);
-    this.emit('sceneCreated', scene);
-    return scene;
-  }
 
-  /**
+    /**
      * Adds an array of Scenes to its state store.
      */
-  public addScenes(scenes: ISceneData[]): IScene[] {
-    return scenes.map(scene => this.onSceneCreate(scene));
-  }
+    public addScenes(scenes: ISceneData[]): IScene[] {
+        return scenes.map(scene => this.onSceneCreate(scene));
+    }
 
-  /**
+    /**
      * Updates an existing scene in the game session.
      */
-  public onGroupUpdate(group: IGroupData) {
-    const targetGroup = this.getGroup(group.groupID);
-    if (targetGroup) {
-      targetGroup.update(group);
+    public onGroupUpdate(group: IGroupData) {
+        const targetGroup = this.getGroup(group.groupID);
+        if (targetGroup) {
+            targetGroup.update(group);
+        }
     }
-  }
 
-  /**
+    /**
      * Removes a group and reassigns the participants that were in it.
      */
-  public onGroupDelete(groupID: string, reassignGroupID: string) {
-    const targetGroup = this.getGroup(groupID);
-    if (targetGroup) {
-      targetGroup.destroy();
-      this.groups.delete(groupID);
-      this.emit('groupDeleted', groupID, reassignGroupID);
+    public onGroupDelete(groupID: string, reassignGroupID: string) {
+        const targetGroup = this.getGroup(groupID);
+        if (targetGroup) {
+            targetGroup.destroy();
+            this.groups.delete(groupID);
+            this.emit('groupDeleted', groupID, reassignGroupID);
+        }
     }
-  }
 
-  /**
+    /**
      * Inserts a new group into the game session.
      */
-  public onGroupCreate(data: IGroupData): Group {
-    let group = this.groups.get(data.groupID);
-    if (group) {
-      if (group.etag === data.etag) {
-        return this.groups.get(data.groupID);
-      }
-      this.onGroupUpdate(data);
-      return group;
+    public onGroupCreate(data: IGroupData): Group {
+        let group = this.groups.get(data.groupID);
+        if (group) {
+            if (group.etag === data.etag) {
+                return this.groups.get(data.groupID);
+            }
+            this.onGroupUpdate(data);
+            return group;
+        }
+        group = new Group(data);
+        this.groups.set(data.groupID, group);
+        this.emit('groupCreated', group);
+        return group;
     }
-    group = new Group(data);
-    this.groups.set(data.groupID, group);
-    this.emit('groupCreated', group);
-    return group;
-  }
 
-  /**
+    /**
      * Retrieve all groups.
      */
-  public getGroups(): Map<string, Group> {
-    return this.groups;
-  }
+    public getGroups(): Map<string, Group> {
+        return this.groups;
+    }
 
-  /**
+    /**
      * Retrieve a group with the matching ID from the group store.
      */
-  public getGroup(id: string): Group {
-    return this.groups.get(id);
-  }
+    public getGroup(id: string): Group {
+        return this.groups.get(id);
+    }
 
-  /**
+    /**
      * Retrieve all scenes
      */
-  public getScenes(): Map<string, Scene> {
-    return this.scenes;
-  }
+    public getScenes(): Map<string, Scene> {
+        return this.scenes;
+    }
 
-  /**
+    /**
      * Retrieve a scene with the matching ID from the scene store.
      */
-  public getScene(id: string): IScene {
-    return this.scenes.get(id);
-  }
+    public getScene(id: string): IScene {
+        return this.scenes.get(id);
+    }
 
-  /**
+    /**
      * Searches through all stored Scenes to find a Control with the matching ID
      */
-  public getControl(id: string): IControl {
-    let result: IControl;
-    this.scenes.forEach(scene => {
-      const found = scene.getControl(id);
-      if (found) {
-        result = found;
-      }
-    });
-    return result;
-  }
+    public getControl(id: string): IControl {
+        let result: IControl;
+        this.scenes.forEach(scene => {
+            const found = scene.getControl(id);
+            if (found) {
+                result = found;
+            }
+        });
+        return result;
+    }
 
-  /**
+    /**
      * Retrieve all participants.
      */
-  public getParticipants(): Map<string, IParticipant> {
-    return this.participants;
-  }
+    public getParticipants(): Map<string, IParticipant> {
+        return this.participants;
+    }
 
-  private getParticipantBy<K extends keyof IParticipant>(
-    field: K,
-    value: IParticipant[K],
-  ): IParticipant {
-    let result;
-    this.participants.forEach(participant => {
-      if (participant[field] === value) {
-        result = participant;
-      }
-    });
-    return result;
-  }
-  /**
+    private getParticipantBy<K extends keyof IParticipant>(
+        field: K,
+        value: IParticipant[K],
+    ): IParticipant {
+        let result;
+        this.participants.forEach(participant => {
+            if (participant[field] === value) {
+                result = participant;
+            }
+        });
+        return result;
+    }
+    /**
      * Retrieve a participant by their Mixer UserId.
      */
-  public getParticipantByUserID(id: number): IParticipant {
-    return this.getParticipantBy('userID', id);
-  }
+    public getParticipantByUserID(id: number): IParticipant {
+        return this.getParticipantBy('userID', id);
+    }
 
-  /**
+    /**
      * Retrieve a participant by their Mixer Username.
      */
-  public getParticipantByUsername(name: string): IParticipant {
-    return this.getParticipantBy('username', name);
-  }
-  /**
+    public getParticipantByUsername(name: string): IParticipant {
+        return this.getParticipantBy('username', name);
+    }
+    /**
      * Retrieve a participant by their sessionID with the current Interactive session.
      */
-  public getParticipantBySessionID(id: string): IParticipant {
-    return this.participants.get(id);
-  }
+    public getParticipantBySessionID(id: string): IParticipant {
+        return this.participants.get(id);
+    }
 }
