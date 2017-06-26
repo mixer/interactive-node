@@ -1,4 +1,4 @@
-import { IJSON, JSONPrimitive} from '../../../interfaces';
+import { IJSON, JSONPrimitive } from '../../../interfaces';
 import { ETag } from './';
 
 /**
