@@ -1,4 +1,4 @@
-import { IJSON } from '../../../interfaces';
+import { IJSON, JSONPrimitive } from '../../../interfaces';
 import { ETag } from './';
 
 /**
@@ -6,8 +6,8 @@ import { ETag } from './';
  * It contains a value and an Etag.
  */
 export interface IMetaProperty {
-    value: IJSON;
-    etag: ETag;
+    value: IJSON | JSONPrimitive;
+    etag?: ETag;
 }
 
 /**
