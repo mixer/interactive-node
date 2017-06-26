@@ -12,7 +12,13 @@ import { InteractiveSocket, ISocketOptions } from './Socket';
 use(require('sinon-chai'));
 
 const port = process.env.SERVER_PORT || 1339;
-const METHOD = { id: 1, type: 'method', method: 'hello', params: { foo: 'bar' }, discard: false};
+const METHOD = {
+    id: 1,
+    type: 'method',
+    method: 'hello',
+    params: { foo: 'bar' },
+    discard: false,
+};
 
 function closeNormal(ws: WebSocketModule) {
     ws.close(1000, 'Normal');
@@ -54,7 +60,9 @@ describe('socket', () => {
         it('connects with JWT auth', done => {
             socket = new InteractiveSocket({ url, jwt: 'asdf!' }).connect();
             server.on('connection', (ws: WebSocketModule) => {
-                expect(ws.upgradeReq.url).to.equal('/?Authorization=JWT%20asdf!');
+                expect(ws.upgradeReq.url).to.equal(
+                    '/?Authorization=JWT%20asdf!',
+                );
                 expect(ws.upgradeReq.headers.authorization).to.equal(
                     undefined,
                     'authorization header should be undefined when jwt auth is used',
@@ -65,18 +73,29 @@ describe('socket', () => {
         });
 
         it('connects with an OAuth token', done => {
-            socket = new InteractiveSocket({ url, authToken: 'asdf!' }).connect();
+            socket = new InteractiveSocket({
+                url,
+                authToken: 'asdf!',
+            }).connect();
             server.on('connection', (ws: WebSocketModule) => {
                 expect(ws.upgradeReq.url).to.equal('/');
-                expect(ws.upgradeReq.headers.authorization).to.equal('Bearer asdf!');
+                expect(ws.upgradeReq.headers.authorization).to.equal(
+                    'Bearer asdf!',
+                );
                 closeNormal(ws);
                 done();
             });
         });
 
         it('throws an error on ambiguous auth', () => {
-            expect(() => new InteractiveSocket({ url, authToken: 'asdf!', jwt: 'wat?' }))
-                .to.throw(/both JWT and OAuth token/);
+            expect(
+                () =>
+                    new InteractiveSocket({
+                        url,
+                        authToken: 'asdf!',
+                        jwt: 'wat?',
+                    }),
+            ).to.throw(/both JWT and OAuth token/);
         });
     });
 
@@ -115,18 +134,24 @@ describe('socket', () => {
                 },
                 'received method should match sent method',
             );
-            ws.send(JSON.stringify({
-                type: 'reply',
-                id: data.id,
-                error: null,
-                result: 'hi',
-            }));
+            ws.send(
+                JSON.stringify({
+                    type: 'reply',
+                    id: data.id,
+                    error: null,
+                    result: 'hi',
+                }),
+            );
         }
 
         beforeEach(ready => {
             awaitConnect(() => ready());
-            socket = new InteractiveSocket({ url, pingInterval: 100, replyTimeout: 50 }).connect();
-            const options: ISocketOptions  = {
+            socket = new InteractiveSocket({
+                url,
+                pingInterval: 100,
+                replyTimeout: 50,
+            }).connect();
+            const options: ISocketOptions = {
                 reconnectionPolicy: new ExponentialReconnectionPolicy(),
             };
             next = sinon.stub(options.reconnectionPolicy, 'next').returns(5);
@@ -160,12 +185,9 @@ describe('socket', () => {
                         socket.once('open', () => {
                             expect(reset).to.have.been.calledThrice;
                             closeNormal(ws3);
-                            setTimeout(
-                                () => {
-                                    done();
-                                },
-                                500,
-                            );
+                            setTimeout(() => {
+                                done();
+                            }, 500);
                         });
                     });
                 });
@@ -175,32 +197,35 @@ describe('socket', () => {
         it('respects closing the socket during a reconnection', done => {
             greet();
             resolveOn(socket, 'method')
-            .then(() => {
-                closeNormal(ws);
-            })
-            .then(() => delay(1))
-            .then(() => {
-                socket.close();
-            })
-            .then(() => {
-                closeNormal(ws);
-                done();
-            });
+                .then(() => {
+                    closeNormal(ws);
+                })
+                .then(() => delay(1))
+                .then(() => {
+                    socket.close();
+                })
+                .then(() => {
+                    closeNormal(ws);
+                    done();
+                });
 
             awaitConnect(() => {
-                assert.fail('Expected not to have reconnected with a closed socket');
+                assert.fail(
+                    'Expected not to have reconnected with a closed socket',
+                );
             });
         });
 
         it('times out message calls if no reply is received', () => {
-            socket.setOptions({replyTimeout: 5});
-            return socket.execute('hello', { foo: 'bar'})
-            .catch(err => expect(err).to.be.an.instanceof(TimeoutError));
+            socket.setOptions({ replyTimeout: 5 });
+            return socket
+                .execute('hello', { foo: 'bar' })
+                .catch(err => expect(err).to.be.an.instanceof(TimeoutError));
         });
 
         it('retries messages if the socket is closed before replying', () => {
             ws.on('message', () => {
-                 closeNormal(ws);
+                closeNormal(ws);
             });
             awaitConnect((newWs: WebSocketModule) => {
                 newWs.on('message', (payload: any) => {
@@ -209,8 +234,7 @@ describe('socket', () => {
                 });
             });
 
-            return socket.execute('hello', { foo: 'bar'})
-            .then(res => {
+            return socket.execute('hello', { foo: 'bar' }).then(res => {
                 expect(res).to.equal('hi');
             });
         });
@@ -220,8 +244,7 @@ describe('socket', () => {
                 assertAndReplyTo(payload);
             });
 
-            return socket.execute('hello', { foo: 'bar'})
-            .then(res => {
+            return socket.execute('hello', { foo: 'bar' }).then(res => {
                 expect(res).to.equal('hi');
             });
         });
@@ -236,11 +259,13 @@ describe('socket', () => {
 
         it('cancels packets if the socket is closed mid-call', () => {
             ws.on('message', () => socket.close());
-            return socket.execute('hello', { foo: 'bar'})
-            .catch(err => expect(err).be.an.instanceof(CancelledError))
-            .then(() => {
-                closeNormal(ws);
-            }).then(() => delay(5));
+            return socket
+                .execute('hello', { foo: 'bar' })
+                .catch(err => expect(err).be.an.instanceof(CancelledError))
+                .then(() => {
+                    closeNormal(ws);
+                })
+                .then(() => delay(5));
         });
     });
 });

@@ -23,15 +23,12 @@ export function resolveOn(
 
         emitter.once(event, listener);
 
-        setTimeout(
-            () => {
-                if (!resolved) {
-                    emitter.removeListener(event, listener);
-                    reject(new TimeoutError(`Expected to get event ${event}`));
-                }
-            },
-            timeout,
-        );
+        setTimeout(() => {
+            if (!resolved) {
+                emitter.removeListener(event, listener);
+                reject(new TimeoutError(`Expected to get event ${event}`));
+            }
+        }, timeout);
     });
 }
 
@@ -76,7 +73,7 @@ export function delay<T>(delay: number, value?: T): Promise<T> {
  * return foo.catch(only(AdapterResponseError, err => alert(err.toLocaleString())));
  */
 export function only<T extends Error, U>(
-    cls: { new(...args: any[]): T },
+    cls: { new (...args: any[]): T },
     handler: (err: T) => U = () => null,
 ): (err: any) => U {
     return err => {

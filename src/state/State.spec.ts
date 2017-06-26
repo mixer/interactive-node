@@ -6,7 +6,11 @@ import { ClientType } from '../Client';
 import { Method } from '../wire/packets';
 import { Group } from './Group';
 import { IControl } from './interfaces/controls/IControl';
-import { IGroup, IGroupDataArray, IGroupDeletionParams } from './interfaces/IGroup';
+import {
+    IGroup,
+    IGroupDataArray,
+    IGroupDeletionParams,
+} from './interfaces/IGroup';
 import { ISceneDataArray } from './interfaces/IScene';
 import { State } from './State';
 
@@ -33,9 +37,15 @@ describe('state', () => {
 
     function initializeState(fixture: string) {
         state = new State(ClientType.GameClient);
-        const data = loadFixture(path.join(__dirname, '../../test/fixtures', fixture));
-        state.processMethod(new Method('onSceneCreate', { scenes: data.scenes }));
-        state.processMethod(new Method('onGroupCreate', { groups: groupsFixture.groups }));
+        const data = loadFixture(
+            path.join(__dirname, '../../test/fixtures', fixture),
+        );
+        state.processMethod(
+            new Method('onSceneCreate', { scenes: data.scenes }),
+        );
+        state.processMethod(
+            new Method('onGroupCreate', { groups: groupsFixture.groups }),
+        );
     }
 
     describe('initialization', () => {
@@ -56,37 +66,34 @@ describe('state', () => {
             expect(scene.sceneID).to.be.equal(targetScene);
         });
         it('initializes a scene from a method', () => {
-            const method = new Method(
-                'onSceneCreate',
-                {
-                    scenes: [
-                        {
-                            sceneID: 'scene2',
-                            etag: '252185589',
-                            controls: [
-                                {
-                                    controlID: 'button2',
-                                    etag: '262111379',
-                                    kind: 'button',
-                                    text: 'Win the Game',
-                                    cost: 0,
-                                    progress: 0.25,
-                                    disabled: false,
-                                    meta: {
-                                        glow: {
-                                            etag: '254353748',
-                                            value: {
-                                                color: '#f00',
-                                                radius: 10,
-                                            },
+            const method = new Method('onSceneCreate', {
+                scenes: [
+                    {
+                        sceneID: 'scene2',
+                        etag: '252185589',
+                        controls: [
+                            {
+                                controlID: 'button2',
+                                etag: '262111379',
+                                kind: 'button',
+                                text: 'Win the Game',
+                                cost: 0,
+                                progress: 0.25,
+                                disabled: false,
+                                meta: {
+                                    glow: {
+                                        etag: '254353748',
+                                        value: {
+                                            color: '#f00',
+                                            radius: 10,
                                         },
                                     },
                                 },
-                            ],
-                        },
-                    ],
-                },
-            );
+                            },
+                        ],
+                    },
+                ],
+            });
             state.processMethod(method);
             const scene = state.getScene('scene2');
             expect(scene).to.exist;
@@ -96,13 +103,10 @@ describe('state', () => {
             expect(controlInScene.controlID).to.equal('button2');
         });
         it('deletes a scene', () => {
-            const method = new Method(
-                'onSceneDelete',
-                {
-                    sceneID: 'scene2',
-                    reassignSceneID: 'my awesome scene',
-                },
-            );
+            const method = new Method('onSceneDelete', {
+                sceneID: 'scene2',
+                reassignSceneID: 'my awesome scene',
+            });
             state.processMethod(method);
             const scene = state.getScene('scene2');
             expect(scene).to.not.exist;
@@ -117,17 +121,14 @@ describe('state', () => {
                     },
                 },
             };
-            const method = new Method(
-                'onSceneUpdate',
-                {
-                    scenes: [
-                        {
-                            sceneID: 'my awesome scene',
-                            meta: meta,
-                        },
-                    ],
-                },
-            );
+            const method = new Method('onSceneUpdate', {
+                scenes: [
+                    {
+                        sceneID: 'my awesome scene',
+                        meta: meta,
+                    },
+                ],
+            });
             state.processMethod(method);
             const scene = state.getScene('my awesome scene');
             expect(scene).to.exist;
@@ -137,21 +138,27 @@ describe('state', () => {
 
     describe('participants', () => {
         it('adds participants', () => {
-            state.processMethod(new Method(
-                'onParticipantJoin',
-                {
-                    participants: [
-                        {
-                            sessionID: 'abc123',
-                            username: 'connor',
-                            userID: 1337,
-                        },
-                    ],
-                },
-                false,
-            ));
-            expect(state.getParticipantBySessionID('abc123').username).to.equal('connor');
-            expect(state.getParticipantByUsername('connor').sessionID).to.equal('abc123');
+            state.processMethod(
+                new Method(
+                    'onParticipantJoin',
+                    {
+                        participants: [
+                            {
+                                sessionID: 'abc123',
+                                username: 'connor',
+                                userID: 1337,
+                            },
+                        ],
+                    },
+                    false,
+                ),
+            );
+            expect(state.getParticipantBySessionID('abc123').username).to.equal(
+                'connor',
+            );
+            expect(state.getParticipantByUsername('connor').sessionID).to.equal(
+                'abc123',
+            );
         });
     });
 
@@ -170,12 +177,14 @@ describe('state', () => {
             control = state.getControl('win_the_game_btn');
             expect(control).to.exist;
             control.on('updated', () => {
-                expect(control.disabled).to.equal(true, 'expect control to be disabled');
+                expect(control.disabled).to.equal(
+                    true,
+                    'expect control to be disabled',
+                );
                 done();
             });
-            state.processMethod(new Method(
-                'onControlUpdate',
-                {
+            state.processMethod(
+                new Method('onControlUpdate', {
                     sceneID: 'my awesome scene',
                     controls: [
                         {
@@ -183,13 +192,12 @@ describe('state', () => {
                             disabled: true,
                         },
                     ],
-                },
-            ));
+                }),
+            );
         });
         it('creates and places a new control within the state tree', () => {
-            state.processMethod(new Method(
-                'onControlCreate',
-                {
+            state.processMethod(
+                new Method('onControlCreate', {
                     sceneID: 'my awesome scene',
                     controls: [
                         {
@@ -211,9 +219,11 @@ describe('state', () => {
                             },
                         },
                     ],
-                },
-            ));
-            control = state.getScene('my awesome scene').getControl('lose_the_game_btn');
+                }),
+            );
+            control = state
+                .getScene('my awesome scene')
+                .getControl('lose_the_game_btn');
             expect(control).to.exist;
             expect(control.controlID).to.equal('lose_the_game_btn');
         });
@@ -226,15 +236,16 @@ describe('state', () => {
                 expect(searchControl).to.not.exist;
                 done();
             });
-            state.processMethod(new Method(
-                'onControlDelete',
-                {
+            state.processMethod(
+                new Method('onControlDelete', {
                     sceneID: 'my awesome scene',
-                    controls: [{
-                        controlID: 'lose_the_game_btn',
-                    }],
-                },
-            ));
+                    controls: [
+                        {
+                            controlID: 'lose_the_game_btn',
+                        },
+                    ],
+                }),
+            );
         });
     });
     describe('groups', () => {
@@ -247,7 +258,6 @@ describe('state', () => {
             group = state.getGroup(targetGroup);
             expect(group).to.exist;
             expect(group.groupID).to.be.equal(targetGroup);
-
         });
         it('applies an update to a group', done => {
             const targetScene = 'existing second scene';
@@ -257,19 +267,17 @@ describe('state', () => {
                 expect(group.sceneID).to.equal(targetScene);
                 done();
             });
-            state.processMethod(new Method(
-                'onGroupUpdate',
-                {
-                    groups:
-                    [
+            state.processMethod(
+                new Method('onGroupUpdate', {
+                    groups: [
                         {
                             groupID: group.groupID,
                             etag: group.etag,
                             sceneID: targetScene,
                         },
                     ],
-                },
-            ));
+                }),
+            );
         });
         it('creates a new group and adds it to state tree', done => {
             const targetGroup: IGroupDataArray = {
@@ -283,13 +291,18 @@ describe('state', () => {
             };
             state.on('groupCreated', (newGroup: Group) => {
                 expect(newGroup).to.exist;
-                expect(newGroup.groupID).to.be.equal(targetGroup.groups[0].groupID);
+                expect(newGroup.groupID).to.be.equal(
+                    targetGroup.groups[0].groupID,
+                );
                 done();
             });
             state.processMethod(new Method('onGroupCreate', targetGroup));
             group = state.getGroup(targetGroup.groups[0].groupID);
             expect(group).to.exist('Group', 'new group should exist');
-            expect(group.groupID).to.be.equal(targetGroup.groups[0].groupID, 'should have the created group id');
+            expect(group.groupID).to.be.equal(
+                targetGroup.groups[0].groupID,
+                'should have the created group id',
+            );
         });
         it('deletes a group', done => {
             const targetGroup = groupsFixture.groups[1].groupID;
@@ -305,11 +318,7 @@ describe('state', () => {
                 expect(group).to.not.exist;
                 done();
             });
-            state.processMethod(new Method(
-                'onGroupDelete',
-                delGroupParams,
-            ));
-
+            state.processMethod(new Method('onGroupDelete', delGroupParams));
         });
     });
 });

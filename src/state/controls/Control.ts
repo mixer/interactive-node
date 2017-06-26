@@ -18,7 +18,8 @@ import { Scene } from '../Scene';
  * Control is used a base class for all other controls within an interactive session.
  * It contains shared logic which all types of controls can utilize.
  */
-export abstract class Control<T extends IControlData> extends EventEmitter implements IControl {
+export abstract class Control<T extends IControlData> extends EventEmitter
+    implements IControl {
     public controlID: string;
     public kind: ControlKind;
     public disabled: boolean;
@@ -53,7 +54,10 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     /**
      * Called by client when it recieves an input event for this control from the server.
      */
-    public receiveInput<T extends IInput>(inputEvent: IInputEvent<T>, participant: IParticipant) {
+    public receiveInput<T extends IInput>(
+        inputEvent: IInputEvent<T>,
+        participant: IParticipant,
+    ) {
         this.emit(inputEvent.input.event, inputEvent, participant);
     }
 

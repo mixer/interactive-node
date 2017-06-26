@@ -22,7 +22,7 @@ export enum PacketState {
     Cancelled,
 }
 
-const maxInt32 = 0xFFFFFFFF;
+const maxInt32 = 0xffffffff;
 
 /**
  * A Packet is a wrapped Method that can be timed-out or canceled whilst it travels over the wire.
@@ -107,19 +107,16 @@ export class Method<T> {
          * The name of this method
          */
         public method: string,
-
         /**
          * Params to be used as arguments for this method.
          */
         public params: T,
-
         /**
          * If discard is set to true it indicates that this method is not expecting a reply.
          *
          * Recipients should however reply with an error if one is caused by this method.
          */
         public discard: boolean = false,
-
         /**
          * A Unique id for each method sent.
          */
@@ -131,13 +128,21 @@ export class Method<T> {
      * @memberOf Method
      */
     public static fromSocket(message: any): Method<IRawValues> {
-        return  new Method(message.method, message.params, message.discard, message.id);
+        return new Method(
+            message.method,
+            message.params,
+            message.discard,
+            message.id,
+        );
     }
 
     /**
      * Creates a reply for this method.
      */
-    public reply(result: IRawValues, error: InteractiveError.Base = null): Reply {
+    public reply(
+        result: IRawValues,
+        error: InteractiveError.Base = null,
+    ): Reply {
         return new Reply(this.id, result, error);
     }
 }
@@ -167,7 +172,9 @@ export class Reply {
      * Constructs a reply packet from raw values coming in from a socket.
      */
     public static fromSocket(message: any): Reply {
-        const err: InteractiveError.Base = message.error ? InteractiveError.fromSocketMessage(message.error) : null;
+        const err: InteractiveError.Base = message.error
+            ? InteractiveError.fromSocketMessage(message.error)
+            : null;
         return new Reply(message.id, message.result, err);
     }
 

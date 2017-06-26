@@ -5,7 +5,10 @@ import { CancelledError, InteractiveError, MessageParseError } from '../errors';
 import { IRawValues } from '../interfaces';
 import { resolveOn } from '../util';
 import { Method, Packet, PacketState, Reply } from './packets';
-import { ExponentialReconnectionPolicy, IReconnectionPolicy } from './reconnection';
+import {
+    ExponentialReconnectionPolicy,
+    IReconnectionPolicy,
+} from './reconnection';
 
 /**
  * Close codes that are deemed to be recoverable by the reconnection policy
@@ -106,7 +109,9 @@ export class InteractiveSocket extends EventEmitter {
     // does not natively support it.
 
     //tslint:disable-next-line:variable-name
-    public static WebSocket: any = typeof WebSocket === 'undefined' ? null : WebSocket;
+    public static WebSocket: any = typeof WebSocket === 'undefined'
+        ? null
+        : WebSocket;
 
     private reconnectTimeout: NodeJS.Timer;
     private options: ISocketOptions;
@@ -120,8 +125,10 @@ export class InteractiveSocket extends EventEmitter {
         this.setOptions(options);
 
         if (InteractiveSocket.WebSocket === undefined) {
-            throw new Error('Cannot find a websocket implementation; please provide one by ' +
-                'running InteractiveSocket.WebSocket = myWebSocketModule;');
+            throw new Error(
+                'Cannot find a websocket implementation; please provide one by ' +
+                    'running InteractiveSocket.WebSocket = myWebSocketModule;',
+            );
         }
 
         this.on('message', (msg: any) => {
@@ -138,7 +145,10 @@ export class InteractiveSocket extends EventEmitter {
             // If this close event's code is not within our recoverable code array
             // We raise it as an error and refuse to connect.
             if (recoverableCloseCodes.indexOf(evt.code) === -1) {
-                const err = InteractiveError.fromSocketMessage({code: evt.code, message: evt.reason});
+                const err = InteractiveError.fromSocketMessage({
+                    code: evt.code,
+                    message: evt.reason,
+                });
                 this.state = SocketState.Closing;
                 this.emit('error', err);
                 // Refuse to continue, these errors usually mean something is very wrong with our connection.
@@ -151,19 +161,19 @@ export class InteractiveSocket extends EventEmitter {
                 return;
             }
 
-            if (this.state === SocketState.Closing || !this.options.autoReconnect) {
+            if (
+                this.state === SocketState.Closing ||
+                !this.options.autoReconnect
+            ) {
                 this.state = SocketState.Idle;
                 return;
             }
 
             this.state = SocketState.Reconnecting;
 
-            this.reconnectTimeout = setTimeout(
-                () => {
-                    this.connect();
-                },
-                this.options.reconnectionPolicy.next(),
-            );
+            this.reconnectTimeout = setTimeout(() => {
+                this.connect();
+            }, this.options.reconnectionPolicy.next());
         });
     }
 
@@ -172,10 +182,16 @@ export class InteractiveSocket extends EventEmitter {
      * Defaults and previous option values will be used if not supplied.
      */
     public setOptions(options: ISocketOptions) {
-        this.options = Object.assign({}, this.options || getDefaults(), options);
+        this.options = Object.assign(
+            {},
+            this.options || getDefaults(),
+            options,
+        );
         //TODO: Clear up auth here later
         if (this.options.jwt && this.options.authToken) {
-            throw new Error('Cannot connect to Constellation with both JWT and OAuth token.');
+            throw new Error(
+                'Cannot connect to Constellation with both JWT and OAuth token.',
+            );
         }
     }
 
@@ -192,7 +208,11 @@ export class InteractiveSocket extends EventEmitter {
             'X-Protocol-Version': '2.0',
         };
 
-        const headers = Object.assign({}, defaultHeaders, this.options.extraHeaders);
+        const headers = Object.assign(
+            {},
+            defaultHeaders,
+            this.options.extraHeaders,
+        );
 
         const extras: IWebSocketOptions = {
             headers,
@@ -204,20 +224,30 @@ export class InteractiveSocket extends EventEmitter {
         url.search = null;
 
         if (this.options.authToken) {
-            extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
+            extras.headers['Authorization'] = `Bearer ${this.options
+                .authToken}`;
         }
         if (this.options.jwt) {
-            this.options.queryParams['Authorization'] = `JWT ${this.options.jwt}`;
+            this.options.queryParams['Authorization'] = `JWT ${this.options
+                .jwt}`;
         }
         url.query = Object.assign({}, url.query, this.options.queryParams);
 
-        this.socket = new InteractiveSocket.WebSocket(Url.format(url), [], extras);
+        this.socket = new InteractiveSocket.WebSocket(
+            Url.format(url),
+            [],
+            extras,
+        );
 
         this.state = SocketState.Connecting;
 
-        this.socket.addEventListener('close', (evt: ICloseEvent) => this.emit('close', evt));
+        this.socket.addEventListener('close', (evt: ICloseEvent) =>
+            this.emit('close', evt),
+        );
         this.socket.addEventListener('open', () => this.emit('open'));
-        this.socket.addEventListener('message', (evt: any) => this.emit('message', evt.data));
+        this.socket.addEventListener('message', (evt: any) =>
+            this.emit('message', evt.data),
+        );
 
         this.socket.addEventListener('error', (err: any) => {
             if (this.state === SocketState.Closing) {
@@ -261,7 +291,11 @@ export class InteractiveSocket extends EventEmitter {
      * Executes an RPC method on the server. Returns a promise which resolves
      * after it completes, or after a timeout occurs.
      */
-    public execute(method: string, params: IRawValues = {}, discard: boolean = false): Promise<any> {
+    public execute(
+        method: string,
+        params: IRawValues = {},
+        discard: boolean = false,
+    ): Promise<any> {
         const methodObj = new Method(method, params, discard);
         return this.send(new Packet(methodObj));
     }
@@ -282,8 +316,7 @@ export class InteractiveSocket extends EventEmitter {
         if (this.state !== SocketState.Connected) {
             return Promise.race([
                 resolveOn(packet, 'send'),
-                resolveOn(packet, 'cancel')
-                .then(() => {
+                resolveOn(packet, 'cancel').then(() => {
                     throw new CancelledError();
                 }),
             ]);
@@ -293,28 +326,27 @@ export class InteractiveSocket extends EventEmitter {
         const promise = Promise.race([
             // Wait for replies to that packet ID:
             resolveOn(this, `reply:${packet.id()}`, timeout)
-            .then((result: Reply) => {
-                this.queue.delete(packet);
+                .then((result: Reply) => {
+                    this.queue.delete(packet);
 
-                if (result.error) {
-                    throw result.error;
-                }
+                    if (result.error) {
+                        throw result.error;
+                    }
 
-                return result.result;
-            })
-            .catch(err => {
-                this.queue.delete(packet);
-                throw err;
-            }),
+                    return result.result;
+                })
+                .catch(err => {
+                    this.queue.delete(packet);
+                    throw err;
+                }),
             // Never resolve if the consumer cancels the packets:
-            resolveOn(packet, 'cancel', timeout + 1)
-            .then(() => {
+            resolveOn(packet, 'cancel', timeout + 1).then(() => {
                 throw new CancelledError();
             }),
             // Re-queue packets if the socket closes:
-            resolveOn(this, 'close', timeout + 1)
-            .then(() => {
-                if (!this.queue.has(packet)) { // skip if we already resolved
+            resolveOn(this, 'close', timeout + 1).then(() => {
+                if (!this.queue.has(packet)) {
+                    // skip if we already resolved
                     return null;
                 }
 
@@ -348,7 +380,7 @@ export class InteractiveSocket extends EventEmitter {
 
     private extractMessage(packet: string | Buffer) {
         let messageString: string;
-        messageString = <string> packet;
+        messageString = <string>packet;
         let message: any;
         try {
             message = JSON.parse(messageString);
@@ -357,14 +389,16 @@ export class InteractiveSocket extends EventEmitter {
         }
 
         switch (message.type) {
-        case 'method':
-            this.emit('method', Method.fromSocket(message));
-            break;
-        case 'reply':
-            this.emit(`reply:${message.id}`, Reply.fromSocket(message));
-            break;
-        default:
-            throw new MessageParseError(`Unknown message type "${message.type}"`);
+            case 'method':
+                this.emit('method', Method.fromSocket(message));
+                break;
+            case 'reply':
+                this.emit(`reply:${message.id}`, Reply.fromSocket(message));
+                break;
+            default:
+                throw new MessageParseError(
+                    `Unknown message type "${message.type}"`,
+                );
         }
     }
 

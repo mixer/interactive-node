@@ -24,7 +24,7 @@ describe('control', () => {
     });
 
     beforeEach(() => {
-        scene = new Scene({sceneID: 'default', controls: []});
+        scene = new Scene({ sceneID: 'default', controls: [] });
         control = new Button(buttonData);
         control.setScene(scene);
         control.setClient(mockClient);
@@ -37,8 +37,7 @@ describe('control', () => {
         const updatedButton = Object.assign({}, buttonData, buttonDiff);
         const stub = sinon.stub(mockClient, 'updateControls');
         control.setText('bar');
-        expect(stub).to.be
-        .calledWith({
+        expect(stub).to.be.calledWith({
             sceneID: 'default',
             controls: [updatedButton],
         });
@@ -52,8 +51,7 @@ describe('control', () => {
         const updatedButton = Object.assign({}, buttonData, buttonDiff);
         const stub = sinon.stub(mockClient, 'updateControls');
         control.setCost(buttonDiff.cost);
-        expect(stub).to.be
-        .calledWith({
+        expect(stub).to.be.calledWith({
             sceneID: 'default',
             controls: [updatedButton],
         });
@@ -72,11 +70,10 @@ describe('control', () => {
         };
         const stub = sinon.stub(mockClient, 'updateControls');
         control.update(buttonDiff);
-        expect(stub).to.be
-            .calledWith({
-                sceneID: 'default',
-                controls: [updatedButton],
-            });
+        expect(stub).to.be.calledWith({
+            sceneID: 'default',
+            controls: [updatedButton],
+        });
         stub.restore();
     });
 });

@@ -10,15 +10,19 @@ export class Requester implements IRequester {
         return new Promise((resolve, reject) => {
             const req = https.get(url, res => {
                 if (res.statusCode !== 200) {
-                    reject(new HTTPError(res.statusCode, res.statusMessage, res));
+                    reject(
+                        new HTTPError(res.statusCode, res.statusMessage, res),
+                    );
                 }
                 let body = '';
-                res.on('data', str => body = body + str.toString());
+                res.on('data', str => (body = body + str.toString()));
                 res.on('end', () => resolve(JSON.parse(body)));
             });
             req.setTimeout(15 * 1000); //tslint:disable-line
             req.on('error', err => reject(err));
-            req.on('timeout', () => reject(new TimeoutError('Request timed out')));
+            req.on('timeout', () =>
+                reject(new TimeoutError('Request timed out')),
+            );
         });
     }
 }

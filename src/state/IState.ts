@@ -43,16 +43,28 @@ export interface IState extends EventEmitter {
     /**
      * Fired when a participant joins.
      */
-    on(event: 'participantJoin', listener: (participant: IParticipant) => void): this;
+    on(
+        event: 'participantJoin',
+        listener: (participant: IParticipant) => void,
+    ): this;
     /**
      * Fired when a participant leaves.
      */
-    on(event: 'participantLeave', listener: (participantSessionID: string, participant: IParticipant) => void): this;
+    on(
+        event: 'participantLeave',
+        listener: (
+            participantSessionID: string,
+            participant: IParticipant,
+        ) => void,
+    ): this;
 
     /**
      * Fired when a scene is deleted.
      */
-    on(event: 'sceneDeleted', listener: (sceneID: string, reassignSceneID: string) => void): this;
+    on(
+        event: 'sceneDeleted',
+        listener: (sceneID: string, reassignSceneID: string) => void,
+    ): this;
     /**
      * Fired when a scene is created.
      */
@@ -61,11 +73,13 @@ export interface IState extends EventEmitter {
     /**
      * Fired when a group is deleted.
      */
-    on(event: 'groupDeleted', listener: (groupID: string, reassignGroupID: string) => void): this;
+    on(
+        event: 'groupDeleted',
+        listener: (groupID: string, reassignGroupID: string) => void,
+    ): this;
     /**
      * Fired when a group is created.
      */
     on(event: 'groupCreated', listener: (group: Group) => void): this;
     on(event: string, listener: Function): this;
-
 }

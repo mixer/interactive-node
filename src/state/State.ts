@@ -146,20 +146,29 @@ export class State extends EventEmitter implements IState {
         this.methodHandler.addHandler('onParticipantLeave', res => {
             res.params.participants.forEach(participant => {
                 this.participants.delete(participant.sessionID);
-                this.emit('participantLeave', participant.sessionID, participant);
+                this.emit(
+                    'participantLeave',
+                    participant.sessionID,
+                    participant,
+                );
             });
         });
 
         this.methodHandler.addHandler('onParticipantUpdate', res => {
             res.params.participants.forEach(participant => {
-                merge(this.participants.get(participant.sessionID), participant);
+                merge(
+                    this.participants.get(participant.sessionID),
+                    participant,
+                );
             });
         });
 
         this.methodHandler.addHandler('giveInput', res => {
             const control = this.getControl(res.params.input.controlID);
             if (control) {
-                const participant = this.getParticipantBySessionID(res.params.participantID);
+                const participant = this.getParticipantBySessionID(
+                    res.params.participantID,
+                );
                 control.receiveInput(res.params, participant);
             }
         });
@@ -357,7 +366,10 @@ export class State extends EventEmitter implements IState {
         return this.participants;
     }
 
-    private getParticipantBy<K extends keyof IParticipant>(field: K, value: IParticipant[K]): IParticipant {
+    private getParticipantBy<K extends keyof IParticipant>(
+        field: K,
+        value: IParticipant[K],
+    ): IParticipant {
         let result;
         this.participants.forEach(participant => {
             if (participant[field] === value) {

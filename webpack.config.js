@@ -1,11 +1,9 @@
-'use strict';
+('use strict');
 const path = require('path');
 module.exports = {
     entry: './src/index.ts',
     devtool: 'source-map',
-    plugins: [
-
-    ],
+    plugins: [],
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'interactive.js',
@@ -16,8 +14,6 @@ module.exports = {
         extensions: ['.webpack.js', '.web.js', '.ts', '.js'],
     },
     module: {
-        loaders: [
-            { test: /\.ts$/, loader: 'awesome-typescript-loader' },
-        ]
+        loaders: [{ test: /\.ts$/, loader: 'awesome-typescript-loader' }],
     },
-}
+};

@@ -40,16 +40,16 @@ export class GameClient extends Client {
      */
     public open(options: IGameClientOptions): Promise<this> {
         return this.discovery
-        .retrieveEndpoints(options.discoveryUrl)
-        .then(endpoints => {
-            return super.open({
-                authToken: options.authToken,
-                url: endpoints[0].address,
-                extraHeaders: {
-                    'X-Interactive-Version': options.versionId,
-                },
+            .retrieveEndpoints(options.discoveryUrl)
+            .then(endpoints => {
+                return super.open({
+                    authToken: options.authToken,
+                    url: endpoints[0].address,
+                    extraHeaders: {
+                        'X-Interactive-Version': options.versionId,
+                    },
+                });
             });
-        });
     }
 
     /**
@@ -58,14 +58,13 @@ export class GameClient extends Client {
      * new controls are added to.
      */
     public createControls(data: ISceneData): Promise<IControl[]> {
-        return this.execute('createControls', data, false)
-            .then(res => {
-                const scene = this.state.getScene(res.sceneID);
-                if (!scene) {
-                    return this.state.onSceneCreate(res).getControls();
-                }
-                return scene.onControlsCreated(res.controls);
-            });
+        return this.execute('createControls', data, false).then(res => {
+            const scene = this.state.getScene(res.sceneID);
+            if (!scene) {
+                return this.state.onSceneCreate(res).getControls();
+            }
+            return scene.onControlsCreated(res.controls);
+        });
     }
 
     /**
@@ -79,8 +78,7 @@ export class GameClient extends Client {
      * Instructs the server to create a new scene with the specified parameters.
      */
     public createScene(scene: ISceneData): Promise<ISceneData> {
-        return this.createScenes({ scenes: [ scene ] })
-        .then(scenes => {
+        return this.createScenes({ scenes: [scene] }).then(scenes => {
             return scenes.scenes[0];
         });
     }

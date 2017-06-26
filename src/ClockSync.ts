@@ -85,14 +85,13 @@ export class ClockSync extends EventEmitter {
         this.state = ClockSyncerState.Started;
         this.deltas = [];
 
-        this.sync()
-            .then(() => {
-                this.expectedTime = Date.now() + this.options.checkInterval;
-                this.checkTimer = setInterval(
-                    () => this.checkClock(),
-                    this.options.checkInterval,
-                );
-            });
+        this.sync().then(() => {
+            this.expectedTime = Date.now() + this.options.checkInterval;
+            this.checkTimer = setInterval(
+                () => this.checkClock(),
+                this.options.checkInterval,
+            );
+        });
     }
 
     private checkClock() {
@@ -109,20 +108,20 @@ export class ClockSync extends EventEmitter {
         const samplePromises: Promise<number>[] = [];
 
         for (let i = 0; i < this.options.sampleSize; i++) {
-            samplePromises.push(delay(i * this.options.sampleDelay).then(() => this.sample()));
+            samplePromises.push(
+                delay(i * this.options.sampleDelay).then(() => this.sample()),
+            );
         }
-        this.syncing = Promise.all(samplePromises)
-            .then(() => {
-                if (this.state !== ClockSyncerState.Synchronizing) {
-                    return;
-                }
-                this.state = ClockSyncerState.Idle;
-                this.emit('delta', this.getDelta());
-                return undefined;
-            });
+        this.syncing = Promise.all(samplePromises).then(() => {
+            if (this.state !== ClockSyncerState.Synchronizing) {
+                return;
+            }
+            this.state = ClockSyncerState.Idle;
+            this.emit('delta', this.getDelta());
+            return undefined;
+        });
 
-        return this.syncing
-            .then(() => this.syncing = null);
+        return this.syncing.then(() => (this.syncing = null));
     }
 
     private sample(): Promise<number> {
@@ -130,7 +129,8 @@ export class ClockSync extends EventEmitter {
             return Promise.resolve(null);
         }
         const transmitTime = Date.now();
-        return this.options.sampleFunc()
+        return this.options
+            .sampleFunc()
             .then(serverTime => this.processResponse(transmitTime, serverTime))
             .catch(err => {
                 if (this.state !== ClockSyncerState.Stopped) {
@@ -181,7 +181,7 @@ export class ClockSync extends EventEmitter {
     private processResponse(transmitTime: number, serverTime: number): number {
         const receiveTime = Date.now();
         const rtt = receiveTime - transmitTime;
-        const delta = serverTime - (rtt / 2) - transmitTime;
+        const delta = serverTime - rtt / 2 - transmitTime;
         return this.addDelta(delta);
     }
 

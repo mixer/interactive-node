@@ -13,13 +13,16 @@ export class EndpointDiscovery {
      * other servers in the list should a connection attempt to the first
      * fail.
      */
-    public retrieveEndpoints(endpoint: string = 'https://mixer.com/api/v1/interactive/hosts'): Promise<IInteractiveEndpoint[]> {
-        return this.requester.request(endpoint)
-        .then(res => {
+    public retrieveEndpoints(
+        endpoint: string = 'https://mixer.com/api/v1/interactive/hosts',
+    ): Promise<IInteractiveEndpoint[]> {
+        return this.requester.request(endpoint).then(res => {
             if (res.length > 0) {
                 return res;
             }
-            throw new NoInteractiveServersAvailable('No Interactive servers are available, please try again.');
+            throw new NoInteractiveServersAvailable(
+                'No Interactive servers are available, please try again.',
+            );
         });
     }
 }

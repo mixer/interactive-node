@@ -55,7 +55,11 @@ export class Scene extends EventEmitter implements IScene {
             this.onControlUpdated(controlData);
             return control;
         }
-        control = this.stateFactory.createControl(controlData.kind, controlData, this);
+        control = this.stateFactory.createControl(
+            controlData.kind,
+            controlData,
+            this,
+        );
         this.controls.set(control.controlID, control);
         this.emit('controlAdded', control);
         return control;
@@ -95,7 +99,7 @@ export class Scene extends EventEmitter implements IScene {
     /**
      * Retrieve a control in this scene by its id.
      */
-     public getControl(id: string): IControl {
+    public getControl(id: string): IControl {
         return this.controls.get(id);
     }
 
@@ -110,29 +114,31 @@ export class Scene extends EventEmitter implements IScene {
      * Creates a control in this scene, sending it to the server.
      */
     public createControl(control: IControlData): Promise<IControl> {
-        return this.createControls([control])
-            .then(res => res[0]);
+        return this.createControls([control]).then(res => res[0]);
     }
 
     /**
      * Creates a collection of controls in this scene, sending it to the server.
      */
     public createControls(controls: IControlData[]): Promise<IControl[]> {
-        return this.client.createControls({sceneID: this.sceneID, controls});
+        return this.client.createControls({ sceneID: this.sceneID, controls });
     }
 
     /**
      * Updates a collection of controls in this scene, sending it to the server.
      */
     public updateControls(controls: IControlData[]): Promise<void> {
-        return this.client.updateControls({sceneID: this.sceneID, controls});
+        return this.client.updateControls({ sceneID: this.sceneID, controls });
     }
 
     /**
      * Deletes controls in this scene from the server.
      */
     public deleteControls(controlIDs: string[]): Promise<void> {
-        return this.client.deleteControls({sceneID: this.sceneID, controlIDs: controlIDs});
+        return this.client.deleteControls({
+            sceneID: this.sceneID,
+            controlIDs: controlIDs,
+        });
     }
 
     /**

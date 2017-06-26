@@ -2,7 +2,8 @@ import { IncomingMessage } from 'http';
 export class BaseError extends Error {
     constructor(public readonly message: string) {
         super();
-        if (Error.captureStackTrace) { // chrome etc.
+        if (Error.captureStackTrace) {
+            // chrome etc.
             Error.captureStackTrace(this, this.constructor);
             return;
         }
@@ -26,7 +27,9 @@ export class BaseError extends Error {
  */
 export class CancelledError extends BaseError {
     constructor() {
-        super('Packet was cancelled or socket was closed before a reply was received.');
+        super(
+            'Packet was cancelled or socket was closed before a reply was received.',
+        );
         CancelledError.setProto(this);
     }
 }
@@ -113,7 +116,7 @@ export interface IInteractiveError {
     path?: string;
 }
 
-export module InteractiveError {
+export namespace InteractiveError {
     export class Base extends BaseError {
         public path: string | null;
         constructor(message: string, public code: number) {

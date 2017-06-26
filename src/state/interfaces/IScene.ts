@@ -84,7 +84,6 @@ export interface IScene extends EventEmitter {
      */
     on(event: 'update', listener: (controlId: this) => void): this;
     on(event: string, listener: Function): this;
-
 }
 
 export interface ISceneControlDeletion {

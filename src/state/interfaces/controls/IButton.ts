@@ -71,10 +71,22 @@ export interface IButton extends IControl, IButtonData {
     /**
      * Fired when a participant presses this button.
      */
-    on(event: 'mousedown', listener: (inputEvent: IInputEvent<IButtonInput>, participant: IParticipant) => void): this;
+    on(
+        event: 'mousedown',
+        listener: (
+            inputEvent: IInputEvent<IButtonInput>,
+            participant: IParticipant,
+        ) => void,
+    ): this;
     /**
      * Fired when a participant releases this button.
      */
-    on(event: 'mouseup', listener: (inputEvent: IInputEvent<IButtonInput>, participant: IParticipant) => void): this;
+    on(
+        event: 'mouseup',
+        listener: (
+            inputEvent: IInputEvent<IButtonInput>,
+            participant: IParticipant,
+        ) => void,
+    ): this;
     on(event: string, listener: Function): this;
 }

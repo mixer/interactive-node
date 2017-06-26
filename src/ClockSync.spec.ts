@@ -49,7 +49,7 @@ describe('clock syncer', () => {
         clock.tick(sampleSize - 1);
     });
 
-    afterEach( () => {
+    afterEach(() => {
         if (syncer) {
             syncer.stop();
             syncer = null;
