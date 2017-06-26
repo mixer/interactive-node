@@ -2,6 +2,10 @@
 
 ## 2.x
 
+## 2.3
+- Added a list of frontend grid sizes `gridLayoutSizes` (#71)
+- Improved typings for control metadata (#82)
+
 ## 2.2
 - Added `State.getGroups()`, `State.getParticipants()` and `State.getScenes()` (#78)
 - Internal project cleanup
