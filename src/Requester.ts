@@ -29,7 +29,7 @@ export class Requester implements IRequester {
     private getRequestFn(url: string) {
         //tslint:disable no-http-string
         if (url.substr(0, 5) === 'http:') {
-          return http.get;
+            return http.get;
         }
         //tslint:enable no-http-string
         return https.get;
