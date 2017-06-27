@@ -1,3 +1,4 @@
+import * as http from 'http';
 import * as https from 'https';
 import { HTTPError, TimeoutError } from './errors';
 
@@ -8,7 +9,7 @@ export interface IRequester {
 export class Requester implements IRequester {
     public request(url: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            const req = https.get(url, res => {
+            const req = this.getRequestFn(url)(url, res => {
                 if (res.statusCode !== 200) {
                     reject(
                         new HTTPError(res.statusCode, res.statusMessage, res),
@@ -24,5 +25,13 @@ export class Requester implements IRequester {
                 reject(new TimeoutError('Request timed out')),
             );
         });
+    }
+    private getRequestFn(url: string) {
+        //tslint:disable no-http-string
+        if (url.substr(0, 5) === 'http:') {
+          return http.get;
+        }
+        //tslint:enable no-http-string
+        return https.get;
     }
 }
