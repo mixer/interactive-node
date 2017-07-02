@@ -17,6 +17,9 @@ export class Scene extends EventEmitter implements IScene {
     public sceneID: string;
     public controls = new Map<string, IControl>();
     public groups: any;
+    /**
+     * @deprecated etags are no longer used, you can always omit/ignore this
+     */
     public etag: string;
     public meta: IMeta = {};
 
@@ -32,7 +35,6 @@ export class Scene extends EventEmitter implements IScene {
     constructor(data: ISceneData) {
         super();
         this.sceneID = data.sceneID;
-        this.etag = data.etag || '';
         this.meta = data.meta || {};
     }
 
@@ -49,9 +51,6 @@ export class Scene extends EventEmitter implements IScene {
     private onControlCreated(controlData: IControlData): IControl {
         let control = this.controls.get(controlData.controlID);
         if (control) {
-            if (control.etag === controlData.etag) {
-                return control;
-            }
             this.onControlUpdated(controlData);
             return control;
         }

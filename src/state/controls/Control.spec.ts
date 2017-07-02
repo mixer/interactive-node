@@ -11,7 +11,6 @@ use(require('sinon-chai'));
 
 const buttonData = {
     controlID: '0',
-    etag: '1234',
 };
 
 describe('control', () => {
@@ -64,7 +63,6 @@ describe('control', () => {
             text: 'foobar',
         };
         const updatedButton = {
-            etag: buttonData.etag,
             controlID: buttonData.controlID,
             ...buttonDiff,
         };

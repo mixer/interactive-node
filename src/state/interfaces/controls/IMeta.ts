@@ -7,12 +7,12 @@ import { ETag } from './';
  */
 export interface IMetaProperty {
     value: IJSON | JSONPrimitive;
+    /** @deprecated etags are no longer used, you can always omit/ignore this */
     etag?: ETag;
 }
 
 /**
- * Meta is a map of custom property names. Each custom property has a value
- * and an etag.
+ * Meta is a map of custom property names.
  * The values can be any valid JSON type.
  *
  * Meta properties allow you to store custom Metadata on their attached interactive

@@ -10,6 +10,7 @@ import { IGroup, IGroupData } from './interfaces/IGroup';
 export class Group extends EventEmitter implements IGroup {
     public groupID: string;
     public sceneID: string;
+    /** @deprecated etags are no longer used, you can always omit/ignore this */
     public etag: string;
     public meta: IMeta = {};
 

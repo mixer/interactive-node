@@ -22,12 +22,10 @@ const groupsFixture: IGroupDataArray = {
     groups: [
         {
             groupID: 'default',
-            etag: '5344324324',
             sceneID: 'my awesome scene',
         },
         {
             groupID: 'deleatable',
-            etag: '6846940396',
             sceneID: 'my awesome scene',
         },
     ],
@@ -70,11 +68,9 @@ describe('state', () => {
                 scenes: [
                     {
                         sceneID: 'scene2',
-                        etag: '252185589',
                         controls: [
                             {
                                 controlID: 'button2',
-                                etag: '262111379',
                                 kind: 'button',
                                 text: 'Win the Game',
                                 cost: 0,
@@ -82,7 +78,6 @@ describe('state', () => {
                                 disabled: false,
                                 meta: {
                                     glow: {
-                                        etag: '254353748',
                                         value: {
                                             color: '#f00',
                                             radius: 10,
@@ -114,7 +109,6 @@ describe('state', () => {
         it('updates a scene', () => {
             const meta = {
                 glow: {
-                    etag: '254353748',
                     value: {
                         color: '#f00',
                         radius: 10,
@@ -202,7 +196,6 @@ describe('state', () => {
                     controls: [
                         {
                             controlID: 'lose_the_game_btn',
-                            etag: '262111379',
                             kind: 'button',
                             text: 'Lose the Game',
                             cost: 0,
@@ -210,7 +203,6 @@ describe('state', () => {
                             disabled: false,
                             meta: {
                                 glow: {
-                                    etag: '254353748',
                                     value: {
                                         color: '#f00',
                                         radius: 10,
@@ -272,7 +264,6 @@ describe('state', () => {
                     groups: [
                         {
                             groupID: group.groupID,
-                            etag: group.etag,
                             sceneID: targetScene,
                         },
                     ],
@@ -284,7 +275,6 @@ describe('state', () => {
                 groups: [
                     {
                         groupID: 'a new group',
-                        etag: '4295943293',
                         sceneID: 'my awesome scene',
                     },
                 ],

@@ -255,12 +255,10 @@ export class State extends EventEmitter implements IState {
     public onSceneCreate(data: ISceneData): IScene {
         let scene = this.scenes.get(data.sceneID);
         if (scene) {
-            if (scene.etag === data.etag) {
-                return this.scenes.get(data.sceneID);
-            }
             this.onSceneUpdate(data);
             return scene;
         }
+
         scene = this.stateFactory.createScene(data);
         if (data.controls) {
             scene.onControlsCreated(data.controls);
@@ -305,9 +303,6 @@ export class State extends EventEmitter implements IState {
     public onGroupCreate(data: IGroupData): Group {
         let group = this.groups.get(data.groupID);
         if (group) {
-            if (group.etag === data.etag) {
-                return this.groups.get(data.groupID);
-            }
             this.onGroupUpdate(data);
             return group;
         }
