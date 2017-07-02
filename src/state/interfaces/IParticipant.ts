@@ -42,8 +42,9 @@ export interface IParticipant {
      */
     groupID?: string;
     meta?: IMeta;
+
     /**
-     * The participant's ETag.
+     * @deprecated etags are no longer used, you can always omit/ignore this
      */
     etag?: ETag;
 }

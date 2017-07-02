@@ -41,7 +41,7 @@ export interface IControlData {
      */
     position?: IGridPlacement[];
     /**
-     * The control's ETag.
+     * @deprecated etags are no longer used, you can always omit/ignore this
      */
     etag?: ETag;
 }

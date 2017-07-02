@@ -212,17 +212,6 @@ export namespace InteractiveError {
     errors[4004] = InvalidMethodArguments;
 
     /**
-     * Indicates that an invalid Etag was sent to the server when the client wished to update some state.
-     */
-    export class EtagMismatch extends Base {
-        constructor(message: string) {
-            super(message, 4005);
-            EtagMismatch.setProto(this);
-        }
-    }
-    errors[4005] = EtagMismatch;
-
-    /**
      * Indicates that an invalid transactionId was specified in a `capture` method.
      */
     export class InvalidTransactionId extends Base {

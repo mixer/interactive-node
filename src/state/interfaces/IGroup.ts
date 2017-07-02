@@ -28,7 +28,7 @@ export interface IGroupData {
     meta?: IMeta;
 
     /**
-     * The group's ETag.
+     * @deprecated etags are no longer used, you can always omit/ignore this
      */
     etag?: ETag;
 }

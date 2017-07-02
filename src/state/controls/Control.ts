@@ -24,6 +24,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter
     public kind: ControlKind;
     public disabled: boolean;
     public position: IGridPlacement[];
+    /** @deprecated etags are no longer used, you can always omit/ignore this */
     public etag: string;
     public meta: IMeta;
 
@@ -86,7 +87,6 @@ export abstract class Control<T extends IControlData> extends EventEmitter
         value: T[K],
     ): Promise<void> {
         const packet: T = <T>{};
-        packet.etag = this.etag;
         packet.controlID = this.controlID;
 
         packet[attribute] = value;
@@ -112,7 +112,6 @@ export abstract class Control<T extends IControlData> extends EventEmitter
         const changedData = {
             ...<IControlUpdate>controlUpdate,
             controlID: this.controlID,
-            etag: this.etag,
         };
 
         return this.client.updateControls({
