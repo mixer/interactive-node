@@ -95,7 +95,7 @@ describe('socket', () => {
             });
         }
 
-        function assertAndReplyTo(payload: any) {
+        function assertAndReplyTo(payload: any, seq: number) {
             const data = JSON.parse(payload);
             expect(data).to.deep.equal(
                 {
@@ -106,6 +106,7 @@ describe('socket', () => {
                     params: {
                         foo: 'bar',
                     },
+                    seq,
                 },
                 'received method should match sent method',
             );
@@ -115,6 +116,7 @@ describe('socket', () => {
                     id: data.id,
                     error: null,
                     result: 'hi',
+                    seq: seq + 1,
                 }),
             );
         }
@@ -209,7 +211,7 @@ describe('socket', () => {
             });
             awaitConnect((newWs: WebSocketModule) => {
                 newWs.on('message', (payload: any) => {
-                    assertAndReplyTo(payload);
+                    assertAndReplyTo(payload, 0);
                     expect(socket.getQueueSize()).to.equal(1);
                 });
             });
@@ -221,12 +223,28 @@ describe('socket', () => {
 
         it('recieves a reply to a method', () => {
             ws.on('message', payload => {
-                assertAndReplyTo(payload);
+                assertAndReplyTo(payload, 0);
             });
 
             return socket.execute('hello', { foo: 'bar' }).then(res => {
                 expect(res).to.equal('hi');
             });
+        });
+
+        it('tracks packet sequence numbers', () => {
+            let completed = false;
+            ws.once('message', (payload1: any) => {
+                assertAndReplyTo(payload1, 0);
+
+                ws.once('message', (payload2: any) => {
+                    assertAndReplyTo(payload2, 1);
+                    completed = true;
+                });
+            });
+
+            return socket.execute('hello', { foo: 'bar' })
+                .then(() => socket.execute('hello', { foo: 'bar' }))
+                .then(() => expect(completed).to.equal(true, 'expected to have called twice'));
         });
 
         it('emits a method sent to it', done => {

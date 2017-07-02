@@ -27,6 +27,7 @@
         "no-typeof-undefined": false,
         "underscore-consistent-invocation": false,
         "no-backbone-get-set-outside-model": false,
+        "no-single-line-block-comment": false,
         "function-name": [true, {
             "method-regex": "^[a-z][\\w\\d]+$",
             "private-method-regex": "^[a-z][\\w\\d]+$",

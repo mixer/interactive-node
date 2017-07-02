@@ -30,7 +30,6 @@ const maxInt32 = 0xffffffff;
 export class Packet extends EventEmitter {
     private state: PacketState = PacketState.Pending;
     private timeout: number;
-
     private method: Method<any>;
 
     constructor(method: Method<any>) {
@@ -84,6 +83,14 @@ export class Packet extends EventEmitter {
         return this.state;
     }
 
+    /**
+     * Sets the sequence number on the outgoing packet.
+     */
+    public setSequenceNumber(x: number): this {
+        this.method.seq = x;
+        return this;
+    }
+
     public setState(state: PacketState) {
         if (state === this.state) {
             return;
@@ -101,6 +108,7 @@ export class Packet extends EventEmitter {
  */
 export class Method<T> {
     public readonly type = 'method'; //tslint:disable-line
+    public seq: number;
 
     constructor(
         /**

@@ -118,6 +118,7 @@ export class InteractiveSocket extends EventEmitter {
     private state: SocketState = SocketState.Idle;
     private socket: any;
     private queue: Set<Packet> = new Set<Packet>();
+    private lastSequenceNumber = 0;
 
     constructor(options: ISocketOptions = {}) {
         super();
@@ -357,7 +358,7 @@ export class InteractiveSocket extends EventEmitter {
     }
 
     private sendPacketInner(packet: Packet) {
-        this.sendRaw(packet);
+        this.sendRaw(packet.setSequenceNumber(this.lastSequenceNumber));
     }
 
     private sendRaw(packet: any) {
@@ -376,6 +377,10 @@ export class InteractiveSocket extends EventEmitter {
             message = JSON.parse(messageString);
         } catch (err) {
             throw new MessageParseError('Message returned was not valid JSON');
+        }
+
+        if (message.hasOwnProperty('seq')) {
+            this.lastSequenceNumber = message.seq;
         }
 
         switch (message.type) {
