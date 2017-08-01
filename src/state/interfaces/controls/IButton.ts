@@ -11,6 +11,10 @@ export interface IButtonData extends IControlData {
      */
     text?: string;
     /**
+     * The tooltip text displayed when the participant hovers over the button.
+     */
+    tooltip?: string;
+    /**
      * The spark cost of this button.
      */
     cost?: number;
@@ -37,6 +41,10 @@ export interface IButtonUpdate extends IControlUpdate {
      * Will update the text of this button.
      */
     text?: string;
+    /**
+     * Will update the tooltip of this button.
+     */
+    tooltip?: string;
     /**
      * In milliseconds, will be converted to a unix timestamp of when this cooldown expires.
      */
