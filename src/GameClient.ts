@@ -18,6 +18,13 @@ export interface IGameClientOptions {
      * from the Interactive Studio on Mixer.com in the Code step.
      */
     versionId: number;
+
+    /**
+     * Optional project sharecode to your Interactive Project Version. You can retrieve one
+     * from the Interactive Studio on Mixer.com in the Code step.
+     */
+    sharecode?: string;
+	
     /**
      * An OAuth Bearer token as defined in {@link https://art.tools.ietf.org/html/rfc6750| OAuth 2.0 Bearer Token Usage}.
      */
@@ -45,9 +52,13 @@ export class GameClient extends Client {
                 return super.open({
                     authToken: options.authToken,
                     url: endpoints[0].address,
-                    extraHeaders: {
-                        'X-Interactive-Version': options.versionId,
-                    },
+                    extraHeaders: 
+					(options.sharecode!==undefined) ? {
+						'X-Interactive-Version': options.versionId,
+						'X-Interactive-Sharecode': options.sharecode,
+					} : {
+						'X-Interactive-Version': options.versionId,
+					},
                 });
             });
     }
