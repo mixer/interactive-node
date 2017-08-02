@@ -4,9 +4,9 @@ import { IInput } from './state/interfaces/controls';
 
 export interface IParticipantOptions {
     /**
-     * A JWT representing a Mixer.com session
+     * An access key for the Mixer.com session
      */
-    jwt: string;
+    key: string;
     /**
      * A url for the Interactive session you'd like to join.
      * This should be retrieved from https://mixer.com/api/v1/interactive/{channelId}
@@ -26,14 +26,12 @@ export class ParticipantClient extends Client {
 
     public open(options: IParticipantOptions): Promise<this> {
         return super.open({
-            jwt: options.jwt,
             url: options.url,
-            queryParams: Object.assign(
-                {
-                    'x-protocol-version': '2.0',
-                },
-                options.extraParams,
-            ),
+            queryParams: {
+                'x-protocol-version': '2.0',
+                key: options.key,
+                ...options.extraParams,
+            },
         });
     }
     /**

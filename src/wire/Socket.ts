@@ -33,9 +33,6 @@ export interface ISocketOptions {
     //compression scheme, defaults to none, Will remain none until pako typings are updated
     compressionScheme?: CompressionScheme;
 
-    // Optional JSON web token to use for authentication.
-    jwt?: string;
-
     // Query params to add
     queryParams?: IRawValues;
 
@@ -187,12 +184,6 @@ export class InteractiveSocket extends EventEmitter {
             this.options || getDefaults(),
             options,
         );
-        //TODO: Clear up auth here later
-        if (this.options.jwt && this.options.authToken) {
-            throw new Error(
-                'Cannot connect to Constellation with both JWT and OAuth token.',
-            );
-        }
     }
 
     /**
@@ -226,10 +217,6 @@ export class InteractiveSocket extends EventEmitter {
         if (this.options.authToken) {
             extras.headers['Authorization'] = `Bearer ${this.options
                 .authToken}`;
-        }
-        if (this.options.jwt) {
-            this.options.queryParams['Authorization'] = `JWT ${this.options
-                .jwt}`;
         }
         url.query = Object.assign({}, url.query, this.options.queryParams);
 
