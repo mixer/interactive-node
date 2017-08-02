@@ -77,6 +77,7 @@ describe('socket', () => {
         let ws: WebSocketModule;
         let next: sinon.SinonStub;
         let reset: sinon.SinonStub;
+        let checker: sinon.SinonStub;
 
         function greet() {
             ws.send(JSON.stringify(METHOD));
@@ -120,6 +121,8 @@ describe('socket', () => {
 
         beforeEach(ready => {
             awaitConnect(() => ready());
+            checker = sinon.stub();
+            checker.resolves();
             socket = new InteractiveSocket({
                 url,
                 pingInterval: 100,
@@ -127,6 +130,7 @@ describe('socket', () => {
             }).connect();
             const options: ISocketOptions = {
                 reconnectionPolicy: new ExponentialReconnectionPolicy(),
+                reconnectChecker: checker,
             };
             next = sinon.stub(options.reconnectionPolicy, 'next').returns(5);
             reset = sinon.stub(options.reconnectionPolicy, 'reset');
@@ -147,12 +151,14 @@ describe('socket', () => {
                 awaitConnect((newWs: WebSocketModule) => {
                     expect(next).to.have.been.calledOnce;
                     expect(reset).to.have.been.calledOnce;
+                    expect(checker).to.have.been.calledOnce;
                     closeNormal(newWs);
 
                     // Backs off again if establishing fails
                     awaitConnect((ws3: WebSocketModule) => {
                         expect(next).to.have.been.calledTwice;
                         expect(reset).to.have.been.calledTwice;
+                        expect(checker).to.have.been.calledTwice;
                         greet();
 
                         // Resets after connection is healthy again.

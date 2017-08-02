@@ -17,6 +17,11 @@ export interface IParticipantOptions {
      * Any extra query parameters you'd like to include on the connection, usually used for debugging.
      */
     extraParams?: IJSON;
+
+    /**
+     * Optional intercept function that can be run before socket reconnections.
+     */
+    reconnectChecker?: () => Promise<void>;
 }
 
 export class ParticipantClient extends Client {
@@ -27,6 +32,7 @@ export class ParticipantClient extends Client {
     public open(options: IParticipantOptions): Promise<this> {
         return super.open({
             url: options.url,
+            reconnectChecker: options.reconnectChecker,
             queryParams: {
                 'x-protocol-version': '2.0',
                 key: options.key,
