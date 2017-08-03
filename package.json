@@ -1,6 +1,6 @@
 {
   "name": "beam-interactive-node2",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "A NodeJS and Browser compatible client for mixer.com's interactive 2 Protocol",
   "contributors": [
     {
