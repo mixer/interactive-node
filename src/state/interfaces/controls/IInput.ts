@@ -15,7 +15,7 @@ export interface IInput {
 /**
  * Extends the base input to include button specific data.
  */
-export interface IButtonInput extends IInput {
+export interface IButtonMouseInput extends IInput {
     /**
      * Buttons can emit the mousedown(depressed) or mouseup(released) event.
      */
@@ -28,6 +28,18 @@ export interface IButtonInput extends IInput {
      */
     button: number;
 }
+
+/**
+ * Extends the base input to include button specific data.
+ */
+export interface IButtonKeyboardInput extends IInput {
+    /**
+     * Buttons can emit the keydown(depressed) or keyup(released) event.
+     */
+    event: 'keydown' | 'keyup';
+}
+
+export type IButtonInput = IButtonMouseInput | IButtonKeyboardInput;
 
 /**
  * Extends the base input to include joystick specific data.
