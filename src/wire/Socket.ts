@@ -33,9 +33,6 @@ export interface ISocketOptions {
     //compression scheme, defaults to none, Will remain none until pako typings are updated
     compressionScheme?: CompressionScheme;
 
-    // Optional JSON web token to use for authentication.
-    jwt?: string;
-
     // Query params to add
     queryParams?: IRawValues;
 
@@ -49,6 +46,8 @@ export interface ISocketOptions {
     pingInterval?: number;
     // Any extra headers to include in the socket connection.
     extraHeaders?: IRawValues;
+    // Optional intercept function that can be run before socket reconnections.
+    reconnectChecker?: () => Promise<void>;
 }
 
 export interface IWebSocketOptions {
@@ -101,6 +100,7 @@ function getDefaults(): ISocketOptions {
         pingInterval: 10 * 1000,
         extraHeaders: {},
         queryParams: {},
+        reconnectChecker: () => Promise.resolve(),
     };
 }
 
@@ -157,7 +157,7 @@ export class InteractiveSocket extends EventEmitter {
 
             if (this.state === SocketState.Refreshing) {
                 this.state = SocketState.Idle;
-                this.connect();
+                this.options.reconnectChecker().then(() => this.connect());
                 return;
             }
 
@@ -172,7 +172,7 @@ export class InteractiveSocket extends EventEmitter {
             this.state = SocketState.Reconnecting;
 
             this.reconnectTimeout = setTimeout(() => {
-                this.connect();
+                this.options.reconnectChecker().then(() => this.connect());
             }, this.options.reconnectionPolicy.next());
         });
     }
@@ -187,12 +187,6 @@ export class InteractiveSocket extends EventEmitter {
             this.options || getDefaults(),
             options,
         );
-        //TODO: Clear up auth here later
-        if (this.options.jwt && this.options.authToken) {
-            throw new Error(
-                'Cannot connect to Constellation with both JWT and OAuth token.',
-            );
-        }
     }
 
     /**
@@ -226,10 +220,6 @@ export class InteractiveSocket extends EventEmitter {
         if (this.options.authToken) {
             extras.headers['Authorization'] = `Bearer ${this.options
                 .authToken}`;
-        }
-        if (this.options.jwt) {
-            this.options.queryParams['Authorization'] = `JWT ${this.options
-                .jwt}`;
         }
         url.query = Object.assign({}, url.query, this.options.queryParams);
 
