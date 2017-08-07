@@ -70,7 +70,7 @@ export interface IControl extends IControlData, EventEmitter {
      * Give input causes the control to give input to the mediator status in response to a
      * control event. For example a mousedown on a button would end up here.
      */
-    giveInput<T extends IInput>(input: T): Promise<void>;
+    giveInput(input: IInput): Promise<void>;
 
     receiveInput<T extends IInput>(
         input: IInputEvent<T>,
