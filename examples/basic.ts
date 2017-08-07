@@ -50,9 +50,6 @@ client.open({
             // Let's tell the user who they are, and what they pushed.
             console.log(`${participant.username} pushed, ${inputEvent.input.controlID}`);
 
-            //Make a sound, its a soundboard \o/
-            console.log('\x07');
-
             // Did this push involve a spark cost?
             if (inputEvent.transactionID) {
 
