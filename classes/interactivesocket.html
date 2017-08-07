@@ -290,13 +290,7 @@
 									<li>Defined in D:/Documents/GitHub/beam/site/beam-interactive-node2/node_modules/@types/node/index.d.ts:627</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns             <span class="tsd-signature-symbol">(</span>
-								<span class="tsd-signature-type">string</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">symbol</span>
-								<span class="tsd-signature-symbol">)</span>
-								<span class="tsd-signature-symbol">[]</span>
-							</h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -375,7 +369,7 @@
 					<a name="getstate" class="tsd-anchor"></a>
 					<h3>get<wbr>State</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>State<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../enums/socketstate.html" class="tsd-signature-type">SocketState</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>State<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SocketState.Idle</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SocketState.Connecting</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SocketState.Connected</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SocketState.Closing</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SocketState.Reconnecting</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SocketState.Refreshing</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -389,7 +383,18 @@
 									<p>Returns the current state of the socket.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../enums/socketstate.html" class="tsd-signature-type">SocketState</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">SocketState.Idle</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">SocketState.Connecting</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">SocketState.Connected</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">SocketState.Closing</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">SocketState.Reconnecting</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">SocketState.Refreshing</span>
+							</h4>
 						</li>
 					</ul>
 				</section>

@@ -162,7 +162,7 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Client<span class="tsd-signature-symbol">(</span>clientType<span class="tsd-signature-symbol">: </span><a href="../enums/clienttype.html" class="tsd-signature-type">ClientType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="client.html" class="tsd-signature-type">Client</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Client<span class="tsd-signature-symbol">(</span>clientType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ClientType.Participant</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ClientType.GameClient</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="client.html" class="tsd-signature-type">Client</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -179,7 +179,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>clientType: <a href="../enums/clienttype.html" class="tsd-signature-type">ClientType</a></h5>
+									<h5>clientType: <span class="tsd-signature-type">ClientType.Participant</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ClientType.GameClient</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="client.html" class="tsd-signature-type">Client</a></h4>
@@ -192,7 +192,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="clienttype" class="tsd-anchor"></a>
 					<h3>client<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">client<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/clienttype.html" class="tsd-signature-type">ClientType</a></div>
+					<div class="tsd-signature tsd-kind-icon">client<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ClientType.Participant</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ClientType.GameClient</span></div>
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/iclient.html">IClient</a>.<a href="../interfaces/iclient.html#clienttype">clientType</a></p>
 						<ul>
@@ -515,13 +515,7 @@
 									<li>Defined in D:/Documents/GitHub/beam/site/beam-interactive-node2/node_modules/@types/node/index.d.ts:627</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns             <span class="tsd-signature-symbol">(</span>
-								<span class="tsd-signature-type">string</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">symbol</span>
-								<span class="tsd-signature-symbol">)</span>
-								<span class="tsd-signature-symbol">[]</span>
-							</h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
