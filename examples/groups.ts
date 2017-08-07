@@ -3,12 +3,10 @@ import * as WebSocket from 'ws';
 
 import {
     GameClient,
-    IButtonData,
-    IControlData,
-    ISceneDataArray,
+    Group,
     IParticipant,
+    ISceneDataArray,
     setWebSocket,
-    Group
 } from '../lib';
 
 import { makeControls } from './util';

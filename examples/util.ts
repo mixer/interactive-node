@@ -8,7 +8,7 @@ export function makeControls(amount: number = 5, textGenerator: (i: number) => s
             kind: 'button',
             text: textGenerator(i),
             cost: 1,
-            position: getGridPlacement(i * size, 1, 10),
+            position: getGridPlacement(i, 0, size),
         });
     }
     return controls;
