@@ -4,11 +4,11 @@ import * as WebSocket from 'ws';
 import {
     GameClient,
     IButton,
-    IButtonData,
-    IControlData,
     IParticipant,
     setWebSocket,
 } from '../lib';
+
+import { makeControls } from './util';
 
 if (process.argv.length < 4) {
     console.log('Usage gameClient.exe <token> <url> <experienceId>');
@@ -28,47 +28,6 @@ client.on('message', (err: any) => console.log('<<<', err));
 client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
 
-/**
- * This makes button objects, it will make the amount of buttons we tell it to
- * we'll use it to create controls dynamically!
- */
-function makeControls(amount: number): IControlData[] {
-    const controls: IButtonData[] = [];
-    const size = 10;
-    for (let i = 0; i < amount; i++) {
-        controls.push({
-            controlID: `${i}`,
-            kind: 'button',
-            text: `Button ${i}`,
-            cost: 1,
-            position: [
-                   {
-                       size: 'large',
-                       width: size,
-                       height: size / 2,
-                       x: i * size,
-                       y: 1,
-                   },
-                   {
-                       size: 'small',
-                       width: size,
-                       height: size / 2,
-                       x: i * size,
-                       y: 1,
-                   },
-                   {
-                       size: 'medium',
-                       width: size,
-                       height: size,
-                       x: i * size,
-                       y: 1,
-                   },
-               ],
-            },
-        );
-    }
-    return controls;
-}
 // Now we open the connection passing in our authentication details and an experienceId.
 client.open({
     authToken: process.argv[2],
@@ -79,7 +38,7 @@ client.open({
     // Every Interactive Experience has a "default" scene so we'll add them there there.
     return client.createControls({
         sceneID: 'default',
-        controls: makeControls(5),
+        controls: makeControls(5, i => `Button ${i}`),
     });
 })
 .then(controls => {

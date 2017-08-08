@@ -1,11 +1,11 @@
 /* tslint:disable:no-console */
 import * as WebSocket from 'ws';
+import { getGridPlacement } from './util';
 
 import {
     GameClient,
     IButton,
     IButtonData,
-    IGridPlacement,
     setWebSocket,
 } from '../lib';
 
@@ -23,33 +23,7 @@ const client = new GameClient();
 // Log when we're connected to interactive
 client.on('open', () => console.log('Connected to interactive'));
 
-// This makes grid placement objects dynamically, to be used for our controls below.
-function getGridPlacement(x: number, y: number): IGridPlacement[] {
-    const size = 10;
-    return [
-        {
-            size: 'large',
-            width: size,
-            height: size,
-            x: x * size,
-            y: y * size,
-        },
-        {
-            size: 'medium',
-            width: size,
-            height: size,
-            x: x * size,
-            y: y * size,
-        },
-        {
-            size: 'small',
-            width: size,
-            height: size,
-            x: x * size,
-            y: y * size,
-        },
-    ];
-}
+
 
 /**
  * These are our controls. The "keyCode" property is the JavaScript key code associated
