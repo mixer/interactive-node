@@ -3,13 +3,13 @@ import * as WebSocket from 'ws';
 
 import {
     GameClient,
-    IButtonData,
-    IControlData,
-    ISceneDataArray,
+    Group,
     IParticipant,
+    ISceneDataArray,
     setWebSocket,
-    Group
 } from '../lib';
+
+import { makeControls } from './util';
 
 if (process.argv.length < 4) {
     console.log('Usage gameClient.exe <token> <versionId>');
@@ -36,45 +36,6 @@ const delayTime = 2000;
 // client.on('message', (err: any) => console.log('<<<', err));
 // client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
-
-/**
- * This makes button objects with the text set to the name of the scene.
- */
-function makeControls(scene: string): IControlData[] {
-    const controls: IButtonData[] = [];
-    const size = 30;
-    controls.push({
-        controlID: 'control0',
-        kind: 'button',
-        text: `Scene: ${scene}`,
-        cost: 1,
-        position: [
-                {
-                    size: 'large',
-                    width: size,
-                    height: size / 2,
-                    x: 1,
-                    y: 1,
-                },
-                {
-                    size: 'small',
-                    width: size,
-                    height: size / 2,
-                    x: 1,
-                    y: 1,
-                },
-                {
-                    size: 'medium',
-                    width: size,
-                    height: size,
-                    x: 1,
-                    y: 1,
-                },
-            ],
-        },
-    );
-    return controls;
-}
 
 /**
  * Swaps the group the current participant is in between secondGroup and default.
@@ -106,11 +67,11 @@ function removeParticipant(participantSessionId: string): void {
  */
 function createScenes(): Promise<ISceneDataArray> {
     const defaultScene = client.state.getScene('default');
-    defaultScene.createControls(makeControls('default'));
+    defaultScene.createControls(makeControls(1, () => 'Scene: default'));
 
     const secondScene = {
         sceneID: 'secondScene',
-        controls: makeControls('second')
+        controls: makeControls(1, () => 'Scene: second'),
     };
 
     return client.createScenes({

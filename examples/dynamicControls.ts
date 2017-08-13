@@ -6,11 +6,11 @@ import * as faker from 'faker';
 import {
     delay,
     GameClient,
-    IButtonData,
-    IControlData,
     IParticipant,
     setWebSocket,
 } from '../lib';
+
+import { makeControls } from './util';
 
 if (process.argv.length < 4) {
     console.log('Usage gameClient.exe <token> <versionId>');
@@ -30,47 +30,6 @@ client.on('open', () => console.log('Connected to interactive'));
 // client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
 
-/**
- * This makes button objects, it will make the amount of buttons we tell it to
- * we'll use it to create controls dynamically!
- */
-function makeControls(amount: number): IControlData[] {
-    const controls: IButtonData[] = [];
-    const size = 10;
-    for (let i = 0; i < amount; i++) {
-        controls.push({
-            controlID: `${i}`,
-            kind: 'button',
-            text: faker.name.firstName(),
-            cost: 1,
-            position: [
-                   {
-                       size: 'large',
-                       width: size,
-                       height: size / 2,
-                       x: i * size,
-                       y: 1,
-                   },
-                   {
-                       size: 'small',
-                       width: size,
-                       height: size / 2,
-                       x: i * size,
-                       y: 1,
-                   },
-                   {
-                       size: 'medium',
-                       width: size,
-                       height: size,
-                       x: i * size,
-                       y: 1,
-                   },
-               ],
-            },
-        );
-    }
-    return controls;
-}
 const delayTime = 2000;
 
 /* Loop creates 5 controls and adds them to the default scene.
@@ -79,7 +38,7 @@ const delayTime = 2000;
 */
 function loop() {
     const scene = client.state.getScene('default');
-    scene.createControls(makeControls(5))
+    scene.createControls(makeControls(5, () => faker.name.firstName()))
         .then(() => delay(delayTime))
         .then(() => scene.deleteAllControls())
         .then(() => delay(delayTime))
@@ -92,7 +51,7 @@ client.open({
     versionId: parseInt(process.argv[3], 10),
 })
 .then(() => {
-    /* Pull in the scenes stored on the server
+    /* Pull in the state stored on the server
     * then call ready so our controls show up.
     * then call loop() to begin our loop.
     */
