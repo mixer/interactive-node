@@ -13,7 +13,7 @@ import {
 /**
  * Close codes that are deemed to be recoverable by the reconnection policy
  */
-export const recoverableCloseCodes = [1000, 1011];
+export const recoverableCloseCodes = [1000, 1001, 1006, 1011, 1012];
 
 //We don't support lz4 due to time constraints right now
 export type CompressionScheme = 'none' | 'gzip';
@@ -27,8 +27,8 @@ export interface ISocketOptions {
     reconnectionPolicy?: IReconnectionPolicy;
     autoReconnect?: boolean;
 
-    // Websocket URL to connect to, defaults to <TODO>
-    url?: string;
+    // Array of possible websocket URLs to connect to.
+    urls?: string[];
 
     //compression scheme, defaults to none, Will remain none until pako typings are updated
     compressionScheme?: CompressionScheme;
@@ -92,7 +92,7 @@ export enum SocketState {
 
 function getDefaults(): ISocketOptions {
     return {
-        url: '',
+        urls: [],
         replyTimeout: 10000,
         compressionScheme: 'none',
         autoReconnect: true,
@@ -119,6 +119,7 @@ export class InteractiveSocket extends EventEmitter {
     private socket: any;
     private queue: Set<Packet> = new Set<Packet>();
     private lastSequenceNumber = 0;
+    private endpointIndex = 0;
 
     constructor(options: ISocketOptions = {}) {
         super();
@@ -213,7 +214,7 @@ export class InteractiveSocket extends EventEmitter {
             headers,
         };
 
-        const url = Url.parse(this.options.url, true);
+        const url = Url.parse(this.getURL(), true);
         // Clear out search so it populates query using the query
         // https://nodejs.org/api/url.html#url_url_format_urlobject
         url.search = null;
@@ -367,6 +368,14 @@ export class InteractiveSocket extends EventEmitter {
 
         this.emit('send', payload);
         this.socket.send(payload);
+    }
+
+    private getURL(): string {
+        const addresses = this.options.urls;
+        if (this.endpointIndex >= addresses.length) {
+            this.endpointIndex = 0;
+        }
+        return addresses[this.endpointIndex++];
     }
 
     private extractMessage(packet: string | Buffer) {

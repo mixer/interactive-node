@@ -58,7 +58,7 @@ export class GameClient extends Client {
             .then(endpoints => {
                 return super.open({
                     authToken: options.authToken,
-                    url: endpoints[0].address,
+                    urls: endpoints.map(({ address }) => address),
                     extraHeaders: extraHeaders,
                 });
             });

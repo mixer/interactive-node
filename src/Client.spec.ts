@@ -11,7 +11,7 @@ setWebSocket(WebSocket);
 const port = process.env.SERVER_PORT || 1339;
 
 describe('client', () => {
-    const url = `ws://127.0.0.1:${port}/`;
+    const urls = [`ws://127.0.0.1:${port}/`];
     let client: Client;
     let server: WebSocket.Server;
     let ws: WebSocket;
@@ -24,7 +24,7 @@ describe('client', () => {
     }
 
     const socketOptions = {
-        url,
+        urls,
     };
     function createClient(): Client {
         return new Client(ClientType.GameClient);

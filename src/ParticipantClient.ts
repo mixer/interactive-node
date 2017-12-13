@@ -31,7 +31,7 @@ export class ParticipantClient extends Client {
 
     public open(options: IParticipantOptions): Promise<this> {
         return super.open({
-            url: options.url,
+            urls: [options.url],
             reconnectChecker: options.reconnectChecker,
             queryParams: {
                 'x-protocol-version': '2.0',
