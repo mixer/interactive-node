@@ -10,11 +10,6 @@ import {
     IReconnectionPolicy,
 } from './reconnection';
 
-/**
- * Close codes that are deemed to be recoverable by the reconnection policy
- */
-export const recoverableCloseCodes = [1000, 1001, 1006, 1011, 1012];
-
 //We don't support lz4 due to time constraints right now
 export type CompressionScheme = 'none' | 'gzip';
 
@@ -144,9 +139,10 @@ export class InteractiveSocket extends EventEmitter {
         });
 
         this.on('close', (evt: ICloseEvent) => {
-            // If this close event's code is not within our recoverable code array
-            // We raise it as an error and refuse to connect.
-            if (recoverableCloseCodes.indexOf(evt.code) === -1) {
+            // If this close event's code is an application error (e.g. bad authentication)
+            // or invalid status code (for Edge), we raise it as an error and refuse to
+            // reconnect.
+            if (evt.code < 1000 || evt.code > 1999 || evt.code === 1005) {
                 const err = InteractiveError.fromSocketMessage({
                     code: evt.code,
                     message: evt.reason,
@@ -372,10 +368,7 @@ export class InteractiveSocket extends EventEmitter {
 
     private getURL(): string {
         const addresses = this.options.urls;
-        if (this.endpointIndex >= addresses.length) {
-            this.endpointIndex = 0;
-        }
-        return addresses[this.endpointIndex++];
+        return this.options.urls[this.endpointIndex++ % addresses.length];
     }
 
     private extractMessage(packet: string | Buffer) {
