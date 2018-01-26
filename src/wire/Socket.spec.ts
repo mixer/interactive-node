@@ -28,7 +28,7 @@ describe('socket', () => {
     let server: WebSocketModule.Server;
     let socket: InteractiveSocket;
 
-    const url = `ws://127.0.0.1:${port}/`;
+    const urls = [`ws://127.0.0.1:${port}/`];
 
     beforeEach(ready => {
         server = new WebSocketModule.Server({ port }, ready);
@@ -45,7 +45,7 @@ describe('socket', () => {
 
     describe('connecting', () => {
         it('connects with no auth', done => {
-            socket = new InteractiveSocket({ url }).connect();
+            socket = new InteractiveSocket({ urls }).connect();
             server.on('connection', (ws: WebSocketModule) => {
                 expect(ws.upgradeReq.url).to.equal('/');
                 expect(ws.upgradeReq.headers.authorization).to.equal(
@@ -59,7 +59,7 @@ describe('socket', () => {
 
         it('connects with an OAuth token', done => {
             socket = new InteractiveSocket({
-                url,
+                urls,
                 authToken: 'asdf!',
             }).connect();
             server.on('connection', (ws: WebSocketModule) => {
@@ -126,7 +126,7 @@ describe('socket', () => {
             checker = sinon.stub();
             checker.resolves();
             socket = new InteractiveSocket({
-                url,
+                urls,
                 pingInterval: 100,
                 replyTimeout: 50,
             }).connect();
@@ -170,6 +170,28 @@ describe('socket', () => {
                             setTimeout(() => {
                                 done();
                             }, 500);
+                        });
+                    });
+                });
+            });
+        });
+
+        it('reconnects to the next server on disconnection', done => {
+            socket.setOptions({ urls: [...urls, `ws://127.0.0.1:${port + 1}/`] });
+
+            // Connect to the first server.
+            socket.once('open', () => {
+                const fallbackServer = new WebSocketModule.Server({ port: port + 1 }, () => {
+                    closeNormal(ws);
+
+                    // Connect to the second server.
+                    fallbackServer.once('connection', (ws2: WebSocketModule) => {
+                        closeNormal(ws2);
+
+                        // Connect to the first server again.
+                        awaitConnect((ws3: WebSocketModule) => {
+                            closeNormal(ws3);
+                            fallbackServer.close(done);
                         });
                     });
                 });

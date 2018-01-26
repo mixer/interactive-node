@@ -10,11 +10,6 @@ import {
     IReconnectionPolicy,
 } from './reconnection';
 
-/**
- * Close codes that are deemed to be recoverable by the reconnection policy
- */
-export const recoverableCloseCodes = [1000, 1011];
-
 //We don't support lz4 due to time constraints right now
 export type CompressionScheme = 'none' | 'gzip';
 
@@ -27,8 +22,8 @@ export interface ISocketOptions {
     reconnectionPolicy?: IReconnectionPolicy;
     autoReconnect?: boolean;
 
-    // Websocket URL to connect to, defaults to <TODO>
-    url?: string;
+    // Array of possible websocket URLs to connect to.
+    urls?: string[];
 
     //compression scheme, defaults to none, Will remain none until pako typings are updated
     compressionScheme?: CompressionScheme;
@@ -92,7 +87,7 @@ export enum SocketState {
 
 function getDefaults(): ISocketOptions {
     return {
-        url: '',
+        urls: [],
         replyTimeout: 10000,
         compressionScheme: 'none',
         autoReconnect: true,
@@ -119,6 +114,7 @@ export class InteractiveSocket extends EventEmitter {
     private socket: any;
     private queue: Set<Packet> = new Set<Packet>();
     private lastSequenceNumber = 0;
+    private endpointIndex = 0;
 
     constructor(options: ISocketOptions = {}) {
         super();
@@ -143,9 +139,10 @@ export class InteractiveSocket extends EventEmitter {
         });
 
         this.on('close', (evt: ICloseEvent) => {
-            // If this close event's code is not within our recoverable code array
-            // We raise it as an error and refuse to connect.
-            if (recoverableCloseCodes.indexOf(evt.code) === -1) {
+            // If this close event's code is an application error (e.g. bad authentication)
+            // or invalid status code (for Edge), we raise it as an error and refuse to
+            // reconnect.
+            if (evt.code < 1000 || evt.code > 1999 || evt.code === 1005) {
                 const err = InteractiveError.fromSocketMessage({
                     code: evt.code,
                     message: evt.reason,
@@ -213,7 +210,7 @@ export class InteractiveSocket extends EventEmitter {
             headers,
         };
 
-        const url = Url.parse(this.options.url, true);
+        const url = Url.parse(this.getURL(), true);
         // Clear out search so it populates query using the query
         // https://nodejs.org/api/url.html#url_url_format_urlobject
         url.search = null;
@@ -367,6 +364,11 @@ export class InteractiveSocket extends EventEmitter {
 
         this.emit('send', payload);
         this.socket.send(payload);
+    }
+
+    private getURL(): string {
+        const addresses = this.options.urls;
+        return this.options.urls[this.endpointIndex++ % addresses.length];
     }
 
     private extractMessage(packet: string | Buffer) {
