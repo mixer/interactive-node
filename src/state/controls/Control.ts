@@ -49,7 +49,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter imple
     }
 
     // A base control class cannot give input
-    public abstract giveInput(input: IInput): Promise<void>;
+    public giveInput?(input: IInput): Promise<void>;
 
     /**
      * Called by client when it receives an input event for this control from the server.

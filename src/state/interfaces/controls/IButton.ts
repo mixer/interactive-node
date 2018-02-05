@@ -30,6 +30,34 @@ export interface IButtonData extends IControlData {
      * A JavaScript keycode which participants can use to activate this button.
      */
     keyCode?: number;
+    /**
+     * The color of the text.
+     */
+    textColor?: string;
+    /**
+     * The size of the text.
+     */
+    textSize?: string;
+    /**
+     * The color of the border.
+     */
+    borderColor?: string;
+    /**
+     * Background color of the button.
+     */
+    backgroundColor?: string;
+    /**
+     * Background image of the button.
+     */
+    backgroundImage?: string;
+    /**
+     * Hover & Focus border color of the button.
+     */
+    focusColor?: string;
+    /**
+     * Progress bar color for the button.
+     */
+    accentColor?: string;
 }
 
 /**
