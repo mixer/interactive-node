@@ -4,7 +4,6 @@ import { IClient } from '../../IClient';
 import { merge } from '../../merge';
 import { IParticipant } from '../interfaces';
 import {
-    ControlKind,
     IControl,
     IControlData,
     IControlUpdate,
@@ -18,9 +17,10 @@ import { Scene } from '../Scene';
  * Control is used a base class for all other controls within an interactive session.
  * It contains shared logic which all types of controls can utilize.
  */
-export abstract class Control<T extends IControlData> extends EventEmitter implements IControl {
+export class Control<T extends IControlData> extends EventEmitter
+    implements IControl {
     public controlID: string;
-    public kind: ControlKind;
+    public kind: string;
     public disabled: boolean;
     public position: IGridPlacement[];
     /** @deprecated etags are no longer used, you can always omit/ignore this */

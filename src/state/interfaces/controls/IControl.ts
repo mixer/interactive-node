@@ -5,7 +5,6 @@ import { IClient } from '../../../IClient';
 import { IInput, IInputEvent } from './IInput';
 import { IMeta } from './IMeta';
 
-export type ControlKind = 'button' | 'joystick' | 'label';
 export type GridSize = 'large' | 'medium' | 'small';
 
 export interface IGridLayout {
@@ -26,7 +25,7 @@ export interface IControlData {
     /**
      * The type of control.
      */
-    kind?: ControlKind;
+    kind?: string;
     /**
      * Wether or not this control is disabled.
      */

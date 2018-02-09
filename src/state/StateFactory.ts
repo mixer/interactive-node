@@ -1,4 +1,4 @@
-import { Button, Control, Joystick } from './controls';
+import { Button, Control, Joystick, Label } from './controls';
 import { IControlData } from './interfaces/controls';
 
 import { IClient } from '../IClient';
@@ -28,8 +28,11 @@ export class StateFactory {
             case 'joystick':
                 control = new Joystick(values);
                 break;
+            case 'label':
+                control = new Label(values);
+                break;
             default:
-                throw new Error('Unknown control type');
+                control = new Control(values);
         }
         control.setClient(this.client);
         control.setScene(scene);
