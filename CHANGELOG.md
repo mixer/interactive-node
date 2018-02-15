@@ -2,6 +2,20 @@
 
 ## 2.x
 
+### 2.6
+- Fixed a couple of housekeeping issues
+
+### 2.5
+- Client will now use a round robin strategy when it encounters issues with an interactive server it is trying to connect to (#92)
+- Add sharecode support (#86). Thanks @JohnyCilohokla.
+- Update package.json links (#90). Thanks @metaa
+- Add keyboard events to buttons (#88)
+
+### 2.4
+- Added tooltip properties to buttons.
+- Removed Etags, these are no longer needed see https://github.com/mixer/developers/issues/160 for more information.
+- Authentication changes, we now use stream access keys to connect to interactive for Mixer.com
+
 ### 2.3
 - Added a list of frontend grid sizes `gridLayoutSizes` (#71)
 - Improved typings for control metadata (#82)
