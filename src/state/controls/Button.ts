@@ -95,7 +95,7 @@ export class Button extends Control<IButtonData> implements IButton {
     public update(controlUpdate: IButtonUpdate): Promise<void> {
         // Clone to prevent mutations
         // XXX: Typescript 2.4 is strict, let the compiler be clever.
-        const changedData = Object.assign({}, controlUpdate );
+        const changedData = Object.assign({}, controlUpdate);
         if (changedData.cooldown) {
             changedData.cooldown =
                 this.client.state.synchronizeLocalTime().getTime() +

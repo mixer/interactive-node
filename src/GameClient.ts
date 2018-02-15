@@ -1,5 +1,6 @@
 import { Client, ClientType } from './Client';
 import { EndpointDiscovery } from './EndpointDiscovery';
+import { IRawValues } from './interfaces';
 import { Requester } from './Requester';
 import {
     IGroupDataArray,
@@ -138,6 +139,13 @@ export class GameClient extends Client {
      */
     public updateParticipants(participants: IParticipantArray): Promise<void> {
         return this.execute('updateParticipants', participants, false);
+    }
+
+    /**
+     * Updates the top level properties of an interactive session.
+     */
+    public updateWorld(world: IRawValues): Promise<ISceneDataArray> {
+        return this.execute('updateWorld', { world }, false);
     }
 
     /**

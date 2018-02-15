@@ -12,11 +12,12 @@ describe('method handler', () => {
     });
 
     it('handles a registered method', () => {
-        handler.addHandler<
-            IRawValues
-        >('hello', (method: Method<IRawValues>) => {
-            return method.reply({ bar: 'foo' }, null);
-        });
+        handler.addHandler<IRawValues>(
+            'hello',
+            (method: Method<IRawValues>) => {
+                return method.reply({ bar: 'foo' }, null);
+            },
+        );
 
         const reply = handler.handle(new Method('hello', { foo: 'bar' }));
         expect(reply).to.exist;

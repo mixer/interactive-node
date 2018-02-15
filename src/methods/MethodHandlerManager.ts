@@ -29,6 +29,10 @@ export class MethodHandlerManager {
     private handlers: { [key: string]: IMethodHandler<any> } = {};
 
     public addHandler(
+        method: 'onWorldUpdate',
+        handler: IMethodHandler<ISceneDataArray>,
+    ): void;
+    public addHandler(
         method: 'onParticipantJoin',
         handler: IMethodHandler<IParticipantArray>,
     ): void;

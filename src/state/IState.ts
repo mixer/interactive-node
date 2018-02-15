@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 
 import { IClient } from '../IClient';
+import { IRawValues } from '../interfaces';
 import { Method, Reply } from '../wire/packets';
 import { Group } from './Group';
 import { IScene, ISceneData, ISceneDataArray } from './interfaces';
@@ -23,6 +24,8 @@ export interface IState extends EventEmitter {
     onSceneCreate(data: ISceneData): IScene;
     synchronizeScenes(data: ISceneDataArray): IScene[];
     synchronizeGroups(data: IGroupDataArray): IGroup[];
+
+    onWorldUpdate(data: IRawValues): void;
 
     getControl(id: string): IControl;
 
@@ -81,5 +84,9 @@ export interface IState extends EventEmitter {
      * Fired when a group is created.
      */
     on(event: 'groupCreated', listener: (group: Group) => void): this;
+    /**
+     * Fired when the world is updated.
+     */
+    on(event: 'worldUpdated', listener: (world: IRawValues) => void): this;
     on(event: string, listener: Function): this;
 }

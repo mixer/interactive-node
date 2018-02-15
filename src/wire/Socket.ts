@@ -216,8 +216,9 @@ export class InteractiveSocket extends EventEmitter {
         url.search = null;
 
         if (this.options.authToken) {
-            extras.headers['Authorization'] = `Bearer ${this.options
-                .authToken}`;
+            extras.headers['Authorization'] = `Bearer ${
+                this.options.authToken
+            }`;
         }
         url.query = Object.assign({}, url.query, this.options.queryParams);
 

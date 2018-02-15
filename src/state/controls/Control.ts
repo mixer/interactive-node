@@ -110,7 +110,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter
      */
     public update<T2 extends IControlUpdate>(controlUpdate: T2): Promise<void> {
         const changedData = {
-            ...<IControlUpdate>controlUpdate,
+            ...(<IControlUpdate>controlUpdate),
             controlID: this.controlID,
         };
 

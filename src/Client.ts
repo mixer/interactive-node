@@ -18,6 +18,7 @@ import {
     ISceneDeletionParams,
     ITransactionCapture,
 } from './state/interfaces';
+import { IWorldUpdate } from './state/interfaces/IScene';
 import { IState } from './state/IState';
 import { State } from './state/State';
 import { resolveOn } from './util';
@@ -216,6 +217,14 @@ export class Client extends EventEmitter implements IClient {
             return res.time;
         });
     }
+    /**
+     * updateWorld, Updates the top-level world state of the session
+     */
+    public execute(
+        method: 'updateWorld',
+        params: IWorldUpdate,
+        discard: false,
+    ): Promise<ISceneDataArray>;
     /**
      * `createControls` will instruct the server to create your provided controls in the active,
      * project. Participants will see the new controls as they are added.
