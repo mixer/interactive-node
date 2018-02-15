@@ -82,10 +82,7 @@ export interface IJoystick extends IControl, IJoystickData {
      */
     on(
         event: 'move',
-        listener: (
-            inputEvent: IInputEvent<IJoystickInput>,
-            participant: IParticipant,
-        ) => void,
+        listener: (inputEvent: IInputEvent<IJoystickInput>, participant: IParticipant) => void,
     ): this;
     on(event: string, listener: Function): this;
 }

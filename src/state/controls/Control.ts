@@ -18,8 +18,7 @@ import { Scene } from '../Scene';
  * Control is used a base class for all other controls within an interactive session.
  * It contains shared logic which all types of controls can utilize.
  */
-export abstract class Control<T extends IControlData> extends EventEmitter
-    implements IControl {
+export abstract class Control<T extends IControlData> extends EventEmitter implements IControl {
     public controlID: string;
     public kind: ControlKind;
     public disabled: boolean;
@@ -55,10 +54,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter
     /**
      * Called by client when it receives an input event for this control from the server.
      */
-    public receiveInput<T extends IInput>(
-        inputEvent: IInputEvent<T>,
-        participant: IParticipant,
-    ) {
+    public receiveInput<T extends IInput>(inputEvent: IInputEvent<T>, participant: IParticipant) {
         this.emit(inputEvent.input.event, inputEvent, participant);
     }
 
@@ -82,10 +78,7 @@ export abstract class Control<T extends IControlData> extends EventEmitter
         return this.updateAttribute('disabled', false);
     }
 
-    protected updateAttribute<K extends keyof T>(
-        attribute: K,
-        value: T[K],
-    ): Promise<void> {
+    protected updateAttribute<K extends keyof T>(attribute: K, value: T[K]): Promise<void> {
         const packet: T = <T>{};
         packet.controlID = this.controlID;
 

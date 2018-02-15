@@ -136,21 +136,13 @@ export class Method<T> {
      * @memberOf Method
      */
     public static fromSocket(message: any): Method<IRawValues> {
-        return new Method(
-            message.method,
-            message.params,
-            message.discard,
-            message.id,
-        );
+        return new Method(message.method, message.params, message.discard, message.id);
     }
 
     /**
      * Creates a reply for this method.
      */
-    public reply(
-        result: IRawValues,
-        error: InteractiveError.Base = null,
-    ): Reply {
+    public reply(result: IRawValues, error: InteractiveError.Base = null): Reply {
         return new Reply(this.id, result, error);
     }
 }

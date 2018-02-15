@@ -203,10 +203,7 @@ export class Client extends EventEmitter implements IClient {
      * Retrieves and hydrates client side stores with state from the server
      */
     public synchronizeState(): Promise<[IGroup[], IScene[]]> {
-        return Promise.all([
-            this.synchronizeGroups(),
-            this.synchronizeScenes(),
-        ]);
+        return Promise.all([this.synchronizeGroups(), this.synchronizeScenes()]);
     }
 
     /**
@@ -239,54 +236,30 @@ export class Client extends EventEmitter implements IClient {
      * By specifying `isReady` false you can pause participant interaction whilst you
      * setup scenes and controls.
      */
-    public execute(
-        method: 'ready',
-        params: onReadyParams,
-        discard: false,
-    ): Promise<void>;
+    public execute(method: 'ready', params: onReadyParams, discard: false): Promise<void>;
     /**
      * `capture` is used to capture a spark transaction that you have received from the server.
      */
-    public execute(
-        method: 'capture',
-        params: ITransactionCapture,
-        discard: false,
-    ): Promise<void>;
+    public execute(method: 'capture', params: ITransactionCapture, discard: false): Promise<void>;
     /**
      * `getTime` retrieves the server's unix timestamp. You can use this to synchronize your clock with
      * the servers. See [ClockSync]{@link ClockSync} for a Clock Synchronizer.
      */
-    public execute(
-        method: 'getTime',
-        params: null,
-        discard: false,
-    ): Promise<{ time: number }>;
+    public execute(method: 'getTime', params: null, discard: false): Promise<{ time: number }>;
     /**
      * `getScenes` retrieves scenes stored ont he server. If you've used the studio to create your project,
      * then you can use this to retrieve the scenes and controls created there.
      */
-    public execute(
-        method: 'getScenes',
-        params: null,
-        discard: false,
-    ): Promise<ISceneDataArray>;
+    public execute(method: 'getScenes', params: null, discard: false): Promise<ISceneDataArray>;
     /**
      * `giveInput` is used to send participant interactive events to the server.
      * These events will be received by the corresponding GameClient.
      */
-    public execute<K extends IInput>(
-        method: 'giveInput',
-        params: K,
-        discard: false,
-    ): Promise<void>;
+    public execute<K extends IInput>(method: 'giveInput', params: K, discard: false): Promise<void>;
     /**
      * `updateControls` is used to update control properties within a scene, such as disabling a control.
      */
-    public execute(
-        method: 'updateControls',
-        params: ISceneData,
-        discard: false,
-    ): Promise<void>;
+    public execute(method: 'updateControls', params: ISceneData, discard: false): Promise<void>;
     /**
      * `deleteControls` will delete the specified controls from the server. Participants will see these controls
      * vanish and will not be able to interact with them.
@@ -296,21 +269,13 @@ export class Client extends EventEmitter implements IClient {
         params: ISceneControlDeletion,
         discard: false,
     ): Promise<void>;
-    public execute<T>(
-        method: string,
-        params: T,
-        discard: boolean,
-    ): Promise<any>;
+    public execute<T>(method: string, params: T, discard: boolean): Promise<any>;
     /**
      * Execute will construct and send a method to the server for execution.
      * It will resolve with the server's reply. It is recommended that you use an
      * existing Client method if available instead of manually calling `execute`.
      */
-    public execute(
-        method: string,
-        params: any,
-        discard: boolean,
-    ): Promise<any> {
+    public execute(method: string, params: any, discard: boolean): Promise<any> {
         return this.socket.execute(method, params, discard);
     }
 

@@ -4,15 +4,8 @@ import { IParticipantArray } from '../state/interfaces/IParticipant';
 import { Method, Reply } from '../wire/packets';
 import { onReadyParams } from './methodTypes';
 
-import {
-    IGroupDataArray,
-    IGroupDeletionParams,
-} from '../state/interfaces/IGroup';
-import {
-    ISceneData,
-    ISceneDataArray,
-    ISceneDeletionParams,
-} from '../state/interfaces/IScene';
+import { IGroupDataArray, IGroupDeletionParams } from '../state/interfaces/IGroup';
+import { ISceneData, ISceneDataArray, ISceneDeletionParams } from '../state/interfaces/IScene';
 
 /**
  * A Method handler takes a given method and handles it, optionally replying with a reply instance.
@@ -28,10 +21,7 @@ export interface IMethodHandler<T> {
 export class MethodHandlerManager {
     private handlers: { [key: string]: IMethodHandler<any> } = {};
 
-    public addHandler(
-        method: 'onWorldUpdate',
-        handler: IMethodHandler<ISceneDataArray>,
-    ): void;
+    public addHandler(method: 'onWorldUpdate', handler: IMethodHandler<ISceneDataArray>): void;
     public addHandler(
         method: 'onParticipantJoin',
         handler: IMethodHandler<IParticipantArray>,
@@ -45,49 +35,19 @@ export class MethodHandlerManager {
         handler: IMethodHandler<IParticipantArray>,
     ): void;
 
-    public addHandler(
-        method: 'onSceneCreate',
-        handler: IMethodHandler<ISceneDataArray>,
-    ): void;
-    public addHandler(
-        method: 'onSceneDelete',
-        handler: IMethodHandler<ISceneDeletionParams>,
-    ): void;
-    public addHandler(
-        method: 'onSceneUpdate',
-        handler: IMethodHandler<ISceneDataArray>,
-    ): void;
+    public addHandler(method: 'onSceneCreate', handler: IMethodHandler<ISceneDataArray>): void;
+    public addHandler(method: 'onSceneDelete', handler: IMethodHandler<ISceneDeletionParams>): void;
+    public addHandler(method: 'onSceneUpdate', handler: IMethodHandler<ISceneDataArray>): void;
 
-    public addHandler(
-        method: 'onGroupCreate',
-        handler: IMethodHandler<IGroupDataArray>,
-    ): void;
-    public addHandler(
-        method: 'onGroupDelete',
-        handler: IMethodHandler<IGroupDeletionParams>,
-    ): void;
-    public addHandler(
-        method: 'onGroupUpdate',
-        handler: IMethodHandler<IGroupDataArray>,
-    ): void;
+    public addHandler(method: 'onGroupCreate', handler: IMethodHandler<IGroupDataArray>): void;
+    public addHandler(method: 'onGroupDelete', handler: IMethodHandler<IGroupDeletionParams>): void;
+    public addHandler(method: 'onGroupUpdate', handler: IMethodHandler<IGroupDataArray>): void;
 
-    public addHandler(
-        method: 'onControlCreate',
-        handler: IMethodHandler<ISceneData>,
-    ): void;
-    public addHandler(
-        method: 'onControlDelete',
-        handler: IMethodHandler<ISceneData>,
-    ): void;
-    public addHandler(
-        method: 'onControlUpdate',
-        handler: IMethodHandler<ISceneData>,
-    ): void;
+    public addHandler(method: 'onControlCreate', handler: IMethodHandler<ISceneData>): void;
+    public addHandler(method: 'onControlDelete', handler: IMethodHandler<ISceneData>): void;
+    public addHandler(method: 'onControlUpdate', handler: IMethodHandler<ISceneData>): void;
 
-    public addHandler(
-        method: 'onReady',
-        handler: IMethodHandler<onReadyParams>,
-    ): void;
+    public addHandler(method: 'onReady', handler: IMethodHandler<onReadyParams>): void;
     public addHandler(method: 'hello', handler: IMethodHandler<void>): void;
 
     public addHandler<T extends IInput>(
@@ -128,8 +88,6 @@ export class MethodHandlerManager {
         if (method.discard) {
             return null;
         }
-        throw new InteractiveError.UnknownMethodName(
-            `Client cannot process ${method.method}`,
-        );
+        throw new InteractiveError.UnknownMethodName(`Client cannot process ${method.method}`);
     }
 }

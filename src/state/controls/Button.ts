@@ -1,8 +1,4 @@
-import {
-    IButton,
-    IButtonData,
-    IButtonUpdate,
-} from '../interfaces/controls/IButton';
+import { IButton, IButtonData, IButtonUpdate } from '../interfaces/controls/IButton';
 import { IButtonInput } from '../interfaces/controls/IInput';
 import { Control } from './Control';
 
@@ -69,8 +65,7 @@ export class Button extends Control<IButtonData> implements IButton {
      * The Client will convert this to a Unix timestamp for you.
      */
     public setCooldown(duration: number): Promise<void> {
-        const target =
-            this.client.state.synchronizeLocalTime().getTime() + duration;
+        const target = this.client.state.synchronizeLocalTime().getTime() + duration;
         return this.updateAttribute('cooldown', target);
     }
 
@@ -98,8 +93,7 @@ export class Button extends Control<IButtonData> implements IButton {
         const changedData = Object.assign({}, controlUpdate);
         if (changedData.cooldown) {
             changedData.cooldown =
-                this.client.state.synchronizeLocalTime().getTime() +
-                changedData.cooldown;
+                this.client.state.synchronizeLocalTime().getTime() + changedData.cooldown;
         }
         return super.update(changedData);
     }

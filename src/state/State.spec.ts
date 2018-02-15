@@ -6,11 +6,7 @@ import { ClientType } from '../Client';
 import { Method } from '../wire/packets';
 import { Group } from './Group';
 import { IControl } from './interfaces/controls/IControl';
-import {
-    IGroup,
-    IGroupDataArray,
-    IGroupDeletionParams,
-} from './interfaces/IGroup';
+import { IGroup, IGroupDataArray, IGroupDeletionParams } from './interfaces/IGroup';
 import { ISceneDataArray } from './interfaces/IScene';
 import { State } from './State';
 
@@ -35,15 +31,9 @@ describe('state', () => {
 
     function initializeState(fixture: string) {
         state = new State(ClientType.GameClient);
-        const data = loadFixture(
-            path.join(__dirname, '../../test/fixtures', fixture),
-        );
-        state.processMethod(
-            new Method('onSceneCreate', { scenes: data.scenes }),
-        );
-        state.processMethod(
-            new Method('onGroupCreate', { groups: groupsFixture.groups }),
-        );
+        const data = loadFixture(path.join(__dirname, '../../test/fixtures', fixture));
+        state.processMethod(new Method('onSceneCreate', { scenes: data.scenes }));
+        state.processMethod(new Method('onGroupCreate', { groups: groupsFixture.groups }));
     }
 
     describe('initialization', () => {
@@ -147,12 +137,8 @@ describe('state', () => {
                     false,
                 ),
             );
-            expect(state.getParticipantBySessionID('abc123').username).to.equal(
-                'connor',
-            );
-            expect(state.getParticipantByUsername('connor').sessionID).to.equal(
-                'abc123',
-            );
+            expect(state.getParticipantBySessionID('abc123').username).to.equal('connor');
+            expect(state.getParticipantByUsername('connor').sessionID).to.equal('abc123');
         });
     });
 
@@ -171,10 +157,7 @@ describe('state', () => {
             control = state.getControl('win_the_game_btn');
             expect(control).to.exist;
             control.on('updated', () => {
-                expect(control.disabled).to.equal(
-                    true,
-                    'expect control to be disabled',
-                );
+                expect(control.disabled).to.equal(true, 'expect control to be disabled');
                 done();
             });
             state.processMethod(
@@ -213,9 +196,7 @@ describe('state', () => {
                     ],
                 }),
             );
-            control = state
-                .getScene('my awesome scene')
-                .getControl('lose_the_game_btn');
+            control = state.getScene('my awesome scene').getControl('lose_the_game_btn');
             expect(control).to.exist;
             expect(control.controlID).to.equal('lose_the_game_btn');
         });
@@ -281,9 +262,7 @@ describe('state', () => {
             };
             state.on('groupCreated', (newGroup: Group) => {
                 expect(newGroup).to.exist;
-                expect(newGroup.groupID).to.be.equal(
-                    targetGroup.groups[0].groupID,
-                );
+                expect(newGroup.groupID).to.be.equal(targetGroup.groups[0].groupID);
                 done();
             });
             state.processMethod(new Method('onGroupCreate', targetGroup));

@@ -72,10 +72,7 @@ export interface IControl extends IControlData, EventEmitter {
      */
     giveInput(input: IInput): Promise<void>;
 
-    receiveInput<T extends IInput>(
-        input: IInputEvent<T>,
-        participant: IParticipant,
-    ): void;
+    receiveInput<T extends IInput>(input: IInputEvent<T>, participant: IParticipant): void;
 
     // GameClient
     /**

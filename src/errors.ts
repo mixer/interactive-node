@@ -27,9 +27,7 @@ export class BaseError extends Error {
  */
 export class CancelledError extends BaseError {
     constructor() {
-        super(
-            'Packet was cancelled or socket was closed before a reply was received.',
-        );
+        super('Packet was cancelled or socket was closed before a reply was received.');
         CancelledError.setProto(this);
     }
 }
@@ -38,11 +36,7 @@ export class CancelledError extends BaseError {
  * HTTPError is used when a request does not respond successfully.
  */
 export class HTTPError extends BaseError {
-    constructor(
-        public code: number,
-        message: string,
-        private res: IncomingMessage,
-    ) {
+    constructor(public code: number, message: string, private res: IncomingMessage) {
         super(message);
         HTTPError.setProto(this);
     }

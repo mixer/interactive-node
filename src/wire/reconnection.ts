@@ -25,10 +25,7 @@ export class ExponentialReconnectionPolicy implements IReconnectionPolicy {
      * @param {Number} maxDelay maximum duration to wait between reconnection attempts
      * @param {Number} baseDelay delay, in milliseconds, to use in
      */
-    constructor(
-        public maxDelay: number = 20 * 1000,
-        public baseDelay: number = 500,
-    ) {}
+    constructor(public maxDelay: number = 20 * 1000, public baseDelay: number = 500) {}
 
     public next(): number {
         // tslint:disable-next-line:no-bitwise

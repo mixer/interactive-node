@@ -54,11 +54,7 @@ export class Scene extends EventEmitter implements IScene {
             this.onControlUpdated(controlData);
             return control;
         }
-        control = this.stateFactory.createControl(
-            controlData.kind,
-            controlData,
-            this,
-        );
+        control = this.stateFactory.createControl(controlData.kind, controlData, this);
         this.controls.set(control.controlID, control);
         this.emit('controlAdded', control);
         return control;

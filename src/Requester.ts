@@ -11,9 +11,7 @@ export class Requester implements IRequester {
         return new Promise((resolve, reject) => {
             const req = this.getRequestFn(url)(url, res => {
                 if (res.statusCode !== 200) {
-                    reject(
-                        new HTTPError(res.statusCode, res.statusMessage, res),
-                    );
+                    reject(new HTTPError(res.statusCode, res.statusMessage, res));
                 }
                 let body = '';
                 res.on('data', str => (body = body + str.toString()));
@@ -21,9 +19,7 @@ export class Requester implements IRequester {
             });
             req.setTimeout(15 * 1000); //tslint:disable-line
             req.on('error', err => reject(err));
-            req.on('timeout', () =>
-                reject(new TimeoutError('Request timed out')),
-            );
+            req.on('timeout', () => reject(new TimeoutError('Request timed out')));
         });
     }
     private getRequestFn(url: string) {

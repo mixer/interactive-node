@@ -15,8 +15,8 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "fmt:javascript": "prettier --single-quote --trailing-comma es5 --tab-width 4 --write \"*.js\"",
-    "fmt:typescript": "prettier --single-quote --trailing-comma all --parser typescript --tab-width 4 --write \"src/**/*.ts\"",
+    "fmt:javascript": "prettier --single-quote --trailing-comma es5 --print-width 100 --write \"*.js\"",
+    "fmt:typescript": "prettier --single-quote --trailing-comma all --print-width 100 --parser typescript --write \"src/**/*.ts\"",
     "fmt": "npm run fmt:javascript && npm run fmt:typescript",
     "build:ts": "rimraf lib dist && tsc",
     "build:webpack": "rimraf dist && webpack && webpack --config webpack.config.min.js",

@@ -5,10 +5,7 @@ import { CancelledError, InteractiveError, MessageParseError } from '../errors';
 import { IRawValues } from '../interfaces';
 import { resolveOn } from '../util';
 import { Method, Packet, PacketState, Reply } from './packets';
-import {
-    ExponentialReconnectionPolicy,
-    IReconnectionPolicy,
-} from './reconnection';
+import { ExponentialReconnectionPolicy, IReconnectionPolicy } from './reconnection';
 
 //We don't support lz4 due to time constraints right now
 export type CompressionScheme = 'none' | 'gzip';
@@ -104,9 +101,7 @@ export class InteractiveSocket extends EventEmitter {
     // does not natively support it.
 
     //tslint:disable-next-line:variable-name
-    public static WebSocket: any = typeof WebSocket === 'undefined'
-        ? null
-        : WebSocket;
+    public static WebSocket: any = typeof WebSocket === 'undefined' ? null : WebSocket;
 
     private reconnectTimeout: NodeJS.Timer;
     private options: ISocketOptions;
@@ -159,10 +154,7 @@ export class InteractiveSocket extends EventEmitter {
                 return;
             }
 
-            if (
-                this.state === SocketState.Closing ||
-                !this.options.autoReconnect
-            ) {
+            if (this.state === SocketState.Closing || !this.options.autoReconnect) {
                 this.state = SocketState.Idle;
                 return;
             }
@@ -180,11 +172,7 @@ export class InteractiveSocket extends EventEmitter {
      * Defaults and previous option values will be used if not supplied.
      */
     public setOptions(options: ISocketOptions) {
-        this.options = Object.assign(
-            {},
-            this.options || getDefaults(),
-            options,
-        );
+        this.options = Object.assign({}, this.options || getDefaults(), options);
     }
 
     /**
@@ -200,11 +188,7 @@ export class InteractiveSocket extends EventEmitter {
             'X-Protocol-Version': '2.0',
         };
 
-        const headers = Object.assign(
-            {},
-            defaultHeaders,
-            this.options.extraHeaders,
-        );
+        const headers = Object.assign({}, defaultHeaders, this.options.extraHeaders);
 
         const extras: IWebSocketOptions = {
             headers,
@@ -216,27 +200,17 @@ export class InteractiveSocket extends EventEmitter {
         url.search = null;
 
         if (this.options.authToken) {
-            extras.headers['Authorization'] = `Bearer ${
-                this.options.authToken
-            }`;
+            extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
         }
         url.query = Object.assign({}, url.query, this.options.queryParams);
 
-        this.socket = new InteractiveSocket.WebSocket(
-            Url.format(url),
-            [],
-            extras,
-        );
+        this.socket = new InteractiveSocket.WebSocket(Url.format(url), [], extras);
 
         this.state = SocketState.Connecting;
 
-        this.socket.addEventListener('close', (evt: ICloseEvent) =>
-            this.emit('close', evt),
-        );
+        this.socket.addEventListener('close', (evt: ICloseEvent) => this.emit('close', evt));
         this.socket.addEventListener('open', () => this.emit('open'));
-        this.socket.addEventListener('message', (evt: any) =>
-            this.emit('message', evt.data),
-        );
+        this.socket.addEventListener('message', (evt: any) => this.emit('message', evt.data));
 
         this.socket.addEventListener('error', (err: any) => {
             if (this.state === SocketState.Closing) {
@@ -394,9 +368,7 @@ export class InteractiveSocket extends EventEmitter {
                 this.emit(`reply:${message.id}`, Reply.fromSocket(message));
                 break;
             default:
-                throw new MessageParseError(
-                    `Unknown message type "${message.type}"`,
-                );
+                throw new MessageParseError(`Unknown message type "${message.type}"`);
         }
     }
 

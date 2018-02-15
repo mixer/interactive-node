@@ -54,15 +54,13 @@ export class GameClient extends Client {
             extraHeaders['X-Interactive-Sharecode'] = options.sharecode;
         }
 
-        return this.discovery
-            .retrieveEndpoints(options.discoveryUrl)
-            .then(endpoints => {
-                return super.open({
-                    authToken: options.authToken,
-                    urls: endpoints.map(({ address }) => address),
-                    extraHeaders: extraHeaders,
-                });
+        return this.discovery.retrieveEndpoints(options.discoveryUrl).then(endpoints => {
+            return super.open({
+                authToken: options.authToken,
+                urls: endpoints.map(({ address }) => address),
+                extraHeaders: extraHeaders,
             });
+        });
     }
 
     /**

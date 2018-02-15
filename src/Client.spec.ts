@@ -80,10 +80,7 @@ describe('client', () => {
 
         it('synchronizes scenes', () => {
             executeStub.onCall(0).resolves(scenes);
-            const syncScenesStub = sinon.stub(
-                client.state,
-                'synchronizeScenes',
-            );
+            const syncScenesStub = sinon.stub(client.state, 'synchronizeScenes');
             return client.synchronizeScenes().then(() => {
                 expect(syncScenesStub).to.have.been.calledWith(scenes);
 
@@ -93,10 +90,7 @@ describe('client', () => {
 
         it('synchronizes groups', () => {
             executeStub.onCall(0).resolves(groups);
-            const syncGroupsStub = sinon.stub(
-                client.state,
-                'synchronizeGroups',
-            );
+            const syncGroupsStub = sinon.stub(client.state, 'synchronizeGroups');
             return client.synchronizeGroups().then(() => {
                 expect(syncGroupsStub).to.have.been.calledWith(groups);
 
@@ -107,14 +101,8 @@ describe('client', () => {
         it('synchronizes state', () => {
             executeStub.withArgs('getGroups', null, false).resolves(groups);
             executeStub.withArgs('getScenes', null, false).resolves(scenes);
-            const syncGroupsStub = sinon.stub(
-                client.state,
-                'synchronizeGroups',
-            );
-            const syncScenesStub = sinon.stub(
-                client.state,
-                'synchronizeScenes',
-            );
+            const syncGroupsStub = sinon.stub(client.state, 'synchronizeGroups');
+            const syncScenesStub = sinon.stub(client.state, 'synchronizeScenes');
             return client.synchronizeState().then(() => {
                 expect(syncScenesStub).to.have.been.calledWith(scenes);
                 expect(syncGroupsStub).to.have.been.calledWith(groups);

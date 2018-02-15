@@ -64,9 +64,7 @@ describe('socket', () => {
             }).connect();
             server.on('connection', (ws: WebSocketModule) => {
                 expect(ws.upgradeReq.url).to.equal('/');
-                expect(ws.upgradeReq.headers.authorization).to.equal(
-                    'Bearer asdf!',
-                );
+                expect(ws.upgradeReq.headers.authorization).to.equal('Bearer asdf!');
                 closeNormal(ws);
                 done();
             });
@@ -183,26 +181,20 @@ describe('socket', () => {
 
             // Connect to the first server.
             socket.once('open', () => {
-                const fallbackServer = new WebSocketModule.Server(
-                    { port: port + 1 },
-                    () => {
-                        closeNormal(ws);
+                const fallbackServer = new WebSocketModule.Server({ port: port + 1 }, () => {
+                    closeNormal(ws);
 
-                        // Connect to the second server.
-                        fallbackServer.once(
-                            'connection',
-                            (ws2: WebSocketModule) => {
-                                closeNormal(ws2);
+                    // Connect to the second server.
+                    fallbackServer.once('connection', (ws2: WebSocketModule) => {
+                        closeNormal(ws2);
 
-                                // Connect to the first server again.
-                                awaitConnect((ws3: WebSocketModule) => {
-                                    closeNormal(ws3);
-                                    fallbackServer.close(done);
-                                });
-                            },
-                        );
-                    },
-                );
+                        // Connect to the first server again.
+                        awaitConnect((ws3: WebSocketModule) => {
+                            closeNormal(ws3);
+                            fallbackServer.close(done);
+                        });
+                    });
+                });
             });
         });
 
@@ -222,9 +214,7 @@ describe('socket', () => {
                 });
 
             awaitConnect(() => {
-                assert.fail(
-                    'Expected not to have reconnected with a closed socket',
-                );
+                assert.fail('Expected not to have reconnected with a closed socket');
             });
         });
 
@@ -275,12 +265,7 @@ describe('socket', () => {
             return socket
                 .execute('hello', { foo: 'bar' })
                 .then(() => socket.execute('hello', { foo: 'bar' }))
-                .then(() =>
-                    expect(completed).to.equal(
-                        true,
-                        'expected to have called twice',
-                    ),
-                );
+                .then(() => expect(completed).to.equal(true, 'expected to have called twice'));
         });
 
         it('emits a method sent to it', done => {
