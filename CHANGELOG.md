@@ -2,6 +2,10 @@
 
 ## 2.x
 
+### 2.7
+- Add world update methods (#94)
+- Adjust prettier config to Mixer standard and did a pass
+
 ### 2.6
 - Fixed a couple of housekeeping issues
 
