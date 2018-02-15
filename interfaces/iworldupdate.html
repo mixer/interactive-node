@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IGridLayout | beam-interactive-node2</title>
+	<title>IWorldUpdate | beam-interactive-node2</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,21 +52,28 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="igridlayout.html">IGridLayout</a>
+					<a href="iworldupdate.html">IWorldUpdate</a>
 				</li>
 			</ul>
-			<h1>Interface IGridLayout</h1>
+			<h1>Interface IWorldUpdate</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Represents a request to update the world properties of an interactive session</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">IGridLayout</span>
+						<span class="target">IWorldUpdate</span>
 					</li>
 				</ul>
 			</section>
@@ -77,9 +84,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igridlayout.html#height" class="tsd-kind-icon">height</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igridlayout.html#size" class="tsd-kind-icon">size</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="igridlayout.html#width" class="tsd-kind-icon">width</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iworldupdate.html#world" class="tsd-kind-icon">world</a></li>
 							</ul>
 						</section>
 					</div>
@@ -88,32 +93,12 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="height" class="tsd-anchor"></a>
-					<h3>height</h3>
-					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="world" class="tsd-anchor"></a>
+					<h3>world</h3>
+					<div class="tsd-signature tsd-kind-icon">world<span class="tsd-signature-symbol">:</span> <a href="ijson.html" class="tsd-signature-type">IJSON</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/35da544/src/state/interfaces/controls/IControl.ts#L14">state/interfaces/controls/IControl.ts:14</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="size" class="tsd-anchor"></a>
-					<h3>size</h3>
-					<div class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">:</span> <a href="../globals.html#gridsize" class="tsd-signature-type">GridSize</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/35da544/src/state/interfaces/controls/IControl.ts#L12">state/interfaces/controls/IControl.ts:12</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="width" class="tsd-anchor"></a>
-					<h3>width</h3>
-					<div class="tsd-signature tsd-kind-icon">width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/35da544/src/state/interfaces/controls/IControl.ts#L13">state/interfaces/controls/IControl.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/WatchBeam/interactive-node/blob/35da544/src/state/interfaces/IScene.ts#L19">state/interfaces/IScene.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -132,16 +117,10 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="igridlayout.html" class="tsd-kind-icon">IGrid<wbr>Layout</a>
+						<a href="iworldupdate.html" class="tsd-kind-icon">IWorld<wbr>Update</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="igridlayout.html#height" class="tsd-kind-icon">height</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="igridlayout.html#size" class="tsd-kind-icon">size</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="igridlayout.html#width" class="tsd-kind-icon">width</a>
+								<a href="iworldupdate.html#world" class="tsd-kind-icon">world</a>
 							</li>
 						</ul>
 					</li>
