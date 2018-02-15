@@ -108,7 +108,7 @@ export class GameClient extends Client {
      * interact with the controls.
      */
     public ready(isReady: boolean = true): Promise<void> {
-        return this.execute('ready', { isReady, message: 'malm' }, false);
+        return this.execute('ready', { isReady }, false);
     }
 
     /**
