@@ -310,5 +310,21 @@ describe('state', () => {
             });
             state.processMethod(new Method('onGroupDelete', delGroupParams));
         });
+        it('handles new worlds', done => {
+            const newWorld = {
+                fantastic: true,
+                dazzling: true,
+                unbelievable: true,
+            };
+
+            const world = state.getWorld();
+            expect(world).to.not.equal(newWorld);
+            state.on('worldUpdated', (w: any) => {
+                expect(w).to.deep.equal(newWorld);
+                expect(state.getWorld()).to.deep.equal(newWorld);
+                done();
+            });
+            state.processMethod(new Method('onWorldUpdate', { ...newWorld }));
+        });
     });
 });

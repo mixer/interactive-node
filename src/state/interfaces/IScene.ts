@@ -1,11 +1,22 @@
 import { EventEmitter } from 'events';
 import { ETag } from './controls';
 
+import { IJSON, IRawValues } from '../../interfaces';
 import { IControl, IControlData } from './controls/IControl';
 import { IMeta } from './controls/IMeta';
 
-export interface ISceneDataArray {
+/**
+ * Represents an array of scenes stored within an object.
+ * Will also contain any global world properties.
+ */
+export interface ISceneDataArray extends IRawValues {
     scenes: ISceneData[];
+}
+/**
+ * Represents a request to update the world properties of an interactive session
+ */
+export interface IWorldUpdate {
+    world: IJSON;
 }
 
 /**

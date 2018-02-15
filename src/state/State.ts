@@ -13,6 +13,8 @@ import { IParticipant, IScene, ISceneDataArray } from './interfaces';
 import { IControl } from './interfaces/controls/IControl';
 import { IGroup, IGroupData, IGroupDataArray } from './interfaces/IGroup';
 import { ISceneData } from './interfaces/IScene';
+
+import { IRawValues } from '../interfaces';
 import { Scene } from './Scene';
 import { StateFactory } from './StateFactory';
 
@@ -29,13 +31,15 @@ export class State extends EventEmitter implements IState {
      */
     private groups = new Map<string, Group>();
     /**
-     * the ready state of this session, is the GameClient in this session ready to recieve input?
+     * the ready state of this session, is the GameClient in this session ready to receive input?
      */
     public isReady: boolean;
 
     private methodHandler = new MethodHandlerManager();
     private stateFactory = new StateFactory();
     private scenes = new Map<string, Scene>();
+
+    private world = {};
 
     private client: IClient;
 
@@ -100,6 +104,17 @@ export class State extends EventEmitter implements IState {
             if (scene) {
                 scene.onControlsUpdated(res.params.controls);
             }
+        });
+
+        this.methodHandler.addHandler('onWorldUpdate', res => {
+            // A WHOLE NEW WORLD
+            // A NEW FANTASTIC POINT OF VIEW
+            // Cloned to preserve original
+            const newWorld = Object.assign({}, res.params);
+            // Filter scenes out
+            delete newWorld.scenes;
+            this.onWorldUpdate(newWorld);
+            res.params.scenes.forEach(scene => this.onSceneUpdate(scene));
         });
 
         this.clockSyncer.on('delta', (delta: number) => {
@@ -310,6 +325,18 @@ export class State extends EventEmitter implements IState {
         this.groups.set(data.groupID, group);
         this.emit('groupCreated', group);
         return group;
+    }
+
+    /**
+     * Merges in new world properties and emits an event to any listeners.
+     */
+    public onWorldUpdate(data: IRawValues) {
+        this.world = { ...this.world, ...data };
+        this.emit('worldUpdated', this.world);
+    }
+
+    public getWorld(): IRawValues {
+        return this.world;
     }
 
     /**

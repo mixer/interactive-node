@@ -177,24 +177,32 @@ describe('socket', () => {
         });
 
         it('reconnects to the next server on disconnection', done => {
-            socket.setOptions({ urls: [...urls, `ws://127.0.0.1:${port + 1}/`] });
+            socket.setOptions({
+                urls: [...urls, `ws://127.0.0.1:${port + 1}/`],
+            });
 
             // Connect to the first server.
             socket.once('open', () => {
-                const fallbackServer = new WebSocketModule.Server({ port: port + 1 }, () => {
-                    closeNormal(ws);
+                const fallbackServer = new WebSocketModule.Server(
+                    { port: port + 1 },
+                    () => {
+                        closeNormal(ws);
 
-                    // Connect to the second server.
-                    fallbackServer.once('connection', (ws2: WebSocketModule) => {
-                        closeNormal(ws2);
+                        // Connect to the second server.
+                        fallbackServer.once(
+                            'connection',
+                            (ws2: WebSocketModule) => {
+                                closeNormal(ws2);
 
-                        // Connect to the first server again.
-                        awaitConnect((ws3: WebSocketModule) => {
-                            closeNormal(ws3);
-                            fallbackServer.close(done);
-                        });
-                    });
-                });
+                                // Connect to the first server again.
+                                awaitConnect((ws3: WebSocketModule) => {
+                                    closeNormal(ws3);
+                                    fallbackServer.close(done);
+                                });
+                            },
+                        );
+                    },
+                );
             });
         });
 
@@ -264,9 +272,15 @@ describe('socket', () => {
                 });
             });
 
-            return socket.execute('hello', { foo: 'bar' })
+            return socket
+                .execute('hello', { foo: 'bar' })
                 .then(() => socket.execute('hello', { foo: 'bar' }))
-                .then(() => expect(completed).to.equal(true, 'expected to have called twice'));
+                .then(() =>
+                    expect(completed).to.equal(
+                        true,
+                        'expected to have called twice',
+                    ),
+                );
         });
 
         it('emits a method sent to it', done => {
