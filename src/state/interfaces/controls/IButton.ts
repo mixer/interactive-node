@@ -43,19 +43,19 @@ export interface IButtonData extends IControlData {
      */
     borderColor?: string;
     /**
-     * Background color of the button.
+     * The background color of the button.
      */
     backgroundColor?: string;
     /**
-     * Background image of the button.
+     * The background image of the button. (HTTPS URL)
      */
     backgroundImage?: string;
     /**
-     * Hover & Focus border color of the button.
+     * The hover & Focus border color of the button.
      */
     focusColor?: string;
     /**
-     * Progress bar color for the button.
+     * The progress bar & cooldown spinner color for the button.
      */
     accentColor?: string;
 }
@@ -89,6 +89,34 @@ export interface IButtonUpdate extends IControlUpdate {
      * Will update the keycode used by participants for keyboard control.
      */
     keyCode?: number;
+        /**
+     * The color of the text.
+     */
+    textColor?: string;
+    /**
+     * The size of the text.
+     */
+    textSize?: string;
+    /**
+     * The color of the border.
+     */
+    borderColor?: string;
+    /**
+     * Background color of the button.
+     */
+    backgroundColor?: string;
+    /**
+     * Background image of the button.
+     */
+    backgroundImage?: string;
+    /**
+     * Hover & Focus border color of the button.
+     */
+    focusColor?: string;
+    /**
+     * Progress bar color for the button.
+     */
+    accentColor?: string;
 }
 
 export interface IButton extends IControl, IButtonData {
@@ -97,6 +125,13 @@ export interface IButton extends IControl, IButtonData {
     progress: number;
     cooldown: number;
     keyCode: number;
+    textColor: string;
+    textSize: string;
+    borderColor: string;
+    backgroundColor: string;
+    backgroundImage: string;
+    focusColor: string;
+    accentColor: string;
     // GameClient
     setText(text: string): Promise<void>;
     setProgress(progress: number): Promise<void>;

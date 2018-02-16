@@ -17,15 +17,15 @@ export interface ILabelData extends IControlData {
      */
     textSize?: string;
     /**
-     * Is the text underline?
+     * Whether the text is underlined.
      */
     underline?: boolean;
     /**
-     * Is the text bold?
+     * Whether the text is bold.
      */
     bold?: boolean;
     /**
-     * Is the text italic?
+     * Whether the text is italicized.
      */
     italic?: boolean;
 }
