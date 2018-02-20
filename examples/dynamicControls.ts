@@ -6,11 +6,12 @@ import * as faker from 'faker';
 import {
     delay,
     GameClient,
+    IControlData,
     IParticipant,
     setWebSocket,
 } from '../lib';
 
-import { makeControls } from './util';
+import { makeControls, updateControls } from './util';
 
 if (process.argv.length < 4) {
     console.log('Usage gameClient.exe <token> <versionId>');
@@ -30,7 +31,8 @@ client.on('open', () => console.log('Connected to interactive'));
 // client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
 
-const delayTime = 2000;
+const delayTime = 200;
+let controls: IControlData[] = [];
 
 /* Loop creates 5 controls and adds them to the default scene.
  * It then waits delayTime milliseconds and then deletes them,
@@ -38,9 +40,7 @@ const delayTime = 2000;
 */
 function loop() {
     const scene = client.state.getScene('default');
-    scene.createControls(makeControls(5, () => faker.name.firstName()))
-        .then(() => delay(delayTime))
-        .then(() => scene.deleteAllControls())
+    scene.updateControls(updateControls(controls, () => faker.name.firstName()))
         .then(() => delay(delayTime))
         .then(() => loop());
 }
@@ -56,6 +56,12 @@ client.open({
     * then call loop() to begin our loop.
     */
     return client.synchronizeState();
+})
+.then(() => {
+    const scene = client.state.getScene('default');
+    scene.deleteAllControls();
+    controls = makeControls(8, () => faker.name.firstName());
+    scene.createControls(controls);
 })
 .then(() => client.ready(true))
 .then(() => loop());
