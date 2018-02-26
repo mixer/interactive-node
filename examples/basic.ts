@@ -34,7 +34,7 @@ client.open({
     versionId: parseInt(process.argv[3], 10),
 }).then(() => {
     // Now we can create the controls, We need to add them to a scene though.
-    // Every Interactive Experience has a "default" scene so we'll add them there there.
+    // Every Interactive Experience has a "default" scene so we'll add them there.
     return client.createControls({
         sceneID: 'default',
         controls: makeControls(5, i => `Button ${i}`),
