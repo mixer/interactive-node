@@ -94,11 +94,11 @@ client.open({
 
 ## Examples
 
-Checkout our [examples](examples/) to get up to speed quickly!
+Checkout our [examples](https://github.com/mixer/interactive-node/tree/master/examples/) to get up to speed quickly!
 
-* [basic](examples/basic.ts) - Connects and sets up 5 buttons, when they are clicked the participant is charged 1 spark.
-* [dynamicControls](examples/dynamicControls.ts) - Connects and then creates and destroys 5 buttons with random text.
-* [joystick](examples/joystick.ts) - Connects and creates a joystick, logs participant coordinate values.
+* [basic](https://github.com/mixer/interactive-node/tree/master/examples/basic.ts) - Connects and sets up 5 buttons, when they are clicked the participant is charged 1 spark.
+* [dynamicControls](https://github.com/mixer/interactive-node/tree/master/examples/dynamicControls.ts) - Connects and then creates and destroys 5 buttons with random text.
+* [joystick](https://github.com/mixer/interactive-node/tree/master/examples/joystick.ts) - Connects and creates a joystick, logs participant coordinate values.
 
 Using Node.js? Clone this repository and run `npm run build` and the examples will be converted to JavaScript for you!
 
@@ -116,6 +116,6 @@ To get a development environment setup:
 
 ### Contributing
 
-Thanks for your interested in contributing, checkout [TODO.md](TODO.md) for a list of tasks!
+Thanks for your interested in contributing, checkout [TODO.md](https://github.com/mixer/interactive-node/TODO.md) for a list of tasks!
 
 Open a [Pull Request](https://github.com/mixer/interactive-node/pulls) we'd love to see your contributions.
