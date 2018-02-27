@@ -137,6 +137,13 @@ export interface IButton extends IControl, IButtonData {
     setProgress(progress: number): Promise<void>;
     setCooldown(duration: number): Promise<void>;
     setCost(cost: number): Promise<void>;
+    setTextSize(textSize: string): Promise<void>;
+    setBorderColor(borderColor: string): Promise<void>;
+    setBackgroundColor(backgroundColor: string): Promise<void>;
+    setFocusColor(focusColor: string): Promise<void>;
+    setAccentColor(accentColor: string): Promise<void>;
+    setTextColor(textColor: string): Promise<void>;
+    setBackgroundImage(backgroundImage: string): Promise<void>;
     update(changedData: IButtonUpdate): Promise<void>;
 
     /**
