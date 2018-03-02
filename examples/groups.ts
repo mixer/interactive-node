@@ -23,8 +23,25 @@ setWebSocket(WebSocket);
 // As we're on the Streamer's side we need a "GameClient" instance
 const client = new GameClient();
 
-// Log when we're connected to interactive
-client.on('open', () => console.log('Connected to interactive'));
+// Log when we're connected to interactive and setup your game!
+client.on('open', () => {
+    console.log('Connected to Interactive!');
+    // Pull the scenes and groups from the interactive server
+    client
+        .synchronizeState()
+
+        // Set the client as ready so that interactive controls show up
+        .then(() => client.ready(true))
+
+        // Create the scenes for our application
+        .then(createScenes)
+
+        // Create the groups for our application
+        .then(createGroups)
+
+        // Catch any errors
+        .catch((reason: Error) => console.error('Promise rejected', reason));
+});
 
 // A collection of interval timers, one for each participant
 const participantTimers: Map<string, number> = new Map<string, number>();
@@ -48,8 +65,8 @@ function swapParticipantGroup(participant: IParticipant): Promise<void> {
     }
 
     return client.updateParticipants({
-        participants: [participant]
-    })
+        participants: [participant],
+    });
 }
 
 /**
@@ -75,7 +92,7 @@ function createScenes(): Promise<ISceneDataArray> {
     };
 
     return client.createScenes({
-        scenes: [secondScene]
+        scenes: [secondScene],
     });
 }
 
@@ -86,37 +103,38 @@ function createGroups(): Promise<void> {
     const defaultGroup = client.state.getGroup('default');
     defaultGroup.sceneID = 'default';
 
-    const secondGroup = new Group(
-        {
-            groupID: 'secondGroup',
-            sceneID: 'secondScene'
-        }
-    );
+    const secondGroup = new Group({
+        groupID: 'secondGroup',
+        sceneID: 'secondScene',
+    });
 
-    const thirdGroup = new Group(
-        {
-            groupID: 'thirdGroup',
-            sceneID: 'default'
-        }
-    );
+    const thirdGroup = new Group({
+        groupID: 'thirdGroup',
+        sceneID: 'default',
+    });
 
-    return client
-        // First update the default group
-        .updateGroups({
-            groups: [defaultGroup]
-        })
-
-        // Then create the new groups
-        .then(() => client.createGroups({
-                groups: [secondGroup, thirdGroup]
+    return (
+        client
+            // First update the default group
+            .updateGroups({
+                groups: [defaultGroup],
             })
-        )
 
-        // Then delete the third group
-        .then(() => client.deleteGroup({
-            groupID: thirdGroup.groupID,
-            reassignGroupID: defaultGroup.groupID
-        }));
+            // Then create the new groups
+            .then(() =>
+                client.createGroups({
+                    groups: [secondGroup, thirdGroup],
+                }),
+            )
+
+            // Then delete the third group
+            .then(() =>
+                client.deleteGroup({
+                    groupID: thirdGroup.groupID,
+                    reassignGroupID: defaultGroup.groupID,
+                }),
+            )
+    );
 }
 
 // Now we open the connection passing in our authentication details and an experienceId.
@@ -127,27 +145,17 @@ client
         versionId: parseInt(process.argv[3], 10),
     })
 
-    // Pull the scenes and groups from the interactive server
-    .then(() => client.synchronizeState())
-
-    // Set the client as ready so that interactive controls show up
-    .then(() => client.ready(true))
-
-    // Create the scenes for our application
-    .then(createScenes)
-
-    // Create the groups for our application
-    .then(createGroups)
-
     // Catch any errors
-    .catch((reason) => console.error("Promise rejected", reason));
+    .catch((reason: Error) => console.error('Promise rejected', reason));
 
-client.state.on('participantJoin', (participant: IParticipant ) => {
+client.state.on('participantJoin', (participant: IParticipant) => {
     console.log(`${participant.username}(${participant.sessionID}) Joined`);
 
     if (!participantTimers.has(participant.sessionID)) {
         participantTimers[participant.sessionID] = setInterval(() => {
-            const p = client.state.getParticipantBySessionID(participant.sessionID);
+            const p = client.state.getParticipantBySessionID(
+                participant.sessionID,
+            );
 
             if (p) {
                 swapParticipantGroup(p);
@@ -158,8 +166,11 @@ client.state.on('participantJoin', (participant: IParticipant ) => {
     }
 });
 
-client.state.on('participantLeave', (participantSessionID: string, participant: IParticipant ) => {
-    console.log(`${participant.username}(${participantSessionID}) Left`);
-    removeParticipant(participantSessionID)
-});
+client.state.on(
+    'participantLeave',
+    (participantSessionID: string, participant: IParticipant) => {
+        console.log(`${participant.username}(${participantSessionID}) Left`);
+        removeParticipant(participantSessionID);
+    },
+);
 /* tslint:enable:no-console */

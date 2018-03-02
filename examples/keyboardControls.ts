@@ -2,12 +2,7 @@
 import * as WebSocket from 'ws';
 import { getGridPlacement } from './util';
 
-import {
-    GameClient,
-    IButton,
-    IButtonData,
-    setWebSocket,
-} from '../lib';
+import { GameClient, IButton, IButtonData, setWebSocket } from '../lib';
 
 if (process.argv.length < 3) {
     console.log('Usage: node keyboardControls.js <token> <versionId>');
@@ -19,11 +14,6 @@ setWebSocket(WebSocket);
 
 // As we're on the Streamer's side we need a "GameClient" instance
 const client = new GameClient();
-
-// Log when we're connected to interactive
-client.on('open', () => console.log('Connected to interactive'));
-
-
 
 /**
  * These are our controls. The "keyCode" property is the JavaScript key code associated
@@ -60,38 +50,58 @@ const controls: IButtonData[] = [
     },
 ];
 
+// Log when we're connected to interactive and setup your game!
+client.on('open', () => {
+    console.log('Connected to Interactive!');
+    // Creates the controls on the default scene, "default".
+    client
+        .createControls({
+            sceneID: 'default',
+            controls,
+        })
+        .then(buttons => {
+            // Now that our controls are created, we can add some event listeners to each.
+            buttons.forEach((control: IButton) => {
+                control.on('keydown', (inputEvent, participant) => {
+                    console.log(
+                        `${participant.username} pressed ${
+                            inputEvent.input.controlID
+                        } with their keyboard.`,
+                    );
+                });
+
+                control.on('keyup', (inputEvent, participant) => {
+                    console.log(
+                        `${participant.username} released ${
+                            inputEvent.input.controlID
+                        } with their keyboard.`,
+                    );
+                });
+
+                control.on('mousedown', (inputEvent, participant) => {
+                    console.log(
+                        `${participant.username} pressed ${
+                            inputEvent.input.controlID
+                        } with their mouse.`,
+                    );
+                });
+
+                control.on('mouseup', (inputEvent, participant) => {
+                    console.log(
+                        `${participant.username} released ${
+                            inputEvent.input.controlID
+                        } with their mouse.`,
+                    );
+                });
+            });
+
+            // Controls don't appear unless we tell Interactive that we are ready!
+            client.ready(true);
+        });
+});
+
 // Opens the connection by passing in our authentication details and a versionId.
 client.open({
     authToken: process.argv[2],
     versionId: parseInt(process.argv[3], 10),
-})
-.then(() => {
-    // Creates the controls on the default scene, "default".
-    return client.createControls({
-        sceneID: 'default',
-        controls,
-    });
-})
-.then(buttons => {
-    // Now that our controls are created, we can add some event listeners to each.
-    buttons.forEach((control: IButton) => {
-        control.on('keydown', (inputEvent, participant) => {
-            console.log(`${participant.username} pressed ${inputEvent.input.controlID} with their keyboard.`);
-        });
-
-        control.on('keyup', (inputEvent, participant) => {
-            console.log(`${participant.username} released ${inputEvent.input.controlID} with their keyboard.`);
-        });
-
-        control.on('mousedown', (inputEvent, participant) => {
-            console.log(`${participant.username} pressed ${inputEvent.input.controlID} with their mouse.`);
-        });
-
-        control.on('mouseup', (inputEvent, participant) => {
-            console.log(`${participant.username} released ${inputEvent.input.controlID} with their mouse.`);
-        });
-    });
-
-    // Controls don't appear unless we tell Interactive that we are ready!
-    client.ready(true);
 });

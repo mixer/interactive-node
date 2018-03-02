@@ -4,7 +4,6 @@ import * as WebSocket from 'ws';
 import * as faker from 'faker';
 
 import {
-    delay,
     GameClient,
     IControlData,
     IParticipant,
@@ -23,15 +22,12 @@ setWebSocket(WebSocket);
 // As we're on the Streamer's side we need a "GameClient" instance
 const client = new GameClient();
 
-// Log when we're connected to interactive
-client.on('open', () => console.log('Connected to interactive'));
-
 // These can be un-commented to see the raw JSON messages under the hood
 // client.on('message', (err: any) => console.log('<<<', err));
 // client.on('send', (err: any) => console.log('>>>', err));
 // client.on('error', (err: any) => console.log(err));
 
-const delayTime = 200;
+const delayTime = 1000;
 let controls: IControlData[] = [];
 
 /* Loop creates 5 controls and adds them to the default scene.
@@ -40,31 +36,37 @@ let controls: IControlData[] = [];
 */
 function loop() {
     const scene = client.state.getScene('default');
-    scene.updateControls(updateControls(controls, () => faker.name.firstName()))
-        .then(() => delay(delayTime))
-        .then(() => loop());
+    scene.updateControls(updateControls(controls, () => faker.name.firstName()));
 }
+
+let loopInterval: any;
+
+// Log when we're connected to interactive and setup your game!
+client.on('open', () => {
+    console.log('Connected to Interactive!');
+    /* Pull in the state stored on the server
+    * then call ready so our controls show up.
+    * then call loop() to begin our loop.
+    */
+    clearInterval(loopInterval);
+    client.synchronizeState()
+    .then(() => {
+        const scene = client.state.getScene('default');
+        scene.deleteAllControls();
+        controls = makeControls(8, () => faker.name.firstName());
+        scene.createControls(controls);
+    })
+    .then(() => client.ready(true))
+    .then(() => {
+        loopInterval = setInterval(loop, delayTime);
+    });
+});
 
 // Now we open the connection passing in our authentication details and an experienceId.
 client.open({
     authToken: process.argv[2],
     versionId: parseInt(process.argv[3], 10),
-})
-.then(() => {
-    /* Pull in the state stored on the server
-    * then call ready so our controls show up.
-    * then call loop() to begin our loop.
-    */
-    return client.synchronizeState();
-})
-.then(() => {
-    const scene = client.state.getScene('default');
-    scene.deleteAllControls();
-    controls = makeControls(8, () => faker.name.firstName());
-    scene.createControls(controls);
-})
-.then(() => client.ready(true))
-.then(() => loop());
+});
 
 client.state.on('participantJoin', (participant: IParticipant ) => {
     console.log(`${participant.username}(${participant.sessionID}) Joined`);
