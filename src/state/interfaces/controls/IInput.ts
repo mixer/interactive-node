@@ -60,6 +60,20 @@ export interface IJoystickInput extends IInput {
 }
 
 /**
+ * Extends the base input to include textbox specific data.
+ */
+export interface ITextboxInput extends IInput {
+    /**
+     * Textboxes can emit change (regular keyboard input) or submit event.
+     */
+    event: 'change' | 'submit';
+    /**
+     * The value of the textbox.
+     */
+    value: string;
+}
+
+/**
  * An Input event ties input data together with the id of the participant who caused it.
  */
 export interface IInputEvent<T> {
