@@ -202,9 +202,14 @@ export class InteractiveSocket extends EventEmitter {
         if (this.options.authToken) {
             extras.headers['Authorization'] = `Bearer ${this.options.authToken}`;
         }
-        url.query = Object.assign({}, url.query, this.options.queryParams);
 
-        this.socket = new InteractiveSocket.WebSocket(Url.format(url), [], extras);
+        if (WebSocket === InteractiveSocket.WebSocket) {
+            url.query = Object.assign({}, url.query, this.options.queryParams, extras.headers);
+            this.socket = new InteractiveSocket.WebSocket(Url.format(url));
+        } else {
+            url.query = Object.assign({}, url.query, this.options.queryParams);
+            this.socket = new InteractiveSocket.WebSocket(Url.format(url), [], extras);
+        }
 
         this.state = SocketState.Connecting;
 
