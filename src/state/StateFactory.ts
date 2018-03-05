@@ -1,4 +1,4 @@
-import { Button, Control, Joystick, Label } from './controls';
+import { Button, Control, Joystick, Label, Textbox } from './controls';
 import { IControlData } from './interfaces/controls';
 
 import { IClient } from '../IClient';
@@ -30,6 +30,9 @@ export class StateFactory {
                 break;
             case 'label':
                 control = new Label(values);
+                break;
+            case 'textbox':
+                control = new Textbox(values);
                 break;
             default:
                 control = new Control(values);
