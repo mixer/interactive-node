@@ -5,6 +5,7 @@ import { IClient } from '../../../IClient';
 import { IInput, IInputEvent } from './IInput';
 import { IMeta } from './IMeta';
 
+export type ControlKind = string;
 export type GridSize = 'large' | 'medium' | 'small';
 
 export interface IGridLayout {
