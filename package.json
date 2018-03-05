@@ -1,11 +1,6 @@
 {
-<<<<<<< 62ed580ec263875e15f3d16c496f7f032449a585
   "name": "beam-interactive-node2",
   "version": "2.7.2",
-=======
-  "name": "@mcph/beam-interactive-node2",
-  "version": "2.8.1",
->>>>>>> 2.8.1
   "description": "A NodeJS and Browser compatible client for mixer.com's interactive 2 Protocol",
   "contributors": [
     {
