@@ -7,7 +7,7 @@ import {
 import { Control } from './Control';
 
 /**
- * Textboxs can be pushed by participants with their mouse or activated with their keyboards.
+ * Textboxes can be used by participants to send text to the game.
  */
 export class Textbox extends Control<ITextboxData> implements ITextbox {
     /**
