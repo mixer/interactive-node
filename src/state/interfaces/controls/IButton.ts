@@ -30,6 +30,30 @@ export interface IButtonData extends IControlData {
      * A JavaScript keycode which participants can use to activate this button.
      */
     keyCode?: number;
+    /**
+     * The color of the text.
+     */
+    textColor?: string;
+    /**
+     * The size of the text.
+     */
+    textSize?: string;
+    /**
+     * The color of the border.
+     */
+    borderColor?: string;
+    /**
+     * The background color of the button.
+     */
+    backgroundColor?: string;
+    /**
+     * The hover & Focus border color of the button.
+     */
+    focusColor?: string;
+    /**
+     * The progress bar & cooldown spinner color for the button.
+     */
+    accentColor?: string;
 }
 
 /**
@@ -61,6 +85,30 @@ export interface IButtonUpdate extends IControlUpdate {
      * Will update the keycode used by participants for keyboard control.
      */
     keyCode?: number;
+        /**
+     * The color of the text.
+     */
+    textColor?: string;
+    /**
+     * The size of the text.
+     */
+    textSize?: string;
+    /**
+     * The color of the border.
+     */
+    borderColor?: string;
+    /**
+     * Background color of the button.
+     */
+    backgroundColor?: string;
+    /**
+     * Hover & Focus border color of the button.
+     */
+    focusColor?: string;
+    /**
+     * Progress bar color for the button.
+     */
+    accentColor?: string;
 }
 
 export interface IButton extends IControl, IButtonData {
@@ -69,11 +117,23 @@ export interface IButton extends IControl, IButtonData {
     progress: number;
     cooldown: number;
     keyCode: number;
+    textColor: string;
+    textSize: string;
+    borderColor: string;
+    backgroundColor: string;
+    focusColor: string;
+    accentColor: string;
     // GameClient
     setText(text: string): Promise<void>;
     setProgress(progress: number): Promise<void>;
     setCooldown(duration: number): Promise<void>;
     setCost(cost: number): Promise<void>;
+    setTextSize(textSize: string): Promise<void>;
+    setBorderColor(borderColor: string): Promise<void>;
+    setBackgroundColor(backgroundColor: string): Promise<void>;
+    setFocusColor(focusColor: string): Promise<void>;
+    setAccentColor(accentColor: string): Promise<void>;
+    setTextColor(textColor: string): Promise<void>;
     update(changedData: IButtonUpdate): Promise<void>;
 
     /**

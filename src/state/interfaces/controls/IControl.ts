@@ -5,7 +5,7 @@ import { IClient } from '../../../IClient';
 import { IInput, IInputEvent } from './IInput';
 import { IMeta } from './IMeta';
 
-export type ControlKind = 'button' | 'joystick';
+export type ControlKind = string;
 export type GridSize = 'large' | 'medium' | 'small';
 
 export interface IGridLayout {
@@ -26,7 +26,7 @@ export interface IControlData {
     /**
      * The type of control.
      */
-    kind?: ControlKind;
+    kind?: string;
     /**
      * Wether or not this control is disabled.
      */
@@ -70,7 +70,7 @@ export interface IControl extends IControlData, EventEmitter {
      * Give input causes the control to give input to the mediator status in response to a
      * control event. For example a mousedown on a button would end up here.
      */
-    giveInput(input: IInput): Promise<void>;
+    giveInput?(input: IInput): Promise<void>;
 
     receiveInput<T extends IInput>(input: IInputEvent<T>, participant: IParticipant): void;
 

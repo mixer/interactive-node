@@ -24,7 +24,8 @@
     "build": "npm run build:ts && npm run build:webpack && npm run build:examples",
     "test": "npm run lint && npm run test:unit",
     "test:unit": "mocha --compilers ts:ts-node/register \"src/**/*.spec.ts\"",
-    "prepublishOnly": "npm run build && npm run docs:publish",
+    "prepublishOnly": "npm run build",
+    "postpublish": "npm run docs:publish",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
     "docs:build": "rimraf docs && typedoc --exclude \"{*.spec.ts,**/node_modules/**}\" --out docs/ --mode file --excludeNotExported --excludePrivate --excludeExternals --tsconfig tsconfig.json ./src/index.ts && node doc-postprocess.js",
     "docs:publish": "npm run docs:build && gh-pages -d docs -s **"
