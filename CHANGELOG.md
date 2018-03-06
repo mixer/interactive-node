@@ -2,6 +2,10 @@
 
 ## 2.x
 
+### 2.7.1
+- Fix a small typo in one of the examples (#93)
+- Fix websocket authentication when used in browsers (#95)
+
 ### 2.7
 - Add world update methods (#94)
 - Adjust prettier config to Mixer standard and did a pass
