@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IControlData | beam-interactive-node2</title>
+	<title>ILabelData | beam-interactive-node2</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="icontroldata.html">IControlData</a>
+					<a href="ilabeldata.html">ILabelData</a>
 				</li>
 			</ul>
-			<h1>Interface IControlData</h1>
+			<h1>Interface ILabelData</h1>
 		</div>
 	</div>
 </header>
@@ -65,8 +65,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents the raw data a control has when transmitted
-						and received over a socket connection.</p>
+						<p>Extends the regular control data with additional properties for Label</p>
 					</div>
 				</div>
 			</section>
@@ -74,22 +73,15 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">IControlData</span>
+						<a href="icontroldata.html" class="tsd-signature-type">IControlData</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="icontrol.html" class="tsd-signature-type">IControl</a>
-							</li>
-							<li>
-								<a href="ibuttondata.html" class="tsd-signature-type">IButtonData</a>
-							</li>
-							<li>
-								<a href="ijoystickdata.html" class="tsd-signature-type">IJoystickData</a>
-							</li>
-							<li>
-								<a href="ilabeldata.html" class="tsd-signature-type">ILabelData</a>
-							</li>
-							<li>
-								<a href="itextboxdata.html" class="tsd-signature-type">ITextboxData</a>
+								<span class="target">ILabelData</span>
+								<ul class="tsd-hierarchy">
+									<li>
+										<a href="ilabel.html" class="tsd-signature-type">ILabel</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</li>
@@ -102,12 +94,18 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="icontroldata.html#controlid" class="tsd-kind-icon">controlID</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="icontroldata.html#disabled" class="tsd-kind-icon">disabled</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="icontroldata.html#etag" class="tsd-kind-icon">etag</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="icontroldata.html#kind" class="tsd-kind-icon">kind</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="icontroldata.html#meta" class="tsd-kind-icon">meta</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="icontroldata.html#position" class="tsd-kind-icon">position</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ilabeldata.html#bold" class="tsd-kind-icon">bold</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ilabeldata.html#controlid" class="tsd-kind-icon">controlID</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ilabeldata.html#disabled" class="tsd-kind-icon">disabled</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ilabeldata.html#etag" class="tsd-kind-icon">etag</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ilabeldata.html#italic" class="tsd-kind-icon">italic</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ilabeldata.html#kind" class="tsd-kind-icon">kind</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ilabeldata.html#meta" class="tsd-kind-icon">meta</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ilabeldata.html#position" class="tsd-kind-icon">position</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ilabeldata.html#text" class="tsd-kind-icon">text</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ilabeldata.html#textcolor" class="tsd-kind-icon">text<wbr>Color</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ilabeldata.html#textsize" class="tsd-kind-icon">text<wbr>Size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ilabeldata.html#underline" class="tsd-kind-icon">underline</a></li>
 							</ul>
 						</section>
 					</div>
@@ -116,10 +114,26 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="bold" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> bold</h3>
+					<div class="tsd-signature tsd-kind-icon">bold<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/ILabel.ts#L26">state/interfaces/controls/ILabel.ts:26</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the text is bold.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="controlid" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> controlID</h3>
 					<div class="tsd-signature tsd-kind-icon">controlID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#controlid">controlID</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/IControl.ts#L25">state/interfaces/controls/IControl.ts:25</a></li>
 						</ul>
@@ -130,11 +144,12 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="disabled" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> disabled</h3>
 					<div class="tsd-signature tsd-kind-icon">disabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#disabled">disabled</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/IControl.ts#L33">state/interfaces/controls/IControl.ts:33</a></li>
 						</ul>
@@ -145,11 +160,12 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="etag" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> etag</h3>
 					<div class="tsd-signature tsd-kind-icon">etag<span class="tsd-signature-symbol">:</span> <a href="../globals.html#etag" class="tsd-signature-type">ETag</a></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#etag">etag</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/IControl.ts#L46">state/interfaces/controls/IControl.ts:46</a></li>
 						</ul>
@@ -163,10 +179,26 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="italic" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> italic</h3>
+					<div class="tsd-signature tsd-kind-icon">italic<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/ILabel.ts#L30">state/interfaces/controls/ILabel.ts:30</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the text is italicized.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="kind" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> kind</h3>
 					<div class="tsd-signature tsd-kind-icon">kind<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#kind">kind</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/IControl.ts#L29">state/interfaces/controls/IControl.ts:29</a></li>
 						</ul>
@@ -177,11 +209,12 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="meta" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> meta</h3>
 					<div class="tsd-signature tsd-kind-icon">meta<span class="tsd-signature-symbol">:</span> <a href="imeta.html" class="tsd-signature-type">IMeta</a></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#meta">meta</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/IControl.ts#L37">state/interfaces/controls/IControl.ts:37</a></li>
 						</ul>
@@ -192,11 +225,12 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="position" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> position</h3>
 					<div class="tsd-signature tsd-kind-icon">position<span class="tsd-signature-symbol">:</span> <a href="igridplacement.html" class="tsd-signature-type">IGridPlacement</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#position">position</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/IControl.ts#L42">state/interfaces/controls/IControl.ts:42</a></li>
 						</ul>
@@ -205,6 +239,66 @@
 						<div class="lead">
 							<p>A collection of grid placements controlling where the control
 							is positioned on screen.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="text" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> text</h3>
+					<div class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/ILabel.ts#L10">state/interfaces/controls/ILabel.ts:10</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The text displayed on the label.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="textcolor" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> text<wbr>Color</h3>
+					<div class="tsd-signature tsd-kind-icon">text<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/ILabel.ts#L14">state/interfaces/controls/ILabel.ts:14</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The color of the text.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="textsize" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> text<wbr>Size</h3>
+					<div class="tsd-signature tsd-kind-icon">text<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/ILabel.ts#L18">state/interfaces/controls/ILabel.ts:18</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The size of the text.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="underline" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> underline</h3>
+					<div class="tsd-signature tsd-kind-icon">underline<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/ILabel.ts#L22">state/interfaces/controls/ILabel.ts:22</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the text is underlined.</p>
 						</div>
 					</div>
 				</section>
@@ -223,25 +317,43 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="icontroldata.html" class="tsd-kind-icon">IControl<wbr>Data</a>
+						<a href="ilabeldata.html" class="tsd-kind-icon">ILabel<wbr>Data</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="icontroldata.html#controlid" class="tsd-kind-icon">controlID</a>
+								<a href="ilabeldata.html#bold" class="tsd-kind-icon">bold</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="ilabeldata.html#controlid" class="tsd-kind-icon">controlID</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="ilabeldata.html#disabled" class="tsd-kind-icon">disabled</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="ilabeldata.html#etag" class="tsd-kind-icon">etag</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="icontroldata.html#disabled" class="tsd-kind-icon">disabled</a>
+								<a href="ilabeldata.html#italic" class="tsd-kind-icon">italic</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="ilabeldata.html#kind" class="tsd-kind-icon">kind</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="ilabeldata.html#meta" class="tsd-kind-icon">meta</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="ilabeldata.html#position" class="tsd-kind-icon">position</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="icontroldata.html#etag" class="tsd-kind-icon">etag</a>
+								<a href="ilabeldata.html#text" class="tsd-kind-icon">text</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="icontroldata.html#kind" class="tsd-kind-icon">kind</a>
+								<a href="ilabeldata.html#textcolor" class="tsd-kind-icon">text<wbr>Color</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="icontroldata.html#meta" class="tsd-kind-icon">meta</a>
+								<a href="ilabeldata.html#textsize" class="tsd-kind-icon">text<wbr>Size</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="icontroldata.html#position" class="tsd-kind-icon">position</a>
+								<a href="ilabeldata.html#underline" class="tsd-kind-icon">underline</a>
 							</li>
 						</ul>
 					</li>

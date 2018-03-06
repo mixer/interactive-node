@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ExponentialReconnectionPolicy | beam-interactive-node2</title>
+	<title>ITextboxInput | beam-interactive-node2</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="exponentialreconnectionpolicy.html">ExponentialReconnectionPolicy</a>
+					<a href="itextboxinput.html">ITextboxInput</a>
 				</li>
 			</ul>
-			<h1>Class ExponentialReconnectionPolicy</h1>
+			<h1>Interface ITextboxInput</h1>
 		</div>
 	</div>
 </header>
@@ -65,8 +65,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>The ExponentialReconnectionPolicy is a policy which reconnects the socket
-						on a delay specified by the equation min(maxDelay, attempts^2 * baseDelay).</p>
+						<p>Extends the base input to include textbox specific data.</p>
 					</div>
 				</div>
 			</section>
@@ -74,14 +73,13 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ExponentialReconnectionPolicy</span>
+						<a href="iinput.html" class="tsd-signature-type">IInput</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">ITextboxInput</span>
+							</li>
+						</ul>
 					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel">
-				<h3>Implements</h3>
-				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/ireconnectionpolicy.html" class="tsd-signature-type">IReconnectionPolicy</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -89,139 +87,64 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="exponentialreconnectionpolicy.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="exponentialreconnectionpolicy.html#basedelay" class="tsd-kind-icon">base<wbr>Delay</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="exponentialreconnectionpolicy.html#maxdelay" class="tsd-kind-icon">max<wbr>Delay</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Methods</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="exponentialreconnectionpolicy.html#next" class="tsd-kind-icon">next</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="exponentialreconnectionpolicy.html#reset" class="tsd-kind-icon">reset</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="itextboxinput.html#controlid" class="tsd-kind-icon">controlID</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="itextboxinput.html#event" class="tsd-kind-icon">event</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="itextboxinput.html#value" class="tsd-kind-icon">value</a></li>
 							</ul>
 						</section>
 					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Exponential<wbr>Reconnection<wbr>Policy<span class="tsd-signature-symbol">(</span>maxDelay<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, baseDelay<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="exponentialreconnectionpolicy.html" class="tsd-signature-type">ExponentialReconnectionPolicy</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/wire/reconnection.ts#L22">wire/reconnection.ts:22</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> maxDelay: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;20 * 1000</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>maximum duration to wait between reconnection attempts</p>
-										</div>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> baseDelay: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;500</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>delay, in milliseconds, to use in</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="exponentialreconnectionpolicy.html" class="tsd-signature-type">ExponentialReconnectionPolicy</a></h4>
-						</li>
-					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="basedelay" class="tsd-anchor"></a>
-					<h3>base<wbr>Delay</h3>
-					<div class="tsd-signature tsd-kind-icon">base<wbr>Delay<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="controlid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> controlID</h3>
+					<div class="tsd-signature tsd-kind-icon">controlID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="iinput.html">IInput</a>.<a href="iinput.html#controlid">controlID</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/wire/reconnection.ts#L28">wire/reconnection.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/IInput.ts#L8">state/interfaces/controls/IInput.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>delay, in milliseconds, to use in</p>
+							<p>The controlId this input event relates to.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="maxdelay" class="tsd-anchor"></a>
-					<h3>max<wbr>Delay</h3>
-					<div class="tsd-signature tsd-kind-icon">max<wbr>Delay<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+					<a name="event" class="tsd-anchor"></a>
+					<h3>event</h3>
+					<div class="tsd-signature tsd-kind-icon">event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"change"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"submit"</span></div>
 					<aside class="tsd-sources">
+						<p>Overrides <a href="iinput.html">IInput</a>.<a href="iinput.html#event">event</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/wire/reconnection.ts#L28">wire/reconnection.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/IInput.ts#L69">state/interfaces/controls/IInput.ts:69</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>maximum duration to wait between reconnection attempts</p>
+							<p>Textboxes can emit change (regular keyboard input) or submit event.</p>
 						</div>
 					</div>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="next" class="tsd-anchor"></a>
-					<h3>next</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">next<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/ireconnectionpolicy.html">IReconnectionPolicy</a>.<a href="../interfaces/ireconnectionpolicy.html#next">next</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/wire/reconnection.ts#L30">wire/reconnection.ts:30</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="reset" class="tsd-anchor"></a>
-					<h3>reset</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/ireconnectionpolicy.html">IReconnectionPolicy</a>.<a href="../interfaces/ireconnectionpolicy.html#reset">reset</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/wire/reconnection.ts#L35">wire/reconnection.ts:35</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="value" class="tsd-anchor"></a>
+					<h3>value</h3>
+					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/2111eca/src/state/interfaces/controls/IInput.ts#L73">state/interfaces/controls/IInput.ts:73</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The value of the textbox.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -237,23 +160,17 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class">
-						<a href="exponentialreconnectionpolicy.html" class="tsd-kind-icon">Exponential<wbr>Reconnection<wbr>Policy</a>
+					<li class="current tsd-kind-interface">
+						<a href="itextboxinput.html" class="tsd-kind-icon">ITextbox<wbr>Input</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="exponentialreconnectionpolicy.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="itextboxinput.html#controlid" class="tsd-kind-icon">controlID</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="exponentialreconnectionpolicy.html#basedelay" class="tsd-kind-icon">base<wbr>Delay</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+								<a href="itextboxinput.html#event" class="tsd-kind-icon">event</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="exponentialreconnectionpolicy.html#maxdelay" class="tsd-kind-icon">max<wbr>Delay</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="exponentialreconnectionpolicy.html#next" class="tsd-kind-icon">next</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="exponentialreconnectionpolicy.html#reset" class="tsd-kind-icon">reset</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="itextboxinput.html#value" class="tsd-kind-icon">value</a>
 							</li>
 						</ul>
 					</li>
