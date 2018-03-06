@@ -3,12 +3,8 @@ import * as WebSocket from 'ws';
 
 import {
     GameClient,
-    IButton,
-    IParticipant,
     setWebSocket,
 } from '../lib';
-
-import { makeControls } from './util';
 
 if (process.argv.length < 4) {
     console.log('Usage gameClient.exe <token> <versionId>');
