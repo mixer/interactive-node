@@ -47,10 +47,6 @@ export interface IButtonData extends IControlData {
      */
     backgroundColor?: string;
     /**
-     * The background image of the button. (HTTPS URL)
-     */
-    backgroundImage?: string;
-    /**
      * The hover & Focus border color of the button.
      */
     focusColor?: string;
@@ -106,10 +102,6 @@ export interface IButtonUpdate extends IControlUpdate {
      */
     backgroundColor?: string;
     /**
-     * Background image of the button.
-     */
-    backgroundImage?: string;
-    /**
      * Hover & Focus border color of the button.
      */
     focusColor?: string;
@@ -129,7 +121,6 @@ export interface IButton extends IControl, IButtonData {
     textSize: string;
     borderColor: string;
     backgroundColor: string;
-    backgroundImage: string;
     focusColor: string;
     accentColor: string;
     // GameClient
@@ -143,7 +134,6 @@ export interface IButton extends IControl, IButtonData {
     setFocusColor(focusColor: string): Promise<void>;
     setAccentColor(accentColor: string): Promise<void>;
     setTextColor(textColor: string): Promise<void>;
-    setBackgroundImage(backgroundImage: string): Promise<void>;
     update(changedData: IButtonUpdate): Promise<void>;
 
     /**
