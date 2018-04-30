@@ -25,7 +25,7 @@ export class Screen extends Control<IScreenData> implements IScreen {
   public update(controlUpdate: IScreenUpdate): Promise<void> {
     // Clone to prevent mutations
     // XXX: Typescript 2.4 is strict, let the compiler be clever.
-    const changedData = Object.assign({}, controlUpdate);
+    const changedData = { ...controlUpdate };
     return super.update(changedData);
   }
 
