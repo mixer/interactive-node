@@ -1,4 +1,6 @@
+import { IParticipant } from '../IParticipant';
 import { IControl, IControlData, IControlUpdate } from './IControl';
+import { IInputEvent, IScreenInput } from './IInput';
 /**
  * Extends the regular control data with additional properties for Textbox
  */
@@ -41,5 +43,23 @@ export interface IScreen extends IControl, IScreenData {
   sendMoveOnMouseDown: boolean;
   moveDeboune: number;
   // GameClient
-  update(changedData: IScreen): Promise<void>;
+  update(changedData: IScreenUpdate): Promise<void>;
+
+  giveInput(input: IScreenInput): Promise<void>;
+
+  /**
+   * Fired when a participant moves cursor.
+   */
+  on(
+      event: 'move',
+      listener: (inputEvent: IInputEvent<IScreenInput>, participant: IParticipant) => void,
+  ): this;
+  /**
+   * Fired when a participant presses this button with their mouse.
+   */
+  on(
+      event: 'mousedown',
+      listener: (inputEvent: IInputEvent<IScreenInput>, participant: IParticipant) => void,
+  ): this;
+  on(event: string, listener: Function): this;
 }
