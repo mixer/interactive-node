@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IJoystickUpdate | beam-interactive-node2</title>
+	<title>IScreenInput | beam-interactive-node2</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="ijoystickupdate.html">IJoystickUpdate</a>
+					<a href="iscreeninput.html">IScreenInput</a>
 				</li>
 			</ul>
-			<h1>Interface IJoystickUpdate</h1>
+			<h1>Interface IScreenInput</h1>
 		</div>
 	</div>
 </header>
@@ -65,8 +65,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents updatable components of a joystick which developers can update
-						from game clients.</p>
+						<p>Extends the base input to include screen specific data.</p>
 					</div>
 				</div>
 			</section>
@@ -74,10 +73,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="icontrolupdate.html" class="tsd-signature-type">IControlUpdate</a>
+						<a href="iinput.html" class="tsd-signature-type">IInput</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">IJoystickUpdate</span>
+								<span class="target">IScreenInput</span>
 							</li>
 						</ul>
 					</li>
@@ -90,10 +89,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ijoystickupdate.html#angle" class="tsd-kind-icon">angle</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ijoystickupdate.html#disabled" class="tsd-kind-icon">disabled</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ijoystickupdate.html#intensity" class="tsd-kind-icon">intensity</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ijoystickupdate.html#samplerate" class="tsd-kind-icon">sample<wbr>Rate</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="iscreeninput.html#controlid" class="tsd-kind-icon">controlID</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="iscreeninput.html#event" class="tsd-kind-icon">event</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iscreeninput.html#x" class="tsd-kind-icon">x</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iscreeninput.html#y" class="tsd-kind-icon">y</a></li>
 							</ul>
 						</section>
 					</div>
@@ -101,68 +100,66 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="angle" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> angle</h3>
-					<div class="tsd-signature tsd-kind-icon">angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IJoystick.ts#L36">state/interfaces/controls/IJoystick.ts:36</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Updates the angle of the Joysticks direction indicator.
-							In radians 0 - 2π.</p>
-						</div>
-					</div>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="disabled" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> disabled</h3>
-					<div class="tsd-signature tsd-kind-icon">disabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="controlid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> controlID</h3>
+					<div class="tsd-signature tsd-kind-icon">controlID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="icontrolupdate.html">IControlUpdate</a>.<a href="icontrolupdate.html#disabled">disabled</a></p>
+						<p>Inherited from <a href="iinput.html">IInput</a>.<a href="iinput.html#controlid">controlID</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IControl.ts#L58">state/interfaces/controls/IControl.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IInput.ts#L8">state/interfaces/controls/IInput.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>When set to true this will disable the control.
-							When set to false this will enable the control.</p>
+							<p>The controlId this input event relates to.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+					<a name="event" class="tsd-anchor"></a>
+					<h3>event</h3>
+					<div class="tsd-signature tsd-kind-icon">event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"move"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mousedown"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"mouseup"</span></div>
+					<aside class="tsd-sources">
+						<p>Overrides <a href="iinput.html">IInput</a>.<a href="iinput.html#event">event</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IInput.ts#L69">state/interfaces/controls/IInput.ts:69</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Joysticks can only be moved.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="intensity" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> intensity</h3>
-					<div class="tsd-signature tsd-kind-icon">intensity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="x" class="tsd-anchor"></a>
+					<h3>x</h3>
+					<div class="tsd-signature tsd-kind-icon">x<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IJoystick.ts#L40">state/interfaces/controls/IJoystick.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IInput.ts#L73">state/interfaces/controls/IInput.ts:73</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>updates the strength/opacity of the direction indicator.</p>
+							<p>The X coordinate of the input.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="samplerate" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> sample<wbr>Rate</h3>
-					<div class="tsd-signature tsd-kind-icon">sample<wbr>Rate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="y" class="tsd-anchor"></a>
+					<h3>y</h3>
+					<div class="tsd-signature tsd-kind-icon">y<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IJoystick.ts#L46">state/interfaces/controls/IJoystick.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IInput.ts#L77">state/interfaces/controls/IInput.ts:77</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Updates the sampleRate of this joystick</p>
+							<p>The Y coordinate of the input.</p>
 						</div>
-						<p>In milliseconds.</p>
 					</div>
 				</section>
 			</section>
@@ -180,19 +177,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="ijoystickupdate.html" class="tsd-kind-icon">IJoystick<wbr>Update</a>
+						<a href="iscreeninput.html" class="tsd-kind-icon">IScreen<wbr>Input</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ijoystickupdate.html#angle" class="tsd-kind-icon">angle</a>
-							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="ijoystickupdate.html#disabled" class="tsd-kind-icon">disabled</a>
+								<a href="iscreeninput.html#controlid" class="tsd-kind-icon">controlID</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+								<a href="iscreeninput.html#event" class="tsd-kind-icon">event</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ijoystickupdate.html#intensity" class="tsd-kind-icon">intensity</a>
+								<a href="iscreeninput.html#x" class="tsd-kind-icon">x</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ijoystickupdate.html#samplerate" class="tsd-kind-icon">sample<wbr>Rate</a>
+								<a href="iscreeninput.html#y" class="tsd-kind-icon">y</a>
 							</li>
 						</ul>
 					</li>

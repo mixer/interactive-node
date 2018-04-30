@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ITextboxUpdate | beam-interactive-node2</title>
+	<title>IScreenData | beam-interactive-node2</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="itextboxupdate.html">ITextboxUpdate</a>
+					<a href="iscreendata.html">IScreenData</a>
 				</li>
 			</ul>
-			<h1>Interface ITextboxUpdate</h1>
+			<h1>Interface IScreenData</h1>
 		</div>
 	</div>
 </header>
@@ -65,8 +65,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents updatable components of a label which developers can update
-						from game clients.</p>
+						<p>Extends the regular control data with additional properties for Textbox</p>
 					</div>
 				</div>
 			</section>
@@ -74,10 +73,15 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="icontrolupdate.html" class="tsd-signature-type">IControlUpdate</a>
+						<a href="icontroldata.html" class="tsd-signature-type">IControlData</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">ITextboxUpdate</span>
+								<span class="target">IScreenData</span>
+								<ul class="tsd-hierarchy">
+									<li>
+										<a href="iscreen.html" class="tsd-signature-type">IScreen</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</li>
@@ -90,13 +94,15 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="itextboxupdate.html#cooldown" class="tsd-kind-icon">cooldown</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="itextboxupdate.html#cost" class="tsd-kind-icon">cost</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="itextboxupdate.html#disabled" class="tsd-kind-icon">disabled</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="itextboxupdate.html#hassubmit" class="tsd-kind-icon">has<wbr>Submit</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="itextboxupdate.html#multiline" class="tsd-kind-icon">multiline</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="itextboxupdate.html#placeholder" class="tsd-kind-icon">placeholder</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="itextboxupdate.html#submittext" class="tsd-kind-icon">submit<wbr>Text</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="iscreendata.html#controlid" class="tsd-kind-icon">controlID</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="iscreendata.html#disabled" class="tsd-kind-icon">disabled</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="iscreendata.html#etag" class="tsd-kind-icon">etag</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="iscreendata.html#kind" class="tsd-kind-icon">kind</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="iscreendata.html#meta" class="tsd-kind-icon">meta</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iscreendata.html#movedeboune" class="tsd-kind-icon">move<wbr>Deboune</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="iscreendata.html#position" class="tsd-kind-icon">position</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iscreendata.html#sendmoveonmousedown" class="tsd-kind-icon">send<wbr>Move<wbr>OnMouse<wbr>Down</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iscreendata.html#sendonmove" class="tsd-kind-icon">send<wbr>OnMove</a></li>
 							</ul>
 						</section>
 					</div>
@@ -104,33 +110,19 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="cooldown" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> cooldown</h3>
-					<div class="tsd-signature tsd-kind-icon">cooldown<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="controlid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> controlID</h3>
+					<div class="tsd-signature tsd-kind-icon">controlID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#controlid">controlID</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/ITextbox.ts#L55">state/interfaces/controls/ITextbox.ts:55</a></li>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IControl.ts#L25">state/interfaces/controls/IControl.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>In milliseconds, will be converted to a unix timestamp of when this cooldown expires.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="cost" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> cost</h3>
-					<div class="tsd-signature tsd-kind-icon">cost<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/ITextbox.ts#L51">state/interfaces/controls/ITextbox.ts:51</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Will update the spark cost of this textbox. A cost will force a submit button.</p>
+							<p>An id, unique to the session.</p>
 						</div>
 					</div>
 				</section>
@@ -139,75 +131,126 @@
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> disabled</h3>
 					<div class="tsd-signature tsd-kind-icon">disabled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="icontrolupdate.html">IControlUpdate</a>.<a href="icontrolupdate.html#disabled">disabled</a></p>
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#disabled">disabled</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IControl.ts#L58">state/interfaces/controls/IControl.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IControl.ts#L33">state/interfaces/controls/IControl.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>When set to true this will disable the control.
-							When set to false this will enable the control.</p>
+							<p>Wether or not this control is disabled.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="etag" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> etag</h3>
+					<div class="tsd-signature tsd-kind-icon">etag<span class="tsd-signature-symbol">:</span> <a href="../globals.html#etag" class="tsd-signature-type">ETag</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#etag">etag</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IControl.ts#L46">state/interfaces/controls/IControl.ts:46</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>etags are no longer used, you can always omit/ignore this</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="kind" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> kind</h3>
+					<div class="tsd-signature tsd-kind-icon">kind<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#kind">kind</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IControl.ts#L29">state/interfaces/controls/IControl.ts:29</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The type of control.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="meta" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> meta</h3>
+					<div class="tsd-signature tsd-kind-icon">meta<span class="tsd-signature-symbol">:</span> <a href="imeta.html" class="tsd-signature-type">IMeta</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#meta">meta</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IControl.ts#L37">state/interfaces/controls/IControl.ts:37</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The collection of Meta properties for this control.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="hassubmit" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> has<wbr>Submit</h3>
-					<div class="tsd-signature tsd-kind-icon">has<wbr>Submit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="movedeboune" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> move<wbr>Deboune</h3>
+					<div class="tsd-signature tsd-kind-icon">move<wbr>Deboune<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/ITextbox.ts#L59">state/interfaces/controls/ITextbox.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IScreen.ts#L19">state/interfaces/controls/IScreen.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Will update Whether the textbox has a submit button.</p>
+							<p>The debounce rate for input sent</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="position" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> position</h3>
+					<div class="tsd-signature tsd-kind-icon">position<span class="tsd-signature-symbol">:</span> <a href="igridplacement.html" class="tsd-signature-type">IGridPlacement</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="icontroldata.html">IControlData</a>.<a href="icontroldata.html#position">position</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IControl.ts#L42">state/interfaces/controls/IControl.ts:42</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A collection of grid placements controlling where the control
+							is positioned on screen.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="multiline" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> multiline</h3>
-					<div class="tsd-signature tsd-kind-icon">multiline<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="sendmoveonmousedown" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> send<wbr>Move<wbr>OnMouse<wbr>Down</h3>
+					<div class="tsd-signature tsd-kind-icon">send<wbr>Move<wbr>OnMouse<wbr>Down<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/ITextbox.ts#L63">state/interfaces/controls/ITextbox.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IScreen.ts#L15">state/interfaces/controls/IScreen.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Will update Whether the textbox supports multiple lines of text.</p>
+							<p>Whether the control will send coordinates on mousedown</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="placeholder" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> placeholder</h3>
-					<div class="tsd-signature tsd-kind-icon">placeholder<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="sendonmove" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> send<wbr>OnMove</h3>
+					<div class="tsd-signature tsd-kind-icon">send<wbr>OnMove<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/ITextbox.ts#L43">state/interfaces/controls/ITextbox.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/IScreen.ts#L11">state/interfaces/controls/IScreen.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Will update the text hint inside the textbox.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="submittext" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> submit<wbr>Text</h3>
-					<div class="tsd-signature tsd-kind-icon">submit<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/mixer/interactive-node/blob/be867e8/src/state/interfaces/controls/ITextbox.ts#L47">state/interfaces/controls/ITextbox.ts:47</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Will update the optional text to replace &quot;Submit&quot; on the submit button.</p>
+							<p>Whether the control will send coordinates on mousemove</p>
 						</div>
 					</div>
 				</section>
@@ -226,28 +269,34 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="itextboxupdate.html" class="tsd-kind-icon">ITextbox<wbr>Update</a>
+						<a href="iscreendata.html" class="tsd-kind-icon">IScreen<wbr>Data</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="itextboxupdate.html#cooldown" class="tsd-kind-icon">cooldown</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="itextboxupdate.html#cost" class="tsd-kind-icon">cost</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iscreendata.html#controlid" class="tsd-kind-icon">controlID</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="itextboxupdate.html#disabled" class="tsd-kind-icon">disabled</a>
+								<a href="iscreendata.html#disabled" class="tsd-kind-icon">disabled</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iscreendata.html#etag" class="tsd-kind-icon">etag</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iscreendata.html#kind" class="tsd-kind-icon">kind</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iscreendata.html#meta" class="tsd-kind-icon">meta</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="itextboxupdate.html#hassubmit" class="tsd-kind-icon">has<wbr>Submit</a>
+								<a href="iscreendata.html#movedeboune" class="tsd-kind-icon">move<wbr>Deboune</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iscreendata.html#position" class="tsd-kind-icon">position</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="itextboxupdate.html#multiline" class="tsd-kind-icon">multiline</a>
+								<a href="iscreendata.html#sendmoveonmousedown" class="tsd-kind-icon">send<wbr>Move<wbr>OnMouse<wbr>Down</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="itextboxupdate.html#placeholder" class="tsd-kind-icon">placeholder</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="itextboxupdate.html#submittext" class="tsd-kind-icon">submit<wbr>Text</a>
+								<a href="iscreendata.html#sendonmove" class="tsd-kind-icon">send<wbr>OnMove</a>
 							</li>
 						</ul>
 					</li>
