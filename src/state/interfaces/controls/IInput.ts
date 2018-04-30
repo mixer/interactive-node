@@ -60,6 +60,24 @@ export interface IJoystickInput extends IInput {
 }
 
 /**
+ * Extends the base input to include screen specific data.
+ */
+export interface IScreenInput extends IInput {
+    /**
+     * Joysticks can only be moved.
+     */
+    event: 'move' | 'mousedown' | 'mouseup';
+    /**
+     * The X coordinate of the input.
+     */
+    x: number;
+    /**
+     * The Y coordinate of the input.
+     */
+    y: number;
+}
+
+/**
  * Extends the base input to include textbox specific data.
  */
 export interface ITextboxInput extends IInput {

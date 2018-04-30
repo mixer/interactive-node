@@ -8,5 +8,6 @@ export * from './IControl';
 export * from './IInput';
 export * from './IJoystick';
 export * from './ILabel';
+export * from './IScreen';
 export * from './ITextbox';
 export * from './IMeta';
