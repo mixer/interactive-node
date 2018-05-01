@@ -14,9 +14,9 @@ export interface IScreenData extends IControlData {
      */
   sendMoveOnMouseDown?: boolean;
   /**
-     * The debounce rate for input sent
+     * The throttle rate for input sent
      */
-  moveDeboune?: number;
+  moveThrottle?: number;
 }
 
 /**
@@ -35,13 +35,13 @@ export interface IScreenUpdate extends IControlUpdate {
   /**
      * The debounce rate for input sent
      */
-  moveDeboune?: number;
+    moveThrottle?: number;
 }
 
 export interface IScreen extends IControl, IScreenData {
   sendOnMove: boolean;
   sendMoveOnMouseDown: boolean;
-  moveDeboune: number;
+  moveThrottle: number;
   // GameClient
   update(changedData: IScreenUpdate): Promise<void>;
 

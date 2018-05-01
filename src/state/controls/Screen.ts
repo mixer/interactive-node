@@ -17,7 +17,7 @@ export class Screen extends Control<IScreenData> implements IScreen {
   /**
      * The debounce rate for input sent
      */
-  public moveDeboune: number;
+  public moveThrottle: number;
 
   /**
      * Sends an input event from a participant to the server for consumption.
