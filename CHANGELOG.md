@@ -57,7 +57,7 @@ With some awesome community contributions we've now added the following features
   - `synchronizeGroups`
   - `getGroups`
 
-#### Breaking Changes
+#### Breaking Changes`
 
 This release includes some minor breaking changes:
 
