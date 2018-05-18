@@ -1,22 +1,20 @@
 import { IParticipant } from '../IParticipant';
 import { IControl, IControlData, IControlUpdate } from './IControl';
 import { IInputEvent, IScreenInput } from './IInput';
+
+export declare type MoveEventType = 'always' | 'mousedown' | 'never';
 /**
  * Extends the regular control data with additional properties for Textbox
  */
 export interface IScreenData extends IControlData {
-  /**
-     * Whether the control will send coordinates on mousemove
+    /**
+     * How the control will handle move events
      */
-  sendOnMove?: boolean;
-  /**
-     * Whether the control will send coordinates on mousedown
-     */
-  sendMoveOnMouseDown?: boolean;
-  /**
+    sendMoveEvents?: MoveEventType;
+    /**
      * The throttle rate for input sent
      */
-  moveThrottle?: number;
+    moveThrottle?: number;
 }
 
 /**
@@ -24,23 +22,18 @@ export interface IScreenData extends IControlData {
  * update from game clients.
  */
 export interface IScreenUpdate extends IControlUpdate {
-  /**
-     * Whether the control will send coordinates on mousemove
+    /**
+     * How the control will handle move events
      */
-  sendOnMove?: boolean;
-  /**
-     * Whether the control will send coordinates on mousedown
-     */
-  sendMoveOnMouseDown?: boolean;
-  /**
-     * The debounce rate for input sent
+    sendMoveEvents?: MoveEventType;
+    /**
+     * The throttle rate for input sent
      */
     moveThrottle?: number;
 }
 
 export interface IScreen extends IControl, IScreenData {
-  sendOnMove: boolean;
-  sendMoveOnMouseDown: boolean;
+  sendMoveEvents: MoveEventType;
   moveThrottle: number;
   // GameClient
   update(changedData: IScreenUpdate): Promise<void>;
