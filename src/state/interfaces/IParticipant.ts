@@ -44,7 +44,7 @@ export interface IParticipant {
     /**
      * The Channel Groups the participant is in.
      */
-    channelGroups: [string];
+    channelGroups: string[];
     meta?: IMeta;
 
     /**
