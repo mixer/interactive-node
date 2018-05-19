@@ -13,15 +13,15 @@ export interface IParticipant {
      */
     sessionID: string;
     /**
-     * This participant's Mixer UserId
+     * This participant's Mixer UserId.
      */
     userID?: number;
     /**
-     * This participant's Mixer Username
+     * This participant's Mixer Username.
      */
     username?: string;
     /**
-     * This participant's Mixer level
+     * This participant's Mixer level.
      */
     level?: number;
     /**
@@ -30,21 +30,25 @@ export interface IParticipant {
      */
     lastInputAt?: number;
     /**
-     * The unix milliseconds timestamp when the user connected
+     * The unix milliseconds timestamp when the user connected.
      */
     connectedAt?: number;
     /**
-     * The disabled state of this participant, when disabled they cannot provide input
+     * The disabled state of this participant, when disabled they cannot provide input.
      */
     disabled?: boolean;
     /**
-     * The ID of the Group this user belongs to
+     * The ID of the Group this user belongs to.
      */
     groupID?: string;
+    /**
+     * The Channel Groups the participant is in.
+     */
+    channelGroups: string[];
     meta?: IMeta;
 
     /**
-     * @deprecated etags are no longer used, you can always omit/ignore this
+     * @deprecated etags are no longer used, you can always omit/ignore this.
      */
     etag?: ETag;
 }
