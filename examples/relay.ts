@@ -1,8 +1,14 @@
-import { IControlData } from './../lib/state/interfaces/controls/IControl.d';
 /* tslint:disable:no-console */
 import * as WebSocket from 'ws';
 
-import { GameClient, IControl, IInputEvent, IParticipant, setWebSocket } from '../lib';
+import {
+    GameClient,
+    IControl,
+    IControlData,
+    IInputEvent,
+    IParticipant,
+    setWebSocket,
+} from '../lib';
 
 // import { makeControls } from './util';
 
@@ -72,7 +78,7 @@ client.on('open', () => {
                         event: IInputEvent<IControl & { name: string; data: any }>,
                         participant: IParticipant,
                     ) => {
-                        broadcast(event.input.name, { participant });
+                        broadcast(event.input.name, { data: event.input.data, participant });
                     },
                 );
             }),
