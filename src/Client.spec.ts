@@ -8,7 +8,7 @@ import { IGroupData, ISceneData } from './state/interfaces';
 import { Method } from './wire/packets';
 
 setWebSocket(WebSocket);
-const port = process.env.SERVER_PORT || 1339;
+const port: number = parseInt(process.env.SERVER_PORT, 10) || 1339;
 
 describe('client', () => {
     const urls = [`ws://127.0.0.1:${port}/`];
