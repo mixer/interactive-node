@@ -1,5 +1,5 @@
 /**
- * This examples is for custom bundles. In this script, this assumes
+ * This example is for custom bundles. In this script, this assumes
  * that your bundle will giveInput on a control with the controlID "setup",
  * with the event being "create", that passes a property controls that is
  * and array of strings.

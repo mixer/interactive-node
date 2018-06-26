@@ -184,6 +184,9 @@ export class GameClient extends Client {
         return this.execute('deleteScene', data, false);
     }
 
+    /**
+     * Instructs the server to broadcast an event with given data to specified scopes.
+     */
     public broadcastEvent(data: IBroadcastEvent): Promise<void> {
         return this.execute('broadcastEvent', data, false);
     }
