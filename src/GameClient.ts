@@ -38,6 +38,11 @@ export interface IGameClientOptions {
     discoveryUrl?: string;
 }
 
+export interface IBroadcastEvent {
+    scope: string[];
+    data: any;
+}
+
 export class GameClient extends Client {
     private discovery = new EndpointDiscovery(new Requester());
     constructor() {
@@ -177,5 +182,12 @@ export class GameClient extends Client {
      */
     public deleteScene(data: ISceneDeletionParams): Promise<void> {
         return this.execute('deleteScene', data, false);
+    }
+
+    /**
+     * Instructs the server to broadcast an event with given data to specified scopes.
+     */
+    public broadcastEvent(data: IBroadcastEvent): Promise<void> {
+        return this.execute('broadcastEvent', data, false);
     }
 }

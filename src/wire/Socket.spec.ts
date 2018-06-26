@@ -11,7 +11,7 @@ import { InteractiveSocket, ISocketOptions } from './Socket';
 // tslint:disable-next-line:no-require-imports no-var-requires
 use(require('sinon-chai'));
 
-const port = process.env.SERVER_PORT || 1339;
+const port: number = parseInt(process.env.SERVER_PORT, 10) || 1339;
 const METHOD = {
     id: 1,
     type: 'method',
