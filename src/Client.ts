@@ -11,6 +11,8 @@ import {
     IGroupDeletionParams,
     IInput,
     IParticipantArray,
+    IParticipantQuery,
+    IParticipantQueryResult,
     IScene,
     ISceneControlDeletion,
     ISceneData,
@@ -269,6 +271,15 @@ export class Client extends EventEmitter implements IClient {
         params: ISceneControlDeletion,
         discard: false,
     ): Promise<void>;
+    /**
+     * Queries the server for a list of participants who match the provided userIDs.
+     * Future enhancements may allow for querying by other properties
+     */
+    public execute(
+        method: 'getParticipantsByMixerID',
+        params: IParticipantQuery,
+        discard: false,
+    ): Promise<IParticipantQueryResult>;
     public execute<T>(method: string, params: T, discard: boolean): Promise<any>;
     /**
      * Execute will construct and send a method to the server for execution.
