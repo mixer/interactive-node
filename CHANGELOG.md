@@ -2,6 +2,30 @@
 
 ## 2.x
 
+### 2.9
+- Added channelGroups to participants (#100)
+- Added broadcast event support (#101)
+- Added anonymous property to participant (#102)
+- Added participant queries (#102)
+- Added screen control properties for sending mouse up and mouse down events (#103)
+
+### 2.8.4
+- Update screen control properties for move events and move throttle.
+
+### 2.8.2
+- Added move and mousedown events to screen control (#99)
+
+### 2.8.1
+- Added screen control (#98)
+
+### 2.8
+- Added texbox control (#96)
+- Added label control (#96)
+- Added additional properties to button control (#96)
+
+### 2.7.2
+- Fix example building
+
 ### 2.7.1
 - Fix a small typo in one of the examples (#93)
 - Fix websocket authentication when used in browsers (#95)
