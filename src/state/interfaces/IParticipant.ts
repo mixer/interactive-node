@@ -1,6 +1,14 @@
 import { ETag } from './controls';
 import { IMeta } from './controls/IMeta';
 
+export interface IParticipantQuery {
+    userIDs: number[];
+}
+
+export interface IParticipantQueryResult {
+    users: Record<string, IParticipant>;
+}
+
 export interface IParticipantArray {
     participants: IParticipant[];
 }
@@ -13,7 +21,7 @@ export interface IParticipant {
      */
     sessionID: string;
     /**
-     * This participant's Mixer UserId.
+     * This participant's Mixer UserId. Will be set to 0 if anonymous is true.
      */
     userID?: number;
     /**
@@ -46,6 +54,11 @@ export interface IParticipant {
      */
     channelGroups: string[];
     meta?: IMeta;
+
+    /**
+     * True if this user has not signed in and is an anonymous user.
+     */
+    anonymous: boolean;
 
     /**
      * @deprecated etags are no longer used, you can always omit/ignore this.
