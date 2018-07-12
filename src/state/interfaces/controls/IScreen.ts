@@ -15,6 +15,14 @@ export interface IScreenData extends IControlData {
      * The throttle rate for input sent
      */
     moveThrottle?: number;
+    /**
+     * Whether the control sends the mouse down event.
+     */
+    sendMouseDownEvent?: boolean;
+    /**
+     * Whether the control sends the mouse up event.
+     */
+    sendMouseUpEvent?: boolean;
 }
 
 /**
@@ -30,29 +38,39 @@ export interface IScreenUpdate extends IControlUpdate {
      * The throttle rate for input sent
      */
     moveThrottle?: number;
+    /**
+     * Whether the control sends the mouse down event.
+     */
+    sendMouseDownEvent?: boolean;
+    /**
+     * Whether the control sends the mouse up event.
+     */
+    sendMouseUpEvent?: boolean;
 }
 
 export interface IScreen extends IControl, IScreenData {
-  sendMoveEvents: MoveEventType;
-  moveThrottle: number;
-  // GameClient
-  update(changedData: IScreenUpdate): Promise<void>;
+    sendMoveEvents: MoveEventType;
+    moveThrottle: number;
+    sendMouseDownEvent: boolean;
+    sendMouseUpEvent: boolean;
+    // GameClient
+    update(changedData: IScreenUpdate): Promise<void>;
 
-  giveInput(input: IScreenInput): Promise<void>;
+    giveInput(input: IScreenInput): Promise<void>;
 
-  /**
+    /**
    * Fired when a participant moves cursor.
    */
-  on(
-      event: 'move',
-      listener: (inputEvent: IInputEvent<IScreenInput>, participant: IParticipant) => void,
-  ): this;
-  /**
+    on(
+        event: 'move',
+        listener: (inputEvent: IInputEvent<IScreenInput>, participant: IParticipant) => void,
+    ): this;
+    /**
    * Fired when a participant presses this button with their mouse.
    */
-  on(
-      event: 'mousedown',
-      listener: (inputEvent: IInputEvent<IScreenInput>, participant: IParticipant) => void,
-  ): this;
-  on(event: string, listener: Function): this;
+    on(
+        event: 'mousedown',
+        listener: (inputEvent: IInputEvent<IScreenInput>, participant: IParticipant) => void,
+    ): this;
+    on(event: string, listener: Function): this;
 }

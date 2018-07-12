@@ -14,11 +14,19 @@ export class Screen extends Control<IScreenData> implements IScreen {
      * The throttle rate for input sent
      */
     public moveThrottle: number;
+    /**
+     * Whether the control sends the mouse down event.
+     */
+    public sendMouseDownEvent: boolean;
+    /**
+     * Whether the control sends the mouse up event.
+     */
+    public sendMouseUpEvent: boolean;
 
-  /**
+    /**
      * Sends an input event from a participant to the server for consumption.
      */
-  public giveInput(input: IScreenInput): Promise<void> {
-    return this.sendInput(input);
-  }
+    public giveInput(input: IScreenInput): Promise<void> {
+        return this.sendInput(input);
+    }
 }
