@@ -19,7 +19,7 @@
 - Added screen control (#98)
 
 ### 2.8
-- Added texbox control (#96)
+- Added textbox control (#96)
 - Added label control (#96)
 - Added additional properties to button control (#96)
 
