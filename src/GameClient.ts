@@ -6,6 +6,8 @@ import {
     IGroupDataArray,
     IGroupDeletionParams,
     IParticipantArray,
+    IParticipantQuery,
+    IParticipantQueryResult,
     ISceneControlDeletion,
     ISceneData,
     ISceneDataArray,
@@ -189,5 +191,12 @@ export class GameClient extends Client {
      */
     public broadcastEvent(data: IBroadcastEvent): Promise<void> {
         return this.execute('broadcastEvent', data, false);
+    }
+    /**
+     * Queries the server for a list of participants who match the provided userIDs.
+     * Future enhancements may allow for querying by other properties.
+     */
+    public getParticipantsByMixerId(data: IParticipantQuery): Promise<IParticipantQueryResult> {
+        return this.execute('getParticipantsByMixerID', data, false);
     }
 }
