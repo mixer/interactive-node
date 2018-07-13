@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as WebSocket from 'ws';
-
 import { setWebSocket } from './';
 import { Client, ClientType } from './Client';
 import { IGroupData, ISceneData } from './state/interfaces';
@@ -14,14 +13,6 @@ describe('client', () => {
     const urls = [`ws://127.0.0.1:${port}/`];
     let client: Client;
     let server: WebSocket.Server;
-    let ws: WebSocket;
-
-    function awaitConnect(callback: Function) {
-        server.once('connection', (_ws: WebSocket) => {
-            ws = _ws;
-            callback(ws);
-        });
-    }
 
     const socketOptions = {
         urls,
@@ -35,22 +26,21 @@ describe('client', () => {
             client = null;
         }
         if (server) {
-            server.close(done);
-            server = null;
+            server.close(() => {
+                server.clients.forEach(c => c.close());
+                server = null;
+                done();
+            });
         } else {
             done();
         }
+        // console.log(server, client); //tslint:disable-line
     }
     describe('connecting', () => {
-        it('connects', done => {
+        it('connects', () => {
             client = createClient();
-
             server = new WebSocket.Server({ port });
-            client.open(socketOptions);
-            awaitConnect(() => {
-                ws.close(1000, 'Normal');
-                done();
-            });
+            return client.open(socketOptions);
         });
         after(done => tearDown(done));
     });
