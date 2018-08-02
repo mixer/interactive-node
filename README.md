@@ -63,7 +63,7 @@ client.open({
 #### JavaScript
 
 ```js
-const interactive = require('beam-interactive-node2');
+const interactive = require('@mixer/interactive-node');
 const ws = require('ws');
 
 interactive.setWebSocket(ws);
