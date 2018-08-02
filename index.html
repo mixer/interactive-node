@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>beam-interactive-node2</title>
+	<title>@mixer/interactive-node</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">beam-interactive-node2</a>
+					<a href="index.html" class="title">@mixer/interactive-node</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,7 +52,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> beam-interactive-node2</h1>
+			<h1> @mixer/interactive-node</h1>
 		</div>
 	</div>
 </header>
@@ -70,7 +70,7 @@
 				<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"dist/interactive.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 </code></pre>
 				<h3 id="node">Node</h3>
-				<pre><code>npm <span class="hljs-selector-tag">i</span> --save beam-interactive-node2
+				<pre><code>npm i --save @mixer/interactive-<span class="hljs-keyword">node</span><span class="hljs-title"></span>
 </code></pre><h2 id="usage">Usage</h2>
 				<h3 id="authentication">Authentication</h3>
 				<p><a href="https://tools.ietf.org/html/rfc6749">OAuth 2.0</a> is used for authentication. Valid bearer tokens can be passed in the <a href="https://mixer.github.io/interactive-node/classes/client.html#open">Client.open</a> method.</p>
@@ -98,7 +98,7 @@ client.open({
 </code></pre>
 				<h3 id="node">Node</h3>
 				<h4 id="javascript">JavaScript</h4>
-				<pre><code class="lang-js"><span class="hljs-keyword">const</span> interactive = <span class="hljs-built_in">require</span>(<span class="hljs-string">'beam-interactive-node2'</span>);
+				<pre><code class="lang-js"><span class="hljs-keyword">const</span> interactive = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@mixer/interactive-node'</span>);
 <span class="hljs-keyword">const</span> ws = <span class="hljs-built_in">require</span>(<span class="hljs-string">'ws'</span>);
 
 interactive.setWebSocket(ws);
@@ -111,7 +111,7 @@ client.open({
 });
 </code></pre>
 				<h4 id="typescript">TypeScript</h4>
-				<pre><code class="lang-ts"><span class="hljs-keyword">import</span> { GameClient, setWebSocket } <span class="hljs-keyword">from</span> <span class="hljs-string">'beam-interactive-node2'</span>;
+				<pre><code class="lang-ts"><span class="hljs-keyword">import</span> { GameClient, setWebSocket } <span class="hljs-keyword">from</span> <span class="hljs-string">'@mixer/interactive-node'</span>;
 <span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> ws <span class="hljs-keyword">from</span> <span class="hljs-string">'ws'</span>;
 
 setWebSocket(ws);
