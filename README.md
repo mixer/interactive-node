@@ -19,7 +19,7 @@ You can use npm(recommended) or download a zip from the [releases page](https://
 ### Node
 
 ```
-npm i --save beam-interactive-node2
+npm i --save @mixer/interactive-node
 ```
 
 ## Usage
@@ -63,7 +63,7 @@ client.open({
 #### JavaScript
 
 ```js
-const interactive = require('beam-interactive-node2');
+const interactive = require('@mixer/interactive-node');
 const ws = require('ws');
 
 interactive.setWebSocket(ws);
@@ -79,7 +79,7 @@ client.open({
 #### TypeScript
 
 ```ts
-import { GameClient, setWebSocket } from 'beam-interactive-node2';
+import { GameClient, setWebSocket } from '@mixer/interactive-node';
 import * as ws from 'ws';
 
 setWebSocket(ws);
