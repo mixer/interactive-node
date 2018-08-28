@@ -410,6 +410,61 @@ export namespace InteractiveError {
     errors[4022] = ChannelNotInteractive;
 
     /**
+     * BundleMissing occurs when the custom control bundle this session is trying to use has been unpublished or deleted.
+     */
+    export class BundleMissing extends Base {
+        constructor(message: string) {
+            super(message, 4023);
+            BundleMissing.setProto(this);
+        }
+    }
+    errors[4023] = BundleMissing;
+
+    /**
+     * Occurs when an Invalid broadcast scope is provided to `broadcastEvent`
+     */
+    export class InvalidBroadcastScope extends Base {
+        constructor(message: string) {
+            super(message, 4024);
+            InvalidBroadcastScope.setProto(this);
+        }
+    }
+    errors[4024] = InvalidBroadcastScope;
+
+    /**
+     * Occurs when your access to the session is revoked for example when you are banned.
+     */
+    export class AccessRevocation  extends Base {
+        constructor(message: string) {
+            super(message, 4025);
+            AccessRevocation.setProto(this);
+        }
+    }
+    errors[4025] = AccessRevocation;
+
+    /**
+     * Occurs when an anonymous user tries to use a button that requires sparks.
+     */
+    export class LoginRequired  extends Base {
+        constructor(message: string) {
+            super(message, 4026);
+            LoginRequired.setProto(this);
+        }
+    }
+    errors[4026] = LoginRequired;
+
+    /**
+     * Sent when the server has terminated your session. You should not try to reconnect.
+     */
+    export class Terminated  extends Base {
+        constructor(message: string) {
+            super(message, 4027);
+            Terminated.setProto(this);
+        }
+    }
+    errors[4027] = Terminated;
+
+    /**
      * Indicates input sent from a participant is invalid.
      */
     export class BadUserInput extends Base {

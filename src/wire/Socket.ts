@@ -137,7 +137,7 @@ export class InteractiveSocket extends EventEmitter {
             // If this close event's code is an application error (e.g. bad authentication)
             // or invalid status code (for Edge), we raise it as an error and refuse to
             // reconnect.
-            if (evt.code < 1000 || evt.code > 1999 || evt.code === 1005 || evt.code === 4025) {
+            if (evt.code < 1000 || evt.code > 1999 || evt.code === 1005 || evt.code === 4027) {
                 const err = InteractiveError.fromSocketMessage({
                     code: evt.code,
                     message: evt.reason,
