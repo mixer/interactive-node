@@ -1,6 +1,6 @@
 {
   "name": "@mixer/interactive-node",
-  "version": "2.9.0",
+  "version": "3.0.0",
   "description": "A NodeJS and Browser compatible client for mixer.com's interactive 2 Protocol",
   "contributors": [
     {
