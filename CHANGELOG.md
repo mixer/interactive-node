@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.x
+
+### 3.0
+- Renamed to @mixer/interactive-node
+- Added 4023 -> 4027 Error Code Classes
+- Disable reconnection logic on 4027
+
 ## 2.x
 
 ### 2.9
