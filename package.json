@@ -27,7 +27,7 @@
     "prepublishOnly": "npm run build",
     "postpublish": "npm run docs:publish",
     "lint": "tslint -c tslint.json --project tsconfig.json \"src/**/*.ts\" \"test/**/*.ts\"",
-    "docs:build": "rimraf docs && typedoc --exclude \"{*.spec.ts,**/node_modules/**}\" --out docs/ --mode file --excludeNotExported --excludePrivate --excludeExternals --tsconfig tsconfig.json ./src/index.ts && node doc-postprocess.js",
+    "docs:build": "rimraf docs && typedoc --exclude \"{*.spec.ts,**/node_modules/**}\" --out docs/ --mode file --excludeNotExported --excludePrivate --excludeExternals --tsconfig tsconfig.json ./src && node doc-postprocess.js",
     "docs:publish": "npm run docs:build && gh-pages -d docs -s **"
   },
   "repository": {

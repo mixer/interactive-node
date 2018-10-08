@@ -26,7 +26,7 @@ npm i --save @mixer/interactive-node
 
 ### Authentication
 
-[OAuth 2.0](https://tools.ietf.org/html/rfc6749) is used for authentication. Valid bearer tokens can be passed in the `Client.open` method.
+[OAuth 2.0](https://tools.ietf.org/html/rfc6749) is used for authentication. Valid bearer tokens can be passed in the [Client.open](https://mixer.github.io/interactive-node/classes/client.html#open) method.
 
 For more information about Mixer's OAuth visit the [OAuth reference page](https://dev.mixer.com/reference/oauth/index.html) on our developer site.
 
