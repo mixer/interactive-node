@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/mixer/interactive-node.svg?branch=master)](https://travis-ci.org/mixer/interactive-node)
 
-A TypeScript, Node.js and Browser(JavaScript) compatible client for [Mixer.com's interactive 2 Protocol](https://dev.mixer.com/reference/interactive/protocol/protocol.pdf).
+A TypeScript, Node.js and Browser(JavaScript) compatible client for [Mixer.com's interactive 2 Protocol](https://dev.mixer.com/guides/mixplay/protocol/overview).
 
-For an introduction to interactive2 checkout the [reference docs](https://dev.mixer.com/reference/interactive/index.html) on the developers site.
+For an introduction to interactive2 checkout the [reference docs](https://dev.mixer.com/guides/mixplay/introduction) on the developers site.
 
 ## Installation
 
@@ -26,7 +26,7 @@ npm i --save @mixer/interactive-node
 
 ### Authentication
 
-[OAuth 2.0](https://tools.ietf.org/html/rfc6749) is used for authentication. Valid bearer tokens can be passed in the [Client.open](https://mixer.github.io/interactive-node/classes/client.html#open) method.
+[OAuth 2.0](https://tools.ietf.org/html/rfc6749) is used for authentication. Valid bearer tokens can be passed in the `Client.open` method.
 
 For more information about Mixer's OAuth visit the [OAuth reference page](https://dev.mixer.com/reference/oauth/index.html) on our developer site.
 
@@ -111,11 +111,11 @@ Checkout our reference docs [here](https://mixer.github.io/interactive-node/).
 To get a development environment setup:
 
 1. [Clone this repository](https://help.github.com/articles/cloning-a-repository/)
-1. `npm install`
-1. `npm run build`
+2. `npm install`
+3. `npm run build`
 
 ### Contributing
 
-Thanks for your interested in contributing, checkout [TODO.md](https://github.com/mixer/interactive-node/TODO.md) for a list of tasks!
+Thanks for your interested in contributing, checkout [TODO.md](https://github.com/mixer/interactive-node/blob/master/TODO.md) for a list of tasks!
 
 Open a [Pull Request](https://github.com/mixer/interactive-node/pulls) we'd love to see your contributions.
