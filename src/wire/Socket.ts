@@ -168,6 +168,13 @@ export class InteractiveSocket extends EventEmitter {
     }
 
     /**
+     * Get the options the socket is using.
+     */
+    public getOptions() {
+        return this.options;
+    }
+
+    /**
      * Set the given options.
      * Defaults and previous option values will be used if not supplied.
      */

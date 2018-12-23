@@ -123,6 +123,13 @@ export class Client extends EventEmitter implements IClient {
     }
 
     /**
+     * Get the options is use by the socket.
+     */
+    public getOptions() {
+        return this.socket.getOptions();
+    }
+
+    /**
      * Sets the given options on the socket.
      */
     public setOptions(options: ISocketOptions) {
