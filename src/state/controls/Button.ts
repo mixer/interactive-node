@@ -58,6 +58,11 @@ export class Button extends Control<IButtonData> implements IButton {
      */
     public backgroundColor: string;
     /**
+     * The image of the background of the button.
+     * Set this value using [setBackgroundImage]{@link Button.setBackgroundImage}
+     */
+    public backgroundImage: string;
+    /**
      * The color around the border of the button when in focus.
      * Set this value using [setFocusColor]{@link Button.setFocusColor}
      */
@@ -95,6 +100,12 @@ export class Button extends Control<IButtonData> implements IButton {
      */
     public setBackgroundColor(backgroundColor: string): Promise<void> {
         return this.updateAttribute('backgroundColor', backgroundColor);
+    }
+    /**
+     * Sets a new background image for this button.
+     */
+    public setBackgroundImage(backgroundImage: string): Promise<void> {
+        return this.updateAttribute('backgroundImage', backgroundImage);
     }
 
     /**
