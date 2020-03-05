@@ -8,10 +8,14 @@ For an introduction to interactive2 checkout the [reference docs](https://dev.mi
 
 ## Installation
 
-You can use npm(recommended) or download a zip from the [releases page](https://github.com/mixer/interactive-node/releases).
-
 ### Browser
 
+- Download a Zip from the [releases page](https://github.com/mixer/interactive-node/releases)
+- Extract the contents then enter the directory and run the following:
+  - Run `npm install`
+  - Run `npm run build`
+
+Add the following to load the pre-built library:
 ```html
 <script src="dist/interactive.js"></script>
 ```
